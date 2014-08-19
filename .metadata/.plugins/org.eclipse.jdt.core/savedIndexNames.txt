@@ -1,0 +1,3 @@
+INDEX VERSION 1.126+D:\Studium\Medieninformatik\Android\Abschlussprojekt\Android_Bienchen\.metadata\.plugins\org.eclipse.jdt.core
+3479580796.index
+783111147.index
