@@ -66,13 +66,13 @@ public class LocationDatabase {
 		
 		private static final String DATABASE_CREATE_SIZE_TABLE = "create table "
 				+ AppConfig.SizeData.TABLE_KEY_SCALE + " ("+ AppConfig.Data.ID_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-				+ AppConfig.SizeData.SCALE_KEY + "REAL NOT NULL, "
-				+ AppConfig.SizeData.DATE_KEY + "TEXT NOT NULL);";
+				+ AppConfig.SizeData.SCALE_KEY + " REAL NOT NULL, "
+				+ AppConfig.SizeData.DATE_KEY + " TEXT NOT NULL);";
 		
 		private static final String DATABASE_CREATE_IMAGE_TABLE = "create table "
 				+ AppConfig.ImageData.TABLE_KEY_IMAGE + " ("
 				+ AppConfig.Data.ID_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-				+ AppConfig.ImageData.IMAGE_KEY + "real not null);";
+				+ AppConfig.ImageData.IMAGE_KEY + " real not null);";
 		
 		public LocationDatabaseHelper(Context context, String name, CursorFactory factory, int version){
 			super(context, name, factory, version);
