@@ -1,15 +1,19 @@
 package de.androidbienchen;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+
+
+
 
 public class StartMenuActivity extends Activity {
 
@@ -23,8 +27,22 @@ public class StartMenuActivity extends Activity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+        init();
     }
 
+    void init(){
+    	LocationDatabase db = new LocationDatabase(this);
+    	db.open();
+    	Weight weight = new Weight(1.5f, "2014/08/20");
+    	Weight weight2 = new Weight(2.0f, "2014/08/24");
+    	Log.d("afterWEIGHT", ""+weight.getSizeValue()+weight.getMeasureDate());
+    	db.insertSizeValue(weight);
+    	db.insertSizeValue(weight2);
+    	ArrayList<Weight> weights = db.getWeights();
+    	Weight newWeight = weights.get(0);
+    	Log.d("All values", newWeight.getMeasureDate() + newWeight.getSizeValue());
+    	db.close();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
