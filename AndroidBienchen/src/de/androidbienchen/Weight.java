@@ -10,12 +10,17 @@ import android.net.ParseException;
 
 public class Weight {
 	
+	private int id;
 	private float value;
 	private String measureDateString;
 	
 	public Weight(float value, String measureDate){
 		this.value = value;	
 		measureDateString = measureDate;
+	}
+	
+	public int getId(){
+		return id;
 	}
 	
 	public float getSizeValue(){

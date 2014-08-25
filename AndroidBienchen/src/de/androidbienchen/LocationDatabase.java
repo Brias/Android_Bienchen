@@ -9,6 +9,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 public class LocationDatabase {
@@ -61,6 +62,17 @@ public class LocationDatabase {
 		return weights;
 	}
 	
+	public boolean removeOldestWeight(){
+		int oldestId = getOldestWeightId();
+		
+		return db.delete(AppConfig.SizeData.TABLE_KEY_SCALE, ""+AppConfig.Data.ID_KEY + " = " + oldestId+"", null) > 0;
+	}
+	
+	private int getOldestWeightId(){
+		final SQLiteStatement stmt = db.compileStatement("SELECT MIN(" +AppConfig.Data.ID_KEY+ ") FROM " +AppConfig.SizeData.TABLE_KEY_SCALE);
+
+	    return (int) stmt.simpleQueryForLong();
+	}
 	
 	private class LocationDatabaseHelper extends SQLiteOpenHelper{
 		
