@@ -27,28 +27,6 @@ public class StartMenuActivity extends Activity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-        init();
-    }
-
-    void init(){
-    	LocationDatabase db = new LocationDatabase(this);
-    	db.open();
-    	
-    	Weight weight = new Weight(1.5f, "2014/08/20");
-    	Weight weight2 = new Weight(2.0f, "2014/08/24");
-    	Weight weight3 = new Weight(1.7f, "2014/08/22");
-    	
-    	db.insertSizeValue(weight);
-    	db.insertSizeValue(weight2);
-    	db.insertSizeValue(weight3);
-    	
-    	ArrayList<Weight> weights = db.getWeights();
-    	Log.d("ArrayListLenght",""+weights.size());
-    	
-    	db.removeOldestWeight();
-    	ArrayList<Weight> newWeights = db.getWeights();
-    	Log.d("ArrayListSize", ""+newWeights.size());
-    	db.close();
     }
 
     @Override
