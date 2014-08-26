@@ -1,31 +1,57 @@
 package de.androidbienchen;
 
 import android.app.Activity;
-import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class CalendarActivity extends Activity {
+	
+	private static final String TAG = "ImkerKalender";
+	  private CalendarPickerView calendar;
+	  private AlertDialog theDialog;
+	  private CalendarPickerView dialogView;
+	  
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_calendar);
+		
+		Button day = (Button) findViewById(R.id.dayPicked);
+		
+		day.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getApplication(), "Eventinformation", Toast.LENGTH_LONG).show(); 
+				
+			}
+		})
 
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
+		
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		
+		 Intent intent = new Intent(Intent.ACTION_INSERT);
+		 intent.setData(CalendarContract.Events.CONTENT_URI);
+		 startActivity(intent);
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.calendar, menu);
