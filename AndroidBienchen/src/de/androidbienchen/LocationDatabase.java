@@ -33,20 +33,18 @@ public class LocationDatabase {
 		db.close();
 	}
 	
-	
-	
 	public long insertSizeValue(Weight weight){
 		ContentValues newSizeValue = new ContentValues();
 		
 		newSizeValue.put(AppConfig.SizeData.SCALE_KEY, weight.getSizeValue());
-		newSizeValue.put(AppConfig.SizeData.DATE_KEY, weight.getMeasureDate());
+		newSizeValue.put(AppConfig.Data.DATE_KEY, weight.getMeasureDate());
 		
 		return db.insert(AppConfig.SizeData.TABLE_KEY_SCALE, null, newSizeValue);
 	}
 	
 	public ArrayList<Weight> getWeights(){
 		ArrayList<Weight> weights = new ArrayList<Weight>();
-		Cursor cursor =  db.query(AppConfig.SizeData.TABLE_KEY_SCALE, new String[] {AppConfig.Data.ID_KEY, AppConfig.SizeData.SCALE_KEY, AppConfig.SizeData.DATE_KEY}, null, null, null, null, null);
+		Cursor cursor =  db.query(AppConfig.SizeData.TABLE_KEY_SCALE, new String[] {AppConfig.Data.ID_KEY, AppConfig.SizeData.SCALE_KEY, AppConfig.Data.DATE_KEY}, null, null, null, null, null);
 		
 		if(cursor.moveToFirst()){
 			do{
@@ -60,6 +58,10 @@ public class LocationDatabase {
 		}
 		
 		return weights;
+	}
+	
+	public boolean removeAll(){
+		return db.delete(AppConfig.SizeData.TABLE_KEY_SCALE, null, null) > 0;
 	}
 	
 	public boolean removeOldestWeight(){
@@ -76,10 +78,15 @@ public class LocationDatabase {
 	
 	private class LocationDatabaseHelper extends SQLiteOpenHelper{
 		
-		private static final String DATABASE_CREATE_SIZE_TABLE = "create table "
+		private static final String DATABASE_CREATE_SCALE_TABLE = "create table "
 				+ AppConfig.SizeData.TABLE_KEY_SCALE + " ("+ AppConfig.Data.ID_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 				+ AppConfig.SizeData.SCALE_KEY + " REAL NOT NULL, "
-				+ AppConfig.SizeData.DATE_KEY + " TEXT NOT NULL);";
+				+ AppConfig.Data.DATE_KEY + " TEXT NOT NULL);";
+		
+		private static final String DATABASE_CREATE_TEMPERATURE_TABLE = "create table "
+				+ AppConfig.TemperatureData.TABLE_KEY_TEMPERATURE + " ("+ AppConfig.Data.ID_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+				+ AppConfig.TemperatureData.TEMPERTURE_KEY + " REAL NOT NULL, "
+				+ AppConfig.Data.DATE_KEY + " TEXT NOT NULL);";
 		
 		private static final String DATABASE_CREATE_IMAGE_TABLE = "create table "
 				+ AppConfig.ImageData.TABLE_KEY_IMAGE + " ("
@@ -92,7 +99,8 @@ public class LocationDatabase {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			db.execSQL(DATABASE_CREATE_SIZE_TABLE);
+			db.execSQL(DATABASE_CREATE_SCALE_TABLE);
+			db.execSQL(DATABASE_CREATE_TEMPERATURE_TABLE);
 			//db.execSQL(DATABASE_CREATE_IMAGE_TABLE);
 		}
 
