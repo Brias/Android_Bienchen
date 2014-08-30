@@ -2,6 +2,12 @@ package de.androidbienchen;
 
 public class AppConfig {
 	
+	public class server{
+		public static final String SCALE_URL = "http://app.iv-sinzing.de/waage";
+		public static final String TEMPERATURE_URL = "http://app.iv-sinzing.de/temperatur";
+		public static final String IMAGE_URL = "http://app.iv-sinzing.de/bildtest.jpg";
+	}
+	
 	public class SizeData{
 		public static final String TABLE_KEY_SCALE = "_scale";
 		public static final String SCALE_KEY = "_scaleValue";

@@ -1,5 +1,7 @@
 package de.androidbienchen;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -13,7 +15,7 @@ import android.view.ViewGroup;
 
 
 
-public class StartMenuActivity extends Activity {
+public class StartMenuActivity extends Activity implements DataFetcherListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,13 @@ public class StartMenuActivity extends Activity {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
+        }
+        
+        TemperatureFetcher fetcher = new TemperatureFetcher(this, this);
+        if(NetworkAvailability.networkStatus(this)){
+        fetcher.startFetchingData();
+        }else{
+        	Log.d("Network not available", "TRUE");
         }
     }
 
@@ -62,5 +71,17 @@ public class StartMenuActivity extends Activity {
             return rootView;
         }
     }
+
+	@Override
+	public void onScalDataFetched(ArrayList<Weight> weights) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTemperatureDataFetched(ArrayList<Temperature> temperatures) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

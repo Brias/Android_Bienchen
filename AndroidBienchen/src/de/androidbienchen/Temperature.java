@@ -6,20 +6,18 @@ import java.util.Date;
 import android.annotation.SuppressLint;
 import android.net.ParseException;
 
+public class Temperature {
 
-
-public class Weight {
-	
 	private int id;
 	private float value;
 	private String measureDateString;
 	
-	public Weight(float value, String measureDate){
+	public Temperature(float value, String measureDate){
 		this.value = value;	
 		measureDateString = measureDate;
 	}
 	
-	public Weight(float value, int id, String measureDate){
+	public Temperature(float value, int id, String measureDate){
 		this.value = value;	
 		this.id = id;
 		measureDateString = measureDate;
@@ -29,7 +27,7 @@ public class Weight {
 		return id;
 	}
 	
-	public float getSizeValue(){
+	public float getTemperatureValue(){
 		return value;
 	}
 	

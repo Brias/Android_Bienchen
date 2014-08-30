@@ -33,13 +33,22 @@ public class LocationDatabase {
 		db.close();
 	}
 	
-	public long insertSizeValue(Weight weight){
+	public long insertScaleValue(Weight weight){
 		ContentValues newSizeValue = new ContentValues();
 		
 		newSizeValue.put(AppConfig.SizeData.SCALE_KEY, weight.getSizeValue());
 		newSizeValue.put(AppConfig.Data.DATE_KEY, weight.getMeasureDate());
 		
 		return db.insert(AppConfig.SizeData.TABLE_KEY_SCALE, null, newSizeValue);
+	}
+	
+	public long insertTemperatureValue(Temperature temperature){
+		ContentValues newTemperatureValue = new ContentValues();
+		
+		newTemperatureValue.put(AppConfig.TemperatureData.TEMPERTURE_KEY, temperature.getTemperatureValue());
+		newTemperatureValue.put(AppConfig.Data.DATE_KEY, temperature.getMeasureDate());
+		
+		return db.insert(AppConfig.TemperatureData.TABLE_KEY_TEMPERATURE, null, newTemperatureValue);
 	}
 	
 	public ArrayList<Weight> getWeights(){
@@ -60,11 +69,33 @@ public class LocationDatabase {
 		return weights;
 	}
 	
-	public boolean removeAll(){
+	public ArrayList<Temperature> getTemperatures(){
+		ArrayList<Temperature> temperatures = new ArrayList<Temperature>();
+		Cursor cursor =  db.query(AppConfig.TemperatureData.TABLE_KEY_TEMPERATURE, new String[] {AppConfig.Data.ID_KEY, AppConfig.TemperatureData.TEMPERTURE_KEY, AppConfig.Data.DATE_KEY}, null, null, null, null, null);
+		
+		if(cursor.moveToFirst()){
+			do{
+				int id = cursor.getInt(0);
+				float value = cursor.getFloat(1);
+				String date = cursor.getString(2);
+				
+				Temperature temperature = new Temperature(value, id, date);
+				temperatures.add(temperature);
+			}while(cursor.moveToNext());
+		}
+		
+		return temperatures;
+	}
+	
+	public boolean removeAllScaleValues(){
 		return db.delete(AppConfig.SizeData.TABLE_KEY_SCALE, null, null) > 0;
 	}
 	
-	public boolean removeOldestWeight(){
+	public boolean removeAllTemperatureValues(){
+		return db.delete(AppConfig.TemperatureData.TABLE_KEY_TEMPERATURE, null, null) > 0;
+	}
+	
+	/*public boolean removeOldestWeight(){
 		int oldestId = getOldestWeightId();
 		
 		return db.delete(AppConfig.SizeData.TABLE_KEY_SCALE, ""+AppConfig.Data.ID_KEY + " = " + oldestId+"", null) > 0;
@@ -74,7 +105,7 @@ public class LocationDatabase {
 		final SQLiteStatement stmt = db.compileStatement("SELECT MIN(" +AppConfig.Data.ID_KEY+ ") FROM " +AppConfig.SizeData.TABLE_KEY_SCALE);
 
 	    return (int) stmt.simpleQueryForLong();
-	}
+	}*/
 	
 	private class LocationDatabaseHelper extends SQLiteOpenHelper{
 		
