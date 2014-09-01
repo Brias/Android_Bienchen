@@ -29,7 +29,7 @@ public class Weight {
 		return id;
 	}
 	
-	public float getSizeValue(){
+	public float getScaleValue(){
 		return value;
 	}
 	

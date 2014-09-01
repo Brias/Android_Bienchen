@@ -10,11 +10,13 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class ScaleFetcher {
 
@@ -38,7 +40,39 @@ public class ScaleFetcher {
 	
 	private void readJSON(String json) throws JSONException{
 		JSONObject jsonObject = new JSONObject(json);
-		jsonObject.getJSONArray("");
+		JSONArray jsonArray = jsonObject.getJSONArray("Waage");
+		if(db.removeAllScaleValues()){
+			getJsonContent(jsonArray);
+		}
+		setScaleDataUpdated();
+	}
+	
+	private void getJsonContent(JSONArray jsonArray){
+		for(int i = 0; i < jsonArray.length(); i++){
+			try {
+				insertDataInDatabase(jsonArray.getJSONObject(i));
+			} catch (JSONException e) {
+				setScaleDataUpdated();
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void insertDataInDatabase(JSONObject jsonObject) throws JSONException{
+			int id = jsonObject.getInt("_id");
+			float weight = (float) jsonObject.getDouble("_gewicht");
+			String date = jsonObject.getString("_datum");
+			Weight newWeight = new Weight(weight, id, date);
+			db.insertScaleValue(newWeight);
+	}
+	
+	private void setScaleDataUpdated(){
+		ArrayList<Weight> weights = db.getWeights();
+		setDataFetched(weights);
+	}
+	
+	private void setDataFetched(ArrayList<Weight> weights){
+		listener.onScaleDataFetched(weights);
 	}
 	
 	
@@ -61,8 +95,7 @@ public class ScaleFetcher {
 		
 		@Override
 		protected String doInBackground(String... url) {
-			startHttpRequest(url[0]);
-			return null;
+			return startHttpRequest(url[0]);
 		}
 		
 		private String startHttpRequest(String url){

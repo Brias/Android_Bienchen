@@ -9,13 +9,12 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 public class LocationDatabase {
 
-	private LocationDatabaseHelper dbHelper;
-	private SQLiteDatabase db;
+	private static LocationDatabaseHelper dbHelper;
+	private static SQLiteDatabase db;
 	
 	public LocationDatabase(Context context){
 		dbHelper = new LocationDatabaseHelper(context, AppConfig.Data.DATABASE_KEY, null, AppConfig.Data.DATABASE_VERSION);
@@ -34,12 +33,12 @@ public class LocationDatabase {
 	}
 	
 	public long insertScaleValue(Weight weight){
-		ContentValues newSizeValue = new ContentValues();
+		ContentValues newScaleValue = new ContentValues();
 		
-		newSizeValue.put(AppConfig.SizeData.SCALE_KEY, weight.getSizeValue());
-		newSizeValue.put(AppConfig.Data.DATE_KEY, weight.getMeasureDate());
+		newScaleValue.put(AppConfig.SizeData.SCALE_KEY, weight.getScaleValue());
+		newScaleValue.put(AppConfig.Data.DATE_KEY, weight.getMeasureDate());
 		
-		return db.insert(AppConfig.SizeData.TABLE_KEY_SCALE, null, newSizeValue);
+		return db.insert(AppConfig.SizeData.TABLE_KEY_SCALE, null, newScaleValue);
 	}
 	
 	public long insertTemperatureValue(Temperature temperature){
@@ -57,11 +56,11 @@ public class LocationDatabase {
 		
 		if(cursor.moveToFirst()){
 			do{
+				int id = cursor.getInt(0);
 				float value = cursor.getFloat(1);
 				String date = cursor.getString(2);
-				Log.d("getWeights", ""+value+date);
 				
-				Weight weight = new Weight(value, date);
+				Weight weight = new Weight(value, id, date);
 				weights.add(weight);
 			}while(cursor.moveToNext());
 		}
@@ -88,11 +87,19 @@ public class LocationDatabase {
 	}
 	
 	public boolean removeAllScaleValues(){
-		return db.delete(AppConfig.SizeData.TABLE_KEY_SCALE, null, null) > 0;
+		if(getWeights().size() == 0){
+			return true;
+		}else{
+			return db.delete(AppConfig.SizeData.TABLE_KEY_SCALE, null, null) > 0;
+		}
 	}
 	
 	public boolean removeAllTemperatureValues(){
-		return db.delete(AppConfig.TemperatureData.TABLE_KEY_TEMPERATURE, null, null) > 0;
+		if(getTemperatures().size() == 0){
+			return true;
+		}else{
+			return db.delete(AppConfig.TemperatureData.TABLE_KEY_TEMPERATURE, null, null) > 0;
+		}
 	}
 	
 	/*public boolean removeOldestWeight(){

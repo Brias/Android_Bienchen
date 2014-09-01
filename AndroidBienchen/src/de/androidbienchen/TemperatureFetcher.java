@@ -37,14 +37,6 @@ public class TemperatureFetcher {
 		new BackgroundTask().execute(AppConfig.server.TEMPERATURE_URL);
 	}
 	
-	private void openDatabase(){
-		db.open();
-	}
-	
-	private void closeDatabase(){
-		db.close();
-	}
-	
 	private void readJSON(String json) throws JSONException{
 		JSONObject jsonObject = new JSONObject(json);
 		JSONArray jsonArray = jsonObject.getJSONArray("temperatur");
@@ -79,14 +71,10 @@ public class TemperatureFetcher {
 	
 	private void setTemperatureDataUpdated(){
 		ArrayList<Temperature> temperatures = db.getTemperatures();
-		closeDatabase();
 		setDataFetched(temperatures);
 	}
 	
 	private void setDataFetched(ArrayList<Temperature> temperatures){
-		for(int i = 0; i < temperatures.size(); i++){
-			Log.d("Temperatures from Database", ""+temperatures.get(i).getId()+" "+temperatures.get(i).getMeasureDate()+" "+temperatures.get(i).getTemperatureValue());
-		}
 		listener.onTemperatureDataFetched(temperatures);
 	}
 	
@@ -94,7 +82,6 @@ public class TemperatureFetcher {
 
 		@Override
 		protected void onPostExecute(String result){
-			openDatabase();
 			callReadJSON(result);
 			super.onPostExecute(result);
 		}

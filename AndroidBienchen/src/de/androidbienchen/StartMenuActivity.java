@@ -13,10 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-
-
 public class StartMenuActivity extends Activity implements DataFetcherListener{
 
+	private LocationDatabase db;
+	private ArrayList<Temperature> temperatures;
+	private ArrayList<Weight> weights;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,11 +30,17 @@ public class StartMenuActivity extends Activity implements DataFetcherListener{
                     .commit();
         }
         
-        TemperatureFetcher fetcher = new TemperatureFetcher(this, this);
+        db = new LocationDatabase(this);
+        ScaleFetcher scaleFetcher = new ScaleFetcher(this, this);
+        TemperatureFetcher temperatureFetcher = new TemperatureFetcher(this, this);
         if(NetworkAvailability.networkStatus(this)){
-        fetcher.startFetchingData();
+	        db.open();
+	        temperatureFetcher.startFetchingData();
+	        scaleFetcher.startFetchingData();
+	        //db.close();
         }else{
-        	Log.d("Network not available", "TRUE");
+        	weights = db.getWeights();
+            temperatures = db.getTemperatures();
         }
     }
 
@@ -73,15 +81,21 @@ public class StartMenuActivity extends Activity implements DataFetcherListener{
     }
 
 	@Override
-	public void onScalDataFetched(ArrayList<Weight> weights) {
+	public void onScaleDataFetched(ArrayList<Weight> weights) {
 		// TODO Auto-generated method stub
-		
+		this.weights = weights;
+		for(int i = 0; i < this.weights.size(); i++){
+			Log.d("Weights", ""+this.weights.get(i).getId()+" "+this.weights.get(i).getScaleValue() +" "+this.weights.get(i).getMeasureDate());
+		}
 	}
 
 	@Override
 	public void onTemperatureDataFetched(ArrayList<Temperature> temperatures) {
 		// TODO Auto-generated method stub
-		
+		this.temperatures = temperatures;
+		for(int i = 0; i < temperatures.size(); i++){
+			Log.d("Temperatures", ""+this.temperatures.get(i).getId()+" "+this.temperatures.get(i).getTemperatureValue()+" "+this.temperatures.get(i).getMeasureDate());
+		}
 	}
 
 }
