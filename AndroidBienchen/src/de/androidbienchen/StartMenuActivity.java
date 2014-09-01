@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,9 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 
-public class StartMenuActivity extends Activity implements DataFetcherListener{
+public class StartMenuActivity extends Activity implements DataFetcherListener, ImageFetcherListener{
 
 	private LocationDatabase db;
 	private ArrayList<Temperature> temperatures;
@@ -31,13 +34,14 @@ public class StartMenuActivity extends Activity implements DataFetcherListener{
         }
         
         db = new LocationDatabase(this);
+        ImageFetcher imageFetcher = new ImageFetcher(this, this);
         ScaleFetcher scaleFetcher = new ScaleFetcher(this, this);
         TemperatureFetcher temperatureFetcher = new TemperatureFetcher(this, this);
         if(NetworkAvailability.networkStatus(this)){
 	        db.open();
 	        temperatureFetcher.startFetchingData();
 	        scaleFetcher.startFetchingData();
-	        //db.close();
+	        imageFetcher.startFetchingData();
         }else{
         	weights = db.getWeights();
             temperatures = db.getTemperatures();
@@ -96,6 +100,12 @@ public class StartMenuActivity extends Activity implements DataFetcherListener{
 		for(int i = 0; i < temperatures.size(); i++){
 			Log.d("Temperatures", ""+this.temperatures.get(i).getId()+" "+this.temperatures.get(i).getTemperatureValue()+" "+this.temperatures.get(i).getMeasureDate());
 		}
+	}
+
+	@Override
+	public void onImageFetched(Bitmap bm) {
+		ImageView view = (ImageView) findViewById(R.id.image);
+		view.setImageBitmap(bm);
 	}
 
 }

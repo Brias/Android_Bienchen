@@ -8,8 +8,10 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 public class LocationDatabase {
 
@@ -30,6 +32,27 @@ public class LocationDatabase {
 	
 	public void close(){
 		db.close();
+	}
+	
+	public long insertImage(byte[] image) throws SQLiteException{
+	    ContentValues newImageValue = new  ContentValues();
+	    
+	    newImageValue.put(AppConfig.ImageData.IMAGE_KEY, image);
+	    
+	    return db.insert( AppConfig.ImageData.TABLE_KEY_IMAGE, null, newImageValue);
+	}
+	
+	public Bitmap getImage(){
+		Cursor cursor = db.query(AppConfig.ImageData.TABLE_KEY_IMAGE, new String[] {AppConfig.ImageData.IMAGE_KEY}, null, null, null, null, null);
+		byte[] image = null;
+		
+		if(cursor.moveToFirst()){
+			image = cursor.getBlob(0);
+		}
+		
+		Bitmap bitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
+		
+		return bitmap;
 	}
 	
 	public long insertScaleValue(Weight weight){
@@ -129,7 +152,7 @@ public class LocationDatabase {
 		private static final String DATABASE_CREATE_IMAGE_TABLE = "create table "
 				+ AppConfig.ImageData.TABLE_KEY_IMAGE + " ("
 				+ AppConfig.Data.ID_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-				+ AppConfig.ImageData.IMAGE_KEY + " real not null);";
+				+ AppConfig.ImageData.IMAGE_KEY + " BLOB);";
 		
 		public LocationDatabaseHelper(Context context, String name, CursorFactory factory, int version){
 			super(context, name, factory, version);
@@ -139,7 +162,7 @@ public class LocationDatabase {
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(DATABASE_CREATE_SCALE_TABLE);
 			db.execSQL(DATABASE_CREATE_TEMPERATURE_TABLE);
-			//db.execSQL(DATABASE_CREATE_IMAGE_TABLE);
+			db.execSQL(DATABASE_CREATE_IMAGE_TABLE);
 		}
 
 		@Override
