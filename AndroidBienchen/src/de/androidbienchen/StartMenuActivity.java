@@ -47,7 +47,7 @@ public class StartMenuActivity extends Activity implements DataFetcherListener, 
         }
         Timer myTimer = new Timer();
         ImageFetcherTimer imageFetcherTimer = new ImageFetcherTimer(this, this);
-        myTimer.schedule(imageFetcherTimer, 0, 10000);
+        myTimer.schedule(imageFetcherTimer, 0, 600000);
     }
 
     @Override

@@ -53,6 +53,7 @@ public class ImageFetcher {
 		return db.getImage();
 	}
 	
+	
 	private class BackgroundTask extends AsyncTask<String, Void, Bitmap>{
 
 		@Override 
