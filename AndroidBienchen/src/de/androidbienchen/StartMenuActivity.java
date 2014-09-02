@@ -1,13 +1,12 @@
 package de.androidbienchen;
 
 import java.util.ArrayList;
+import java.util.Timer;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +45,9 @@ public class StartMenuActivity extends Activity implements DataFetcherListener, 
         	weights = db.getWeights();
             temperatures = db.getTemperatures();
         }
+        Timer myTimer = new Timer();
+        ImageFetcherTimer imageFetcherTimer = new ImageFetcherTimer(this, this);
+        myTimer.schedule(imageFetcherTimer, 0, 10000);
     }
 
     @Override
@@ -88,22 +90,17 @@ public class StartMenuActivity extends Activity implements DataFetcherListener, 
 	public void onScaleDataFetched(ArrayList<Weight> weights) {
 		// TODO Auto-generated method stub
 		this.weights = weights;
-		for(int i = 0; i < this.weights.size(); i++){
-			Log.d("Weights", ""+this.weights.get(i).getId()+" "+this.weights.get(i).getScaleValue() +" "+this.weights.get(i).getMeasureDate());
-		}
 	}
 
 	@Override
 	public void onTemperatureDataFetched(ArrayList<Temperature> temperatures) {
 		// TODO Auto-generated method stub
 		this.temperatures = temperatures;
-		for(int i = 0; i < temperatures.size(); i++){
-			Log.d("Temperatures", ""+this.temperatures.get(i).getId()+" "+this.temperatures.get(i).getTemperatureValue()+" "+this.temperatures.get(i).getMeasureDate());
-		}
 	}
 
 	@Override
 	public void onImageFetched(Bitmap bm) {
+		// TODO Auto-generated method stub
 		ImageView view = (ImageView) findViewById(R.id.image);
 		view.setImageBitmap(bm);
 	}

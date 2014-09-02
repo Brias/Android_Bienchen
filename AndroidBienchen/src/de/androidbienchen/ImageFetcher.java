@@ -11,7 +11,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.storage.StorageManager;
 
 public class ImageFetcher {
 
@@ -36,7 +35,9 @@ public class ImageFetcher {
 		bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
 		byte[] img = stream.toByteArray();
 		
-		storeImageInDatabase(img);
+		if(db.removeImage()){
+			storeImageInDatabase(img);
+		}
 		setDataFetched();
 	}
 	

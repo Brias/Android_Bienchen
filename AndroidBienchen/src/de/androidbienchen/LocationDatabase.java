@@ -55,6 +55,14 @@ public class LocationDatabase {
 		return bitmap;
 	}
 	
+	public boolean removeImage(){
+		if(getImage() == null){
+			return true;
+		}else{
+			return db.delete(AppConfig.ImageData.TABLE_KEY_IMAGE, null, null) > 0;
+		}
+	}
+	
 	public long insertScaleValue(Weight weight){
 		ContentValues newScaleValue = new ContentValues();
 		
