@@ -32,24 +32,28 @@ public class StartMenuActivity extends Activity implements DataFetcherListener, 
                     .commit();
         }
         
-        db = new LocationDatabase(this);
-        ImageFetcher imageFetcher = new ImageFetcher(this, this);
-        ScaleFetcher scaleFetcher = new ScaleFetcher(this, this);
-        TemperatureFetcher temperatureFetcher = new TemperatureFetcher(this, this);
-        if(NetworkAvailability.networkStatus(this)){
-	        db.open();
-	        temperatureFetcher.startFetchingData();
-	        scaleFetcher.startFetchingData();
-	        imageFetcher.startFetchingData();
-        }else{
-        	weights = db.getWeights();
-            temperatures = db.getTemperatures();
-        }
-        Timer myTimer = new Timer();
-        ImageFetcherTimer imageFetcherTimer = new ImageFetcherTimer(this, this);
-        myTimer.schedule(imageFetcherTimer, 0, 600000);
+       init();
     }
 
+    private void init(){
+    	 db = new LocationDatabase(this);
+         ImageFetcher imageFetcher = new ImageFetcher(this, this);
+         ScaleFetcher scaleFetcher = new ScaleFetcher(this, this);
+         TemperatureFetcher temperatureFetcher = new TemperatureFetcher(this, this);
+         if(NetworkAvailability.networkStatus(this)){
+ 	        db.open();
+ 	        temperatureFetcher.startFetchingData();
+ 	        scaleFetcher.startFetchingData();
+ 	        imageFetcher.startFetchingData();
+         }else{
+         	weights = db.getWeights();
+             temperatures = db.getTemperatures();
+         }
+         Timer myTimer = new Timer();
+         ImageFetcherTimer imageFetcherTimer = new ImageFetcherTimer(this, this);
+         myTimer.schedule(imageFetcherTimer, 0, 600000);
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         
