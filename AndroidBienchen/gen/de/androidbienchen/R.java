@@ -25,12 +25,9 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080005;
+        public static final int action_settings=0x7f080002;
         public static final int container=0x7f080000;
-        public static final int content_frame=0x7f080003;
-        public static final int drawer_layout=0x7f080002;
         public static final int image=0x7f080001;
-        public static final int left_drawer=0x7f080004;
     }
     public static final class layout {
         public static final int activity_calendar=0x7f030000;
@@ -47,7 +44,6 @@ public final class R {
         public static final int fragment_presence_status=0x7f03000b;
         public static final int fragment_scale=0x7f03000c;
         public static final int fragment_website_link=0x7f03000d;
-        public static final int navigation_drawer_fragment=0x7f03000e;
     }
     public static final class menu {
         public static final int calendar=0x7f070000;
