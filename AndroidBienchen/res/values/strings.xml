@@ -10,5 +10,7 @@
     <string name="title_activity_chat">ChatActivity</string>
     <string name="title_activity_presence_status">PresenceStatusActivity</string>
     <string name="title_activity_calendar">CalendarActivity</string>
+    <string name="insertname">Veranstaltung: </string>
+    <string name="insertinfo">Veranstaltungsinfo:</string>
 
 </resources>

@@ -1,89 +1,161 @@
 package de.androidbienchen;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Fragment;
-import android.content.Intent;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.CalendarContract;
-import android.view.LayoutInflater;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
-public class CalendarActivity extends Activity {
+import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
+
+@SuppressLint("SimpleDateFormat")
+public class CalendarActivity extends FragmentActivity {
+
+	private EventDatabase dbb;
+	private CaldroidFragment caldroidFragment;
+	HashMap<Long,Event> allEvents = new HashMap<Long,Event>();
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.calendar, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
 	
-	private static final String TAG = "ImkerKalender";
-	  private CalendarPickerView calendar;
-	  private AlertDialog theDialog;
-	  private CalendarPickerView dialogView;
-	  
+	private Context getAppContext(){
+		return this;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_refresh:
+			dbb.syncToOnlineDB();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_calendar);
+		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
+
 		
-		Button day = (Button) findViewById(R.id.dayPicked);
-		
-		day.setOnClickListener(new View.OnClickListener() {
-			
+
+		caldroidFragment = new CaldroidFragment();
+		//
+		// If Activity is created after rotation
+		if (savedInstanceState != null) {
+			caldroidFragment.restoreStatesFromKey(savedInstanceState,
+					"CALDROID_SAVED_STATE");
+		}
+		// If activity is created from fresh
+		else {
+			Bundle args = new Bundle();
+			Calendar cal = Calendar.getInstance();
+			args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+			args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+			args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
+			args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
+
+			// Uncomment this to customize startDayOfWeek
+			// args.putInt(CaldroidFragment.START_DAY_OF_WEEK,
+			// CaldroidFragment.TUESDAY); // Tuesday
+			caldroidFragment.setArguments(args);
+		}
+
+		// // Attach to the activity
+		FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+		t.replace(R.id.calendar, caldroidFragment);
+		t.commit();
+
+		// Setup listener
+		final CaldroidListener listener = new CaldroidListener() {
+
 			@Override
-			public void onClick(View v) {
-				Toast.makeText(getApplication(), "Eventinformation", Toast.LENGTH_LONG).show(); 
-				
+			public void onSelectDate(Date date, View view) {
+				Toast.makeText(getApplicationContext(), formatter.format(date),
+						Toast.LENGTH_SHORT).show();
+			Event event = allEvents.get(date.getTime());
+			if(event != null){
+				new EventViewDialog(getAppContext(), event);
 			}
-		})
+			}
 
-		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+			@Override
+			public void onChangeMonth(int month, int year) {
+				String text = "month: " + month + " year: " + year;
+				Toast.makeText(getApplicationContext(), text,
+						Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void onLongClickDate(Date date, View view) {
+				Toast.makeText(getApplicationContext(),
+						"Long click " + formatter.format(date),
+						Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void onCaldroidViewCreated() {
+				if (caldroidFragment.getLeftArrowButton() != null) {
+					Toast.makeText(getApplicationContext(),
+							"Caldroid view is created", Toast.LENGTH_SHORT)
+							.show();
+				}
+			}
+
+		};
+
+		// Setup Caldroid
+		caldroidFragment.setCaldroidListener(listener);
+
+		dbb = new EventDatabase(this);
+		dbb.syncToOnlineDB();
+		ArrayList<Event> evt = new ArrayList<Event>();
+		evt = dbb.getAllEvents();
+		for (int i = 0; i < evt.size(); i++) {
+			Event event = evt.get(i);
+			allEvents.put(event.StartDate.getTime(), event);
+			 caldroidFragment.setBackgroundResourceForDate(Color.YELLOW,
+			 new Date(event.StartDate.getTime()));
+			// caldroidFragment.moveToDate(event.StartDate);
+			Calendar cal = Calendar.getInstance();
+			
+			GregorianCalendar calendar = new GregorianCalendar(2014, 9, 2);
+
+//			caldroidFragment.setBackgroundResourceForDate(0xffff00,
+//					calendar.getTime());
+			Log.e("AYLA", allEvents.get(event.StartDate.getTime()).StartDate.toString());
 		}
-		
-		
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		
-		 Intent intent = new Intent(Intent.ACTION_INSERT);
-		 intent.setData(CalendarContract.Events.CONTENT_URI);
-		 startActivity(intent);
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.calendar, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	/**
-	 * A placeholder fragment containing a simple view.
+	 * Save current states of the Caldroid here
 	 */
-	public static class PlaceholderFragment extends Fragment {
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
 
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_calendar,
-					container, false);
-			return rootView;
+		if (caldroidFragment != null) {
+			caldroidFragment.saveStatesToKey(outState, "CALDROID_SAVED_STATE");
 		}
 	}
 
