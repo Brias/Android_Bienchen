@@ -5,9 +5,25 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="src" path="bin/res"/>
+	<classpathentry excluding="library/libs/|library/res/" kind="src" path="libs/Caldroid-eclipse_project"/>
 	<classpathentry kind="src" path="/android-support-v7-appcompat"/>
-	<classpathentry kind="lib" path="/Users/aylasybille/Android_Bienchen_App/Android_Bienchen/AndroidBienchen/libs/Parse-1.5.1.jar"/>
+	<classpathentry kind="lib" path="libs/Caldroid-eclipse_project/library/libs/android-support-v4.jar"/>
+	<classpathentry kind="lib" path="libs/Parse-1.5.1.jar"/>
+	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
+	<classpathentry kind="lib" path="libs/caldroid-library-773229cc4ffc4c4114d938c805e8570c.jar"/>
+	<classpathentry kind="lib" path="libs/Parse-1.5.1.jar.properties"/>
+	<classpathentry kind="lib" path="libs/Caldroid-eclipse_project/library/libs/date4j.jar"/>
+	<classpathentry kind="lib" path="libs/Caldroid-eclipse_project/caldroid-library-773229cc4ffc4c4114d938c805e8570c.jar"/>
+	<classpathentry kind="lib" path="libs/datetimepicker-library/libs/android-support-v4.jar"/>
 	<classpathentry kind="src" path="/caldroid-library"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
+	<classpathentry kind="lib" path="/Users/aylasybille/Downloads/adt-bundle-mac-x86_64-20140702/sdk/platforms/android-20/android.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://developer.android.com/reference/"/>
+		</attributes>
+		<accessrules>
+			<accessrule kind="nonaccessible" pattern="com/android/internal/**"/>
+		</accessrules>
+	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

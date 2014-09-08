@@ -1,12 +1,14 @@
 package de.androidbienchen;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
+import library.src.com.roomorama.caldroid.CaldroidFragment;
+import library.src.com.roomorama.caldroid.CaldroidListener;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -19,9 +21,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
-import com.roomorama.caldroid.CaldroidFragment;
-import com.roomorama.caldroid.CaldroidListener;
 
 @SuppressLint("SimpleDateFormat")
 public class CalendarActivity extends FragmentActivity {
