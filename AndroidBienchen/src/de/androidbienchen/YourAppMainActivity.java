@@ -1,8 +1,7 @@
 package de.androidbienchen;
 
-import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
 public class YourAppMainActivity extends AbstractNavDrawerActivity {
     
@@ -10,7 +9,7 @@ public class YourAppMainActivity extends AbstractNavDrawerActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if ( savedInstanceState == null ) {
-            getFragmentManager().beginTransaction().replace(R.id.content_frame, new Fragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new Fragment()).commit();
         }
     }
     
@@ -18,12 +17,13 @@ public class YourAppMainActivity extends AbstractNavDrawerActivity {
     protected NavDrawerActivityConfiguration getNavDrawerConfiguration() {
         
         NavDrawerItem[] menu = new NavDrawerItem[] {
-                NavMenuItem.create(1,"Start Menu", "navdrawer_start", true, this),
-                NavMenuItem.create(2, "Chat", "navdrawer_chat", false, this), 
-                NavMenuItem.create(3, "Kalender", "navdrawer_calendar", false, this),
-                NavMenuItem.create(4, "Statistik", "navdrawer_statistics", false, this), 
-                NavMenuItem.create(5, "Live-Cam", "navdrawer_cam", false, this),
-                NavMenuItem.create(6, "Website", "navdrawer_webite", false, this),};
+                NavMenuSection.create( 100, "Demos"),
+                NavMenuItem.create(101,"List/Detail (Fragment)", "navdrawer_friends", false, this),
+                NavMenuItem.create(102, "Airport (AsyncTask)", "navdrawer_airport", true, this), 
+                NavMenuSection.create(200, "General"),
+                NavMenuItem.create(202, "Rate this app", "navdrawer_rating", false, this),
+                NavMenuItem.create(203, "Eula", "navdrawer_eula", false, this), 
+                NavMenuItem.create(204, "Quit", "navdrawer_quit", false, this)};
         
         NavDrawerActivityConfiguration navDrawerActivityConfiguration = new NavDrawerActivityConfiguration();
         navDrawerActivityConfiguration.setMainLayout(R.layout.activity_main);
@@ -40,31 +40,12 @@ public class YourAppMainActivity extends AbstractNavDrawerActivity {
     
     @Override
     protected void onNavItemSelected(int id) {
-    	Intent intent;
-    	switch ((int)id) {
-        case 1:
-            intent = new Intent(this, PresenceStatusActivity.class);
-            startActivity(intent);
+        switch ((int)id) {
+        case 101:
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new Fragment()).commit();
             break;
-        case 2:
-            intent = new Intent(this, ChatActivity.class);
-            startActivity(intent);
-            break;
-        case 3:
-            intent = new Intent(this, CalendarActivity.class);
-            startActivity(intent);
-            break;
-        case 4:
-            intent = new Intent(this, ScaleActivity.class);
-            startActivity(intent);
-            break;
-        case 5:
-            intent = new Intent(this, CamActivity.class);
-            startActivity(intent);
-            break;
-        case 6:
-            intent = new Intent(this, WebsiteLinkActivity.class);
-            startActivity(intent);
+        case 102:
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new Fragment()).commit();
             break;
         }
     }

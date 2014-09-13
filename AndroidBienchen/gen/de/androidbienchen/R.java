@@ -32,15 +32,14 @@ public final class R {
         public static final int navdrawer_listselector=0x7f020002;
     }
     public static final class id {
-        public static final int action_settings=0x7f090008;
+        public static final int action_settings=0x7f090007;
         public static final int container=0x7f090000;
-        public static final int content_fram=0x7f090002;
-        public static final int content_frame=0x7f090004;
+        public static final int content_frame=0x7f090002;
         public static final int drawer_layout=0x7f090001;
         public static final int left_drawer=0x7f090003;
-        public static final int navmenuitem_icon=0x7f090005;
-        public static final int navmenuitem_label=0x7f090006;
-        public static final int navmenusection_label=0x7f090007;
+        public static final int navmenuitem_icon=0x7f090004;
+        public static final int navmenuitem_label=0x7f090005;
+        public static final int navmenusection_label=0x7f090006;
     }
     public static final class layout {
         public static final int activity_calendar=0x7f030000;
