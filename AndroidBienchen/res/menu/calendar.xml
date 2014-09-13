@@ -4,9 +4,8 @@
 
     <item
         android:id="@+id/action_refresh"
+        android:icon="@android:drawable/ic_menu_help"
         android:showAsAction="ifRoom"
-        android:title="sync"
-        android:icon="@android:drawable/ic_menu_help"/>
-    
+        android:title="sync"/>
 
 </menu>

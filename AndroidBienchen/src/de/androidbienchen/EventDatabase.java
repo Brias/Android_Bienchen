@@ -11,13 +11,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
+import com.parse.ParseException;
 
 public class EventDatabase {
 	private dbOpenHelper dbH;
@@ -25,13 +26,13 @@ public class EventDatabase {
 	public EventDatabase(Context context) {
 		this.context = context;
 		dbH = new dbOpenHelper(context, DATABASE_KEY, null, DATABASE_VERSION);
-		Parse.initialize(context, "4RP3AlbWRKmrrhi542rrP3jFuleZN9TSgwAek8N0",
+		Parse.initialize(this.context, "4RP3AlbWRKmrrhi542rrP3jFuleZN9TSgwAek8N0",
 				"FjLHxQAqH7gcZzoBvFiTvtntMRHeW36LbzGrg1A9");
 	}
 
 	private SQLiteDatabase database;
 
-	public static final int DATABASE_VERSION = 2;
+	public static final int DATABASE_VERSION = 1;
 	public static final String DATABASE_KEY = "bienendatabase";
 	public static final String TABLE_KEY = "events";
 	public static final String ID_KEY = "id";
@@ -45,10 +46,11 @@ public class EventDatabase {
 
 	private class dbOpenHelper extends SQLiteOpenHelper {
 		private static final String DATABASE_CREATE = "create table "
-				+ TABLE_KEY + " (" + ID_KEY
-				+ " integer primary key autoincrement, " + TITLE_KEY
-				+ " text not null, " + START_DATE + " integer not null, "
-				+ END_DATE + " integer not null, " + PARSE_KEY + " text, "
+				+ TABLE_KEY + " (" 
+				+ ID_KEY + " integer primary key autoincrement, " 
+				+ TITLE_KEY + " text not null, " 
+				+ START_DATE + " long not null, "
+				+ END_DATE + " long not null, " + PARSE_KEY + " text, "
 				+ INFO_KEY + " text not null );";
 
 		public dbOpenHelper(Context context, String name,
@@ -83,10 +85,10 @@ public class EventDatabase {
 			do {
 				Event event = new Event();
 				event.Titel = cursor.getString(1);
-				Date startDate = new Date(cursor.getInt(2));
-				Date endDate = new Date(cursor.getInt(3));
+				Date startDate = new Date(cursor.getLong(2));
+				Date endDate = new Date(cursor.getLong(3));
 				event.StartDate = startDate;
-				Log.e("AYLA", event.StartDate.toString());
+				Log.e("MARK", startDate.toString());
 				event.EndDate = endDate;
 				event.Info = cursor.getString(5);
 				event.parseId = cursor.getString(4);
@@ -116,7 +118,7 @@ public class EventDatabase {
 		parseData.put(START_DATE, start.getTime());
 		parseData.put(END_DATE, end.getTime());
 		parseData.saveInBackground(new SaveCallback() {
-
+			
 			@Override
 			public void done(ParseException e) {
 				ContentValues cid = new ContentValues();
@@ -127,16 +129,18 @@ public class EventDatabase {
 				database.close();
 			}
 
+
 		});
 	}
 
-	public void syncToOnlineDB() {
+	public void syncToOnlineDB(final SyncListener sl) {
 		ParseQuery<ParseObject> pquery = new ParseQuery<ParseObject>(TABLE_KEY);
 
 		pquery.findInBackground(new FindCallback<ParseObject>() {
 
 			@Override
 			public void done(List<ParseObject> objects, ParseException e) {
+				
 				ArrayList<Event> localEvents = getAllEvents();
 				for (int i = 0; i < objects.size(); i++) {
 					ParseObject curObject = objects.get(i);
@@ -149,9 +153,9 @@ public class EventDatabase {
 							continue;
 						}
 						String onlineParseId = curObject.getObjectId();
-						if (localParseId.equals(onlineParseId)) {
+						if (localParseId.equals(onlineParseId)) { // Hier
+																	// Vergleich
 							entryfound = true;
-
 						}
 					}
 					if (entryfound == false) {
@@ -160,18 +164,29 @@ public class EventDatabase {
 
 						cvs.put(TITLE_KEY, curObject.getString(TITLE_KEY));
 						cvs.put(INFO_KEY, curObject.getString(INFO_KEY));
-						cvs.put(START_DATE, curObject.getInt(START_DATE));
-						cvs.put(END_DATE, curObject.getInt(END_DATE));
+						cvs.put(START_DATE, curObject.getLong(START_DATE));
+						cvs.put(END_DATE, curObject.getLong(END_DATE));
 						cvs.put(PARSE_KEY, curObject.getObjectId());
 						openDB();
 						database.insert(TABLE_KEY, null, cvs);
 						database.close();
+						
+					}
+					if (sl != null){
+						sl.syncFinished();
 					}
 				}
 
 			}
 
 		});
-
+	}
+	
+	
+	public interface SyncListener{
+		public void syncFinished();
+		
+		
+		
 	}
 }
