@@ -36,12 +36,12 @@ public class NavDrawerAdapter extends ArrayAdapter<NavDrawerItem> {
             convertView = inflater.inflate( R.layout.navdrawer_item, parentView, false);
             TextView labelView = (TextView) convertView
                     .findViewById( R.id.navmenuitem_label );
-            /*ImageView iconView = (ImageView) convertView
-                    .findViewById( R.id.navmenuitem_icon );*/
+            ImageView iconView = (ImageView) convertView
+                    .findViewById( R.id.navmenuitem_icon );
 
             navMenuItemHolder = new NavMenuItemHolder();
             navMenuItemHolder.labelView = labelView ;
-            //navMenuItemHolder.iconView = iconView ;
+            navMenuItemHolder.iconView = iconView ;
 
             convertView.setTag(navMenuItemHolder);
         }
