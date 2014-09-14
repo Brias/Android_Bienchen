@@ -1,35 +1,63 @@
-package de.androidbienchen;
+/*
+ * Copyright (C) 2013 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import java.util.ArrayList;
-import java.util.List;
+package de.androidbienchen.geofence;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.Geofence;
-
-import de.androidbienchen.geofence.GeofenceRequester;
-import de.androidbienchen.geofence.GeofenceUtils;
-import de.androidbienchen.geofence.SimpleGeofence;
-import de.androidbienchen.geofence.SimpleGeofenceStore;
-import de.androidbienchen.geofence.GeofenceUtils.REQUEST_TYPE;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
-public class PresenceStatusActivity extends FragmentActivity {
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.Geofence;
+
+import de.androidbienchen.R;
+import de.androidbienchen.geofence.GeofenceUtils.REMOVE_TYPE;
+import de.androidbienchen.geofence.GeofenceUtils.REQUEST_TYPE;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * UI handler for the Location Services Geofence sample app.
+ * Allow input of latitude, longitude, and radius for two geofences.
+ * When registering geofences, check input and then send the geofences to Location Services.
+ * Also allow removing either one of or both of the geofences.
+ * The menu allows you to clear the screen or delete the geofences stored in persistent memory.
+ */
+public class CopyOfGeofenceActivity extends FragmentActivity {
     /*
      * Use to set an expiration time for a geofence. After this amount
      * of time Location Services will stop tracking the geofence.
@@ -118,61 +146,11 @@ public class PresenceStatusActivity extends FragmentActivity {
         //mGeofenceRemover = new GeofenceRemover(this);
 
         // Attach to the main UI
-        setContentView(R.layout.activity_presence_status);
-        
-        registerGeofence();
+        setContentView(R.layout.activity_geofence_main);
 
     }
 
-    private void registerGeofence() {
-
-        /*
-         * Record the request as an ADD. If a connection error occurs,
-         * the app can automatically restart the add request if Google Play services
-         * can fix the error
-         */
-        mRequestType = GeofenceUtils.REQUEST_TYPE.ADD;
-
-        /*
-         * Check for Google Play services. Do this after
-         * setting the request type. If connecting to Google Play services
-         * fails, onActivityResult is eventually called, and it needs to
-         * know what type of request was in progress.
-         */
-        if (!servicesConnected()) {
-            return;
-        }
-
-        /*
-         * Create a version of geofence 1 that is "flattened" into individual fields. This
-         * allows it to be stored in SharedPreferences.
-         */
-		mGeofence = new SimpleGeofence(GEOFENCE_ID, GEOFENCE_LATITUDE, GEOFENCE_LONGITUDE,
-		            GEOFENCE_RADIUS, Geofence.NEVER_EXPIRE,
-		            Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT);
-
-        // Store this flat version in SharedPreferences
-        //mPrefs.setGeofence(GEOFENCE_ID, mGeofence);
-
-        /*
-         * Add Geofence objects to a List. toGeofence()
-         * creates a Location Services Geofence object from a
-         * flat object
-         */
-        mCurrentGeofences.add(mGeofence.toGeofence());
-
-        // Start the request. Fail if there's already a request in progress
-        try {
-            // Try to add geofences
-            mGeofenceRequester.addGeofences(mCurrentGeofences);
-        } catch (UnsupportedOperationException e) {
-            // Notify user that previous request hasn't finished.
-            Toast.makeText(this, R.string.add_geofences_already_requested_error,
-                        Toast.LENGTH_LONG).show();
-        }
-	}
-
-	/*
+    /*
      * Whenever the Activity resumes, reconnect the client to Location
      * Services and reload the last geofences that were set
      */
@@ -247,6 +225,62 @@ public class PresenceStatusActivity extends FragmentActivity {
             return false;
         }
     }
+    
+    /**
+     * Called when the user clicks the "Register geofences" button.
+     * Get the geofence parameters for each geofence and add them to
+     * a List. Create the PendingIntent containing an Intent that
+     * Location Services sends to this app's broadcast receiver when
+     * Location Services detects a geofence transition. Send the List
+     * and the PendingIntent to Location Services.
+     */
+    public void onRegisterClicked(View view) {
+
+        /*
+         * Record the request as an ADD. If a connection error occurs,
+         * the app can automatically restart the add request if Google Play services
+         * can fix the error
+         */
+        mRequestType = GeofenceUtils.REQUEST_TYPE.ADD;
+
+        /*
+         * Check for Google Play services. Do this after
+         * setting the request type. If connecting to Google Play services
+         * fails, onActivityResult is eventually called, and it needs to
+         * know what type of request was in progress.
+         */
+        if (!servicesConnected()) {
+            return;
+        }
+
+        /*
+         * Create a version of geofence 1 that is "flattened" into individual fields. This
+         * allows it to be stored in SharedPreferences.
+         */
+		mGeofence = new SimpleGeofence(GEOFENCE_ID, GEOFENCE_LATITUDE, GEOFENCE_LONGITUDE,
+		            GEOFENCE_RADIUS, Geofence.NEVER_EXPIRE,
+		            Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT);
+
+        // Store this flat version in SharedPreferences
+        //mPrefs.setGeofence(GEOFENCE_ID, mGeofence);
+
+        /*
+         * Add Geofence objects to a List. toGeofence()
+         * creates a Location Services Geofence object from a
+         * flat object
+         */
+        mCurrentGeofences.add(mGeofence.toGeofence());
+
+        // Start the request. Fail if there's already a request in progress
+        try {
+            // Try to add geofences
+            mGeofenceRequester.addGeofences(mCurrentGeofences);
+        } catch (UnsupportedOperationException e) {
+            // Notify user that previous request hasn't finished.
+            Toast.makeText(this, R.string.add_geofences_already_requested_error,
+                        Toast.LENGTH_LONG).show();
+        }
+    }
 
     /**
      * Define a Broadcast receiver that receives updates from connection listeners and
@@ -295,7 +329,7 @@ public class PresenceStatusActivity extends FragmentActivity {
          * @param intent The received broadcast Intent
          */
         private void handleGeofenceStatus(Context context, Intent intent) {
-        	
+
         }
 
         /**
@@ -310,18 +344,6 @@ public class PresenceStatusActivity extends FragmentActivity {
              * here. The current design of the app uses a notification to inform the
              * user that a transition has occurred.
              */
-        	
-        	int transitionType = intent.getExtras().getInt(GeofenceUtils.EXTRA_GEOFENCE_STATUS);
-        	
-        	if(transitionType == Geofence.GEOFENCE_TRANSITION_ENTER){
-        		
-        		//hier bilder wechseln, status auf ANWESEND setzten
-        		
-        	}else if(transitionType == Geofence.GEOFENCE_TRANSITION_EXIT){
-        		
-        		//hier Status auf ABWESEND setzten
-        		
-        	}
         }
 
         /**
