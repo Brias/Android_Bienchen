@@ -1,23 +1,17 @@
 package de.androidbienchen;
 
-<<<<<<< HEAD
-import java.util.Date;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
+import java.util.Date;
 
-import android.content.Context;
-import android.graphics.Color;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.support.v7.appcompat.R;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.roomorama.caldroid.CaldroidFragment;
@@ -25,26 +19,7 @@ import com.roomorama.caldroid.CaldroidListener;
 
 import de.androidbienchen.EventDatabase.SyncListener;
 
-public class CalendarActivity extends FragmentActivity implements SyncListener {
-
-	private EventDatabase dbb;
-	private CaldroidFragment caldroidFragment;
-	ArrayList<Event> allEvents = new ArrayList<Event>();
-
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.calendar, menu);
-		return super.onCreateOptionsMenu(menu);
-=======
-import android.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
-public class CalendarActivity extends Fragment {
+public class CalendarActivity extends Fragment implements SyncListener{
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,7 +32,6 @@ public class CalendarActivity extends Fragment {
 	@Override
 	public void onStart(){
 		super.onStart();
->>>>>>> refs/heads/Matze_Test_Backup
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -67,7 +41,6 @@ public class CalendarActivity extends Fragment {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-<<<<<<< HEAD
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +71,7 @@ public class CalendarActivity extends Fragment {
 		}
 
 		// // Attach to the activity
-		FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+		FragmentTransaction t = getFragmentManager().beginTransaction();
 		t.replace(R.id.calendar, caldroidFragment);
 		t.commit();
 
@@ -158,9 +131,6 @@ public class CalendarActivity extends Fragment {
 
 	}
 
-=======
-	
->>>>>>> refs/heads/Matze_Test_Backup
 	/**
 	 * Save current states of the Caldroid here
 	 */
@@ -172,7 +142,6 @@ public class CalendarActivity extends Fragment {
 		if (caldroidFragment != null) {
 			caldroidFragment.saveStatesToKey(outState, "CALDROID_SAVED_STATE");
 		}
-<<<<<<< HEAD
 	}
 
 	@Override
@@ -192,8 +161,6 @@ public class CalendarActivity extends Fragment {
 
 			caldroidFragment.refreshView();
 		}
-=======
->>>>>>> refs/heads/Matze_Test_Backup
 	}
 
 }

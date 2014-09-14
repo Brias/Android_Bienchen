@@ -10,21 +10,15 @@
     <string name="title_activity_chat">ChatActivity</string>
     <string name="title_activity_presence_status">PresenceStatusActivity</string>
     <string name="title_activity_calendar">CalendarActivity</string>
-<<<<<<< HEAD
     <string name="insertname">Veranstaltung</string>
     <string name="insertinfo">Veranstaltungsinfo</string>
-
-=======
 	<string name="drawer_open">Open navigation drawer</string>
-	<string name="drawer_close">Close navigation drawer</string>
-	
+	<string name="drawer_close">Close navigation drawer</string>	
 	<string name="presence">Presence</string>
 	<string name="chat">Chat</string>
 	<string name="calendar">Kalender</string>
 	<string name="statistic">Statistik</string>
 	<string name="cam">Cam</string>
 	<string name="website">Website</string>
-	
-    
->>>>>>> refs/heads/Matze_Test_Backup
+
 </resources>
