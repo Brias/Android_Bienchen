@@ -24,9 +24,6 @@ public class NavDrawerAdapter extends ArrayAdapter<NavDrawerItem> {
         if ( menuItem.getType() == NavMenuItem.ITEM_TYPE ) {
             view = getItemView(convertView, parent, menuItem );
         }
-        else {
-            view = getSectionView(convertView, parent, menuItem);
-        }
         return view ;
     }
     
@@ -39,12 +36,12 @@ public class NavDrawerAdapter extends ArrayAdapter<NavDrawerItem> {
             convertView = inflater.inflate( R.layout.navdrawer_item, parentView, false);
             TextView labelView = (TextView) convertView
                     .findViewById( R.id.navmenuitem_label );
-            ImageView iconView = (ImageView) convertView
-                    .findViewById( R.id.navmenuitem_icon );
+            /*ImageView iconView = (ImageView) convertView
+                    .findViewById( R.id.navmenuitem_icon );*/
 
             navMenuItemHolder = new NavMenuItemHolder();
             navMenuItemHolder.labelView = labelView ;
-            navMenuItemHolder.iconView = iconView ;
+            //navMenuItemHolder.iconView = iconView ;
 
             convertView.setTag(navMenuItemHolder);
         }
@@ -55,31 +52,6 @@ public class NavDrawerAdapter extends ArrayAdapter<NavDrawerItem> {
                     
         navMenuItemHolder.labelView.setText(menuItem.getLabel());
         navMenuItemHolder.iconView.setImageResource(menuItem.getIcon());
-        
-        return convertView ;
-    }
-
-    public View getSectionView(View convertView, ViewGroup parentView,
-            NavDrawerItem navDrawerItem) {
-        
-        NavMenuSection menuSection = (NavMenuSection) navDrawerItem ;
-        NavMenuSectionHolder navMenuItemHolder = null;
-        
-        if (convertView == null) {
-            convertView = inflater.inflate( R.layout.navdrawer_section, parentView, false);
-            TextView labelView = (TextView) convertView
-                    .findViewById( R.id.navmenusection_label );
-
-            navMenuItemHolder = new NavMenuSectionHolder();
-            navMenuItemHolder.labelView = labelView ;
-            convertView.setTag(navMenuItemHolder);
-        }
-
-        if ( navMenuItemHolder == null ) {
-            navMenuItemHolder = (NavMenuSectionHolder) convertView.getTag();
-        }
-                    
-        navMenuItemHolder.labelView.setText(menuSection.getLabel());
         
         return convertView ;
     }
@@ -103,9 +75,5 @@ public class NavDrawerAdapter extends ArrayAdapter<NavDrawerItem> {
     private static class NavMenuItemHolder {
         private TextView labelView;
         private ImageView iconView;
-    }
-    
-    private class NavMenuSectionHolder {
-        private TextView labelView;
     }
 }

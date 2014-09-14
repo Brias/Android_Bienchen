@@ -17,10 +17,8 @@ public class YourAppMainActivity extends AbstractNavDrawerActivity {
     protected NavDrawerActivityConfiguration getNavDrawerConfiguration() {
         
         NavDrawerItem[] menu = new NavDrawerItem[] {
-                NavMenuSection.create( 100, "Demos"),
                 NavMenuItem.create(101,"List/Detail (Fragment)", "navdrawer_friends", false, this),
                 NavMenuItem.create(102, "Airport (AsyncTask)", "navdrawer_airport", true, this), 
-                NavMenuSection.create(200, "General"),
                 NavMenuItem.create(202, "Rate this app", "navdrawer_rating", false, this),
                 NavMenuItem.create(203, "Eula", "navdrawer_eula", false, this), 
                 NavMenuItem.create(204, "Quit", "navdrawer_quit", false, this)};
