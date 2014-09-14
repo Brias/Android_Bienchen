@@ -19,11 +19,17 @@ public class Weight {
 		measureDateString = measureDate;
 	}
 	
+	public Weight(float value, int id, String measureDate){
+		this.value = value;	
+		this.id = id;
+		measureDateString = measureDate;
+	}
+	
 	public int getId(){
 		return id;
 	}
 	
-	public float getSizeValue(){
+	public float getScaleValue(){
 		return value;
 	}
 	

@@ -1,35 +1,58 @@
 package de.androidbienchen;
 
-import android.app.Activity;
-import android.app.ActionBar;
+import java.util.ArrayList;
+import java.util.Timer;
+
 import android.app.Fragment;
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.ImageView;
 
-public class ScaleActivity extends Activity {
+public class ScaleActivity extends Fragment implements DataFetcherListener, ImageFetcherListener{
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_scale);
-
-		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
+	private LocationDatabase db;
+	private ArrayList<Temperature> temperatures;
+	private ArrayList<Weight> weights;
+	private Context context;
+	
+	
+	public ScaleActivity(Context context){
+		this.context = context;
 	}
-
+	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.scale, menu);
-		return true;
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_scale,
+				container, false);
+		return rootView;
+	}
+	
+	@Override
+	public void onStart(){
+		super.onStart();
+		
+		db = new LocationDatabase(getActivity());
+        ImageFetcher imageFetcher = new ImageFetcher(context, this);
+        ScaleFetcher scaleFetcher = new ScaleFetcher(this, context);
+        TemperatureFetcher temperatureFetcher = new TemperatureFetcher(this, context);
+        if(NetworkAvailability.networkStatus(context)){
+	        db.open();
+	        temperatureFetcher.startFetchingData();
+	        scaleFetcher.startFetchingData();
+	        imageFetcher.startFetchingData();
+        }else{
+        	weights = db.getWeights();
+            temperatures = db.getTemperatures();
+        }
+        Timer myTimer = new Timer();
+        ImageFetcherTimer imageFetcherTimer = new ImageFetcherTimer(context, this);
+        myTimer.schedule(imageFetcherTimer, 0, 600000);
 	}
 
 	@Override
@@ -43,7 +66,7 @@ public class ScaleActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
@@ -51,14 +74,25 @@ public class ScaleActivity extends Activity {
 
 		public PlaceholderFragment() {
 		}
+	}
 
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_scale,
-					container, false);
-			return rootView;
-		}
+	@Override
+	public void onScaleDataFetched(ArrayList<Weight> weights) {
+		// TODO Auto-generated method stub
+		this.weights = weights;
+	}
+
+	@Override
+	public void onTemperatureDataFetched(ArrayList<Temperature> temperatures) {
+		// TODO Auto-generated method stub
+		this.temperatures = temperatures;
+	}
+
+	@Override
+	public void onImageFetched(Bitmap bm) {
+		// TODO Auto-generated method stub
+		ImageView view = (ImageView) getView().findViewById(R.id.image_view);
+		view.setImageBitmap(bm);
 	}
 
 }

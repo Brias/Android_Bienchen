@@ -8,9 +8,16 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="20" />
 
+<<<<<<< HEAD
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+=======
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+>>>>>>> refs/heads/Matze_Test_Backup
 
     <application
         android:allowBackup="true"
@@ -18,7 +25,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="de.androidbienchen.StartMenuActivity"
+            android:name="de.androidbienchen.StartActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
