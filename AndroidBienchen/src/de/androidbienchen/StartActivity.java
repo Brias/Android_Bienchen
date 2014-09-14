@@ -56,7 +56,7 @@ public class StartActivity extends AbstractNavDrawerActivity {
         	getFragmentManager().beginTransaction().replace(R.id.content_frame, calendar).commit();
 	        break;
 	    case 4:
-	    	ScaleActivity scale = new ScaleActivity();
+	    	ScaleActivity scale = new ScaleActivity(this);
         	getFragmentManager().beginTransaction().replace(R.id.content_frame, scale).commit();
 	        break;
 	    case 5:
