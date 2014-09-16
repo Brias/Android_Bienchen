@@ -7,7 +7,7 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry exported="true" kind="lib" path="D:/Eclipse/adt-bundle-windows-x86_64-20140702/adt-bundle-windows-x86_64-20140702/sdk/extras/android/support/v13/android-support-v13.jar"/>
 	<classpathentry exported="true" kind="lib" path="D:/Studium/Medieninformatik/Android/Abschlussprojekt/Android_Bienchen/Parse-1/Parse-1.5.1.jar"/>
+	<classpathentry kind="lib" path="D:/Studium/Medieninformatik/Android/Abschlussprojekt/Android_Bienchen/Caldroid-eclipse_project/library/libs/android-support-v4.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
