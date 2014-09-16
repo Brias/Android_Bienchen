@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.LineGraphView;
@@ -61,10 +62,12 @@ public class ScaleActivity extends Activity implements DataFetcherListener{
 	}
 		
 	void showGraph(){
-		graphView.setViewPort(1, 30);
+		graphView.setViewPort(0, 30);
 		//graphView.setScalable(true);
 		graphView.setShowLegend(true);
-		 
+		graphView.setLegendAlign(LegendAlign.TOP);
+		graphView.setLegendWidth(200);
+		graphView.setBackgroundColor(getResources().getColor(R.color.black));
 		LinearLayout layout = (LinearLayout) findViewById(R.id.statistic_layout);
 		layout.addView(graphView);
 	}
@@ -109,7 +112,7 @@ public class ScaleActivity extends Activity implements DataFetcherListener{
 			data[i] = new GraphViewData(i, weights.get(i).getScaleValue());
 		}
 		
-		GraphViewSeries scaleGraph = new GraphViewSeries("Scale", new GraphViewSeriesStyle(Color.RED, 3), data);
+		GraphViewSeries scaleGraph = new GraphViewSeries("Gewicht", new GraphViewSeriesStyle(Color.RED, 3), data);
 		graphView.addSeries(scaleGraph);
 	}
 	
@@ -120,8 +123,7 @@ public class ScaleActivity extends Activity implements DataFetcherListener{
 		for(int i = 0; i < data.length; i++){
 			data[i] = new GraphViewData(i, temperatures.get(i).getTemperatureValue());
 		}
-		
-		GraphViewSeries temperatureGraph = new GraphViewSeries("Temperature", new GraphViewSeriesStyle(Color.BLUE, 3), data);
+		GraphViewSeries temperatureGraph = new GraphViewSeries("Temperatur", new GraphViewSeriesStyle(Color.BLUE, 3), data);
 		graphView.addSeries(temperatureGraph);
 	}
 }

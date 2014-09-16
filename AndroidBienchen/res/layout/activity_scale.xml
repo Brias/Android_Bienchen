@@ -1,13 +1,60 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/statistic_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/caldroid_black"
-    tools:context="de.androidbienchen.ScaleActivity$PlaceholderFragment" >
+    tools:context="de.androidbienchen.MainActivity$PlaceholderFragment" >
 
-</LinearLayout>
+    
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="de.androidbienchen.MainActivity$PlaceholderFragment" >
+	    
+	    <LinearLayout
+	        xmlns:android="http://schemas.android.com/apk/res/android"
+	        xmlns:tools="http://schemas.android.com/tools"
+	        android:id="@+id/statistic_layout"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_alignParentTop="true"
+	        android:layout_centerHorizontal="true"
+	        android:layout_marginTop="119dp"
+	        android:paddingBottom="@dimen/activity_vertical_margin"
+	        android:paddingLeft="@dimen/activity_horizontal_margin"
+	        android:paddingRight="@dimen/activity_horizontal_margin"
+	        android:paddingTop="@dimen/activity_vertical_margin"
+	        tools:context="de.androidbienchen.ScaleActivity$PlaceholderFragment" >
+	    </LinearLayout>
+
+	    <TextView
+	        android:id="@+id/days_text_view"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentRight="true"
+	        android:text="@string/day"
+	        android:textColor="@color/black" />
+
+	    <TextView
+	        android:id="@+id/grad_kg_text_view"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignLeft="@+id/statistic_layout"
+	        android:layout_alignParentTop="true"
+	        android:layout_marginTop="95dp"
+	        android:text="@string/grad_kg"
+	        android:textColor="@color/black" />
+
+	</RelativeLayout>
+</RelativeLayout>
+

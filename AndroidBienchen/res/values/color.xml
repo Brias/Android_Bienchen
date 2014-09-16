@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="black">#000000</color>
+    <color name="start_menu_button_color_light">#F9CE1D</color>
+    <color name="start_menu_button_color_dark">#FF8800</color> 
+    <color name="start_menu_background_color">#FFEA40</color>
+
+</resources>

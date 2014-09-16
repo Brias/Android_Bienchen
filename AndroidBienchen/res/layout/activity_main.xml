@@ -1,60 +1,70 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/start_menu_background_color"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="de.androidbienchen.MainActivity$PlaceholderFragment" >
 
     <Button
         android:id="@+id/anwesend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="72dp"
-        android:text="Anwesend" />
-
-    <Button
-        android:id="@+id/chat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/anwesend"
-        android:layout_centerHorizontal="true"
-        android:text="Chat" />
-
-    <Button
-        android:id="@+id/kalender"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/chat"
-        android:layout_centerHorizontal="true"
-        android:text="Kalender" />
-
-    <Button
-        android:id="@+id/statistik"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/kalender"
-        android:layout_centerHorizontal="true"
-        android:text="Statistik" />
-
-    <Button
-        android:id="@+id/cam"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/statistik"
-        android:layout_centerHorizontal="true"
-        android:text="Cam" />
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button"
+        android:clickable="true"
+        android:text="@string/presence_button" />
 
     <Button
         android:id="@+id/website"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/cam"
-        android:layout_below="@+id/cam"
-        android:text="Website" />
+        android:layout_below="@+id/anwesend"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button"
+        android:clickable="true"
+        android:text="@string/website_button" />
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/cam"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/website"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button"
+        android:clickable="true"
+        android:text="@string/cam_button" />
+
+    <Button
+        android:id="@+id/statistik"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cam"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button"
+        android:clickable="true"
+        android:text="@string/statistic_button" />
+
+    <Button
+        android:id="@+id/chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/statistik"
+        android:layout_centerHorizontal="true"
+       	android:background="@drawable/button"
+       	android:clickable="true"
+        android:text="@string/chat_button" />
+
+    <Button
+        android:id="@+id/kalender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button"
+        android:clickable="true"
+        android:text="@string/calendar_button" />
+
+</LinearLayout>

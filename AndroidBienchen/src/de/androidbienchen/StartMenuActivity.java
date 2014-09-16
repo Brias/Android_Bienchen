@@ -1,15 +1,13 @@
 package de.androidbienchen;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 
 
@@ -26,15 +24,15 @@ public class StartMenuActivity extends Activity implements OnClickListener{
     }
     
     void init(){
-    	Button anwesend = (Button) findViewById(R.id.anwesend);
-    	Button chat = (Button) findViewById(R.id.chat);
+    	//Button anwesend = (Button) findViewById(R.id.anwesend);
+    	//Button chat = (Button) findViewById(R.id.chat);
     	Button kalender = (Button) findViewById(R.id.kalender);
     	Button statistik = (Button) findViewById(R.id.statistik);
     	Button cam = (Button) findViewById(R.id.cam);
     	Button website = (Button) findViewById(R.id.website);
     	
-    	anwesend.setOnClickListener(this);
-    	chat.setOnClickListener(this);
+    	//anwesend.setOnClickListener(this);
+    	//chat.setOnClickListener(this);
     	kalender.setOnClickListener(this);
     	statistik.setOnClickListener(this);
     	cam.setOnClickListener(this);
@@ -84,9 +82,14 @@ public class StartMenuActivity extends Activity implements OnClickListener{
 				startNextActivity(ScaleActivity.class);
 				break;
 			case R.id.website:
-				startNextActivity(WebsiteLinkActivity.class);
+				startWebsite();
 				break;
 		}
+	}
+	
+	void startWebsite(){
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConfig.server.WEBSITE_URL));
+		startActivity(browserIntent);
 	}
 	
 	@SuppressWarnings("rawtypes")
