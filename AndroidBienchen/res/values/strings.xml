@@ -20,5 +20,7 @@
 	<string name="statistic">Statistik</string>
 	<string name="cam">Cam</string>
 	<string name="website">Website</string>
+    <string name="grad_kg">Kg/Celsius</string>
+    <string name="day">Tag</string>
 
 </resources>

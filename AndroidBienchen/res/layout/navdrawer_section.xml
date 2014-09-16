@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
    android:layout_width="fill_parent"
    android:layout_height="wrap_content"
-   android:background="@color/purple_dark">
+   android:background="@color/start_menu_button_color_dark">
     
     <TextView
        android:id="@+id/navmenusection_label"
@@ -14,6 +14,6 @@
        android:paddingBottom="7dp"
        android:textColor="#FFFFFF"
        style="?android:attr/listSeparatorTextViewStyle"
-       android:background="@color/purple_dark"/>
+       android:background="@color/start_menu_background_color"/>
 
 </RelativeLayout>

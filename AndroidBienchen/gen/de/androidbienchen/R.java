@@ -11,6 +11,7 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
+        public static final int black=0x7f040009;
         public static final int caldroid_black=0x7f040001;
         public static final int caldroid_darker_gray=0x7f040005;
         public static final int caldroid_gray=0x7f040004;
@@ -28,9 +29,9 @@ public final class R {
         public static final int caldroid_sky_blue=0x7f040008;
         public static final int caldroid_transparent=0x7f040002;
         public static final int caldroid_white=0x7f040000;
-        public static final int purple_dark=0x7f04000b;
-        public static final int purple_light=0x7f040009;
-        public static final int purple_middle=0x7f04000a;
+        public static final int start_menu_background_color=0x7f04000c;
+        public static final int start_menu_button_color_dark=0x7f04000b;
+        public static final int start_menu_button_color_light=0x7f04000a;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -57,8 +58,8 @@ public final class R {
         public static final int right_arrow=0x7f02000a;
     }
     public static final class id {
-        public static final int action_refresh=0x7f09001c;
-        public static final int action_settings=0x7f09001d;
+        public static final int action_refresh=0x7f09001f;
+        public static final int action_settings=0x7f090020;
         public static final int calendar=0x7f090000;
         public static final int calendar_gridview=0x7f09000b;
         public static final int calendar_left_arrow=0x7f090005;
@@ -66,7 +67,9 @@ public final class R {
         public static final int calendar_right_arrow=0x7f090007;
         public static final int calendar_title_view=0x7f090004;
         public static final int calendar_tv=0x7f09000a;
+        public static final int cam_image=0x7f090018;
         public static final int content_frame=0x7f090002;
+        public static final int days_text_view=0x7f09001a;
         public static final int drawer_layout=0x7f090001;
         public static final int endButton=0x7f090017;
         public static final int endZeit=0x7f090016;
@@ -74,14 +77,15 @@ public final class R {
         public static final int eventdialog_time=0x7f09000d;
         public static final int eventinsert_info=0x7f090010;
         public static final int eventinsert_titel=0x7f09000f;
-        public static final int image_view=0x7f090018;
+        public static final int grad_kg_text_view=0x7f09001b;
         public static final int left_drawer=0x7f090003;
         public static final int months_infinite_pager=0x7f090009;
-        public static final int navmenuitem_icon=0x7f090019;
-        public static final int navmenuitem_label=0x7f09001a;
-        public static final int navmenusection_label=0x7f09001b;
+        public static final int navmenuitem_icon=0x7f09001c;
+        public static final int navmenuitem_label=0x7f09001d;
+        public static final int navmenusection_label=0x7f09001e;
         public static final int startButton=0x7f090014;
         public static final int startZeit=0x7f090013;
+        public static final int statistic_layout=0x7f090019;
         public static final int textView1=0x7f09000e;
         public static final int textView2=0x7f090011;
         public static final int textView3=0x7f090012;
@@ -101,9 +105,8 @@ public final class R {
         public static final int fragment_chat=0x7f030009;
         public static final int fragment_presence_status=0x7f03000a;
         public static final int fragment_scale=0x7f03000b;
-        public static final int fragment_website_link=0x7f03000c;
-        public static final int navdrawer_item=0x7f03000d;
-        public static final int navdrawer_section=0x7f03000e;
+        public static final int navdrawer_item=0x7f03000c;
+        public static final int navdrawer_section=0x7f03000d;
     }
     public static final class menu {
         public static final int calendar=0x7f080000;
@@ -112,7 +115,6 @@ public final class R {
         public static final int main=0x7f080003;
         public static final int presence_status=0x7f080004;
         public static final int scale=0x7f080005;
-        public static final int website_link=0x7f080006;
     }
     public static final class string {
         public static final int action_settings=0x7f050002;
@@ -120,8 +122,10 @@ public final class R {
         public static final int calendar=0x7f05000f;
         public static final int cam=0x7f050011;
         public static final int chat=0x7f05000e;
+        public static final int day=0x7f050014;
         public static final int drawer_close=0x7f05000c;
         public static final int drawer_open=0x7f05000b;
+        public static final int grad_kg=0x7f050013;
         public static final int hello_world=0x7f050001;
         public static final int insertinfo=0x7f05000a;
         public static final int insertname=0x7f050009;

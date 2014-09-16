@@ -22,7 +22,6 @@
        android:layout_height="50dp"
        android:layout_toRightOf="@id/navmenuitem_icon"
        android:gravity="center_vertical"
-       android:text="TextView"
-       android:textColor="#FFFFFF"/>
+       android:textColor="@color/black"/>
 
 </RelativeLayout>

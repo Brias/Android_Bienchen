@@ -5,7 +5,8 @@ public class AppConfig {
 	public class server{
 		public static final String SCALE_URL = "http://app.iv-sinzing.de/waage";
 		public static final String TEMPERATURE_URL = "http://app.iv-sinzing.de/temperatur";
-		public static final String IMAGE_URL = "http://app.iv-sinzing.de/bildtest.jpg";
+		public static final String IMAGE_URL = "http://app.iv-sinzing.de/bild_4.jpg";
+		public static final String WEBSITE_URL = "http://www.iv-sinzing.de/";
 	}
 	
 	public class SizeData{

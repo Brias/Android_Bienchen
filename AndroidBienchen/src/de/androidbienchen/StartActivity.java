@@ -1,6 +1,7 @@
 package de.androidbienchen;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 
@@ -25,14 +26,14 @@ public class StartActivity extends AbstractNavDrawerActivity {
                 NavMenuItem.create(3, "Kalender", "navdrawer_calendar", true, this),
                 NavMenuItem.create(4, "Statistik", "navdrawer_statistic", true, this), 
                 NavMenuItem.create(5, "Live-Cam", "navdrawer_live_cam", true, this),
-                NavMenuItem.create(6, "Website", "navdrawer_website", true, this)};
+                NavMenuItem.create(6, "zur Website", "navdrawer_website", true, this)};
         
         NavDrawerActivityConfiguration navDrawerActivityConfiguration = new NavDrawerActivityConfiguration();
         navDrawerActivityConfiguration.setMainLayout(R.layout.activity_main);
         navDrawerActivityConfiguration.setDrawerLayoutId(R.id.drawer_layout);
         navDrawerActivityConfiguration.setLeftDrawerId(R.id.left_drawer);
         navDrawerActivityConfiguration.setNavItems(menu);
-        navDrawerActivityConfiguration.setDrawerShadow(R.drawable.ic_launcher);    			//CHANGE PICTURE       
+        navDrawerActivityConfiguration.setDrawerShadow(R.drawable.red_border_gray_bg);    			//CHANGE PICTURE       
         navDrawerActivityConfiguration.setDrawerOpenDesc(R.string.drawer_open);
         navDrawerActivityConfiguration.setDrawerCloseDesc(R.string.drawer_close);
         navDrawerActivityConfiguration.setBaseAdapter(
@@ -57,7 +58,7 @@ public class StartActivity extends AbstractNavDrawerActivity {
 	    	startActivity(intent);
 	        break;
 	    case 4:
-	    	ScaleActivity scale = new ScaleActivity(this);
+	    	ScaleActivity scale = new ScaleActivity();
         	getFragmentManager().beginTransaction().replace(R.id.content_frame, scale).commit();
 	        break;
 	    case 5:
@@ -65,9 +66,13 @@ public class StartActivity extends AbstractNavDrawerActivity {
         	getFragmentManager().beginTransaction().replace(R.id.content_frame, cam).commit();
 	        break;
 	    case 6:
-	    	WebsiteLinkActivity website = new WebsiteLinkActivity();
-        	getFragmentManager().beginTransaction().replace(R.id.content_frame, website).commit();
+	    	startWebsite();
 	        break;
 	    }
     }
+    
+    void startWebsite(){
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConfig.server.WEBSITE_URL));
+		startActivity(browserIntent);
+	}
 }

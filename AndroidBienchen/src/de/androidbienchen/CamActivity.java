@@ -1,14 +1,22 @@
 package de.androidbienchen;
 
 import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
-public class CamActivity extends Fragment {
+public class CamActivity extends Fragment implements ImageFetcherListener{
 
+	private ImageFetcher imageFetcher;
+	ImageFetcherTimer timer;
+	LocationDatabase db;
+	Bitmap bm;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -20,7 +28,34 @@ public class CamActivity extends Fragment {
 	@Override
 	public void onStart(){
 		super.onStart();
+		
+		init();
+		fetchingData();
 	}
+	
+	void init(){
+		imageFetcher = new ImageFetcher(getActivity(),this);
+		timer = new ImageFetcherTimer(getActivity(), this);
+		db = new LocationDatabase(getActivity());
+		try {
+			bm = db.getImage();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	void fetchingData(){
+		if(NetworkAvailability.networkStatus(getActivity())){
+			db.open();
+			imageFetcher.startFetchingData();
+			
+		}else{
+			Toast.makeText(getActivity(), "Keine Internetverbindung vorhanden",
+					Toast.LENGTH_SHORT).show();
+			setImageContent();
+		}
+	}
+
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -33,14 +68,19 @@ public class CamActivity extends Fragment {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
 
-		public PlaceholderFragment() {
+	@Override
+	public void onImageFetched(Bitmap bm) {
+		this.bm = bm;
+		setImageContent();
+	}
+	
+	void setImageContent(){
+		if(bm != null){
+			ImageView v = (ImageView) getActivity().findViewById(R.id.cam_image);
+			v.setImageBitmap(this.bm);
+		}else{
+			Toast.makeText(getActivity(), "Keine Anzeige möglich", Toast.LENGTH_SHORT).show();
 		}
 	}
-
 }

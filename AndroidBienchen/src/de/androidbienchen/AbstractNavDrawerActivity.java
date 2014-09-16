@@ -76,7 +76,7 @@ public abstract class AbstractNavDrawerActivity extends FragmentActivity {
     }
     
     protected int getDrawerIcon() {					
-        return R.drawable.ic_launcher;						//Change Picture
+        return R.drawable.calendar_prev_arrow;						//Change Picture
     }
     
     @Override

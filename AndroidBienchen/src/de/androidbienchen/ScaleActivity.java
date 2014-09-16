@@ -1,28 +1,35 @@
 package de.androidbienchen;
 
 import java.util.ArrayList;
-import java.util.Timer;
 
 import android.app.Fragment;
-import android.content.Context;
-import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
-public class ScaleActivity extends Fragment implements DataFetcherListener, ImageFetcherListener{
+import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphView.LegendAlign;
+import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
+import com.jjoe64.graphview.LineGraphView;
 
-	private LocationDatabase db;
+public class ScaleActivity extends Fragment implements DataFetcherListener{
+
+	private LineGraphView graphView;
 	private ArrayList<Temperature> temperatures;
 	private ArrayList<Weight> weights;
-	private Context context;
+	private LocationDatabase db;
+	private ScaleFetcher scaleFetcher;
+	private TemperatureFetcher temperatureFetcher;
 	
 	
-	public ScaleActivity(Context context){
-		this.context = context;
+	public ScaleActivity(){
+
 	}
 	
 	@Override
@@ -37,22 +44,47 @@ public class ScaleActivity extends Fragment implements DataFetcherListener, Imag
 	public void onStart(){
 		super.onStart();
 		
+
+		init();
+		fetchData();
+	}
+	
+	void init(){
+		graphView = new LineGraphView(getActivity(), "Statistic");
+		scaleFetcher = new ScaleFetcher(this, getActivity());
+		temperatureFetcher = new TemperatureFetcher(this, getActivity());
 		db = new LocationDatabase(getActivity());
-        ImageFetcher imageFetcher = new ImageFetcher(context, this);
-        ScaleFetcher scaleFetcher = new ScaleFetcher(this, context);
-        TemperatureFetcher temperatureFetcher = new TemperatureFetcher(this, context);
-        if(NetworkAvailability.networkStatus(context)){
-	        db.open();
-	        temperatureFetcher.startFetchingData();
-	        scaleFetcher.startFetchingData();
-	        imageFetcher.startFetchingData();
-        }else{
-        	weights = db.getWeights();
-            temperatures = db.getTemperatures();
-        }
-        Timer myTimer = new Timer();
-        ImageFetcherTimer imageFetcherTimer = new ImageFetcherTimer(context, this);
-        myTimer.schedule(imageFetcherTimer, 0, 600000);
+		db.open();
+		try {
+			temperatures = db.getTemperatures();
+			weights = db.getWeights();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	void fetchData(){
+		if(NetworkAvailability.networkStatus(getActivity())){
+			temperatureFetcher.startFetchingData();
+			scaleFetcher.startFetchingData();
+		}else{
+			setupTemperatureGraph();
+			setupWeightGraph();
+			Toast.makeText(getActivity(), "Keine Internetverbindung vorhanden",
+					Toast.LENGTH_SHORT).show();
+		}
+		showGraph();
+	}
+		
+	void showGraph(){
+		graphView.setViewPort(0, 30);
+		//graphView.setScalable(true);
+		graphView.setShowLegend(true);
+		graphView.setLegendAlign(LegendAlign.TOP);
+		graphView.setLegendWidth(200);
+		graphView.setBackgroundColor(getResources().getColor(R.color.black));
+		LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.statistic_layout);
+		layout.addView(graphView);
 	}
 
 	@Override
@@ -78,21 +110,36 @@ public class ScaleActivity extends Fragment implements DataFetcherListener, Imag
 
 	@Override
 	public void onScaleDataFetched(ArrayList<Weight> weights) {
-		// TODO Auto-generated method stub
 		this.weights = weights;
+		setupWeightGraph();
 	}
 
 	@Override
 	public void onTemperatureDataFetched(ArrayList<Temperature> temperatures) {
-		// TODO Auto-generated method stub
 		this.temperatures = temperatures;
+		setupTemperatureGraph();
 	}
 
-	@Override
-	public void onImageFetched(Bitmap bm) {
-		// TODO Auto-generated method stub
-		ImageView view = (ImageView) getView().findViewById(R.id.image_view);
-		view.setImageBitmap(bm);
+	void setupWeightGraph(){
+		int num = 30;
+		GraphViewData[] data = new GraphViewData[num];
+		
+		for(int i = 0; i < data.length; i++){
+			data[i] = new GraphViewData(i, weights.get(i).getScaleValue());
+		}
+		
+		GraphViewSeries scaleGraph = new GraphViewSeries("Gewicht", new GraphViewSeriesStyle(Color.RED, 3), data);
+		graphView.addSeries(scaleGraph);
 	}
-
+	
+	void setupTemperatureGraph(){
+		int num = 30;
+		GraphViewData[] data = new GraphViewData[num];
+		
+		for(int i = 0; i < data.length; i++){
+			data[i] = new GraphViewData(i, temperatures.get(i).getTemperatureValue());
+		}
+		GraphViewSeries temperatureGraph = new GraphViewSeries("Temperatur", new GraphViewSeriesStyle(Color.BLUE, 3), data);
+		graphView.addSeries(temperatureGraph);
+	}
 }
