@@ -1,26 +1,49 @@
 package de.androidbienchen;
 
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.ImageView;
+import android.widget.Toast;
 
-public class CamActivity extends Activity {
+public class CamActivity extends Activity implements ImageFetcherListener{
 
+	private ImageFetcher imageFetcher;
+	ImageFetcherTimer timer;
+	LocationDatabase db;
+	Bitmap bm;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cam);
 
-		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+		init();
+		fetchingData();
+	}
+	
+	void init(){
+		imageFetcher = new ImageFetcher(this, this);
+		timer = new ImageFetcherTimer(this, this);
+		db = new LocationDatabase(this);
+		try {
+			bm = db.getImage();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
+	void fetchingData(){
+		if(NetworkAvailability.networkStatus(this)){
+			db.open();
+			imageFetcher.startFetchingData();
+			
+		}else{
+			Toast.makeText(getApplicationContext(), "Keine Internetverbindung vorhanden",
+					Toast.LENGTH_SHORT).show();
+			setImageContent();
 		}
 	}
 
@@ -44,21 +67,42 @@ public class CamActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_cam, container,
-					false);
-			return rootView;
+	@Override
+	public void onImageFetched(Bitmap bm) {
+		this.bm = bm;
+		setImageContent();
+	}
+	
+	void setImageContent(){
+		if(bm != null){
+			ImageView v = (ImageView) findViewById(R.id.imageView1);
+			v.setImageBitmap(this.bm);
+		}else{
+			Toast.makeText(getApplicationContext(), "Keine Anzeige möglich", Toast.LENGTH_SHORT).show();
 		}
 	}
-
+	
+	@Override
+	protected void onDestroy() {
+		db.close();
+		super.onDestroy();
+	}
+	
+	@Override
+	protected void onPause() {
+		db.close();
+		super.onPause();
+	}
+	
+	@Override
+	protected void onResume() {
+		db.open();
+		super.onResume();
+	}
+	
+	@Override
+	protected void onRestart() {
+		db.open();
+		super.onRestart();
+	}
 }
