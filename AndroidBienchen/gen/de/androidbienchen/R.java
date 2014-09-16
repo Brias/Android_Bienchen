@@ -253,8 +253,8 @@ containing a value of this type.
         public static final int right_arrow=0x7f020026;
     }
     public static final class id {
-        public static final int action_refresh=0x7f050024;
-        public static final int action_settings=0x7f050025;
+        public static final int action_refresh=0x7f050025;
+        public static final int action_settings=0x7f050026;
         public static final int calendar=0x7f050005;
         public static final int calendar_gridview=0x7f050010;
         public static final int calendar_left_arrow=0x7f05000a;
@@ -274,11 +274,12 @@ containing a value of this type.
         public static final int eventinsert_titel=0x7f050014;
         public static final int grad_kg_text_view=0x7f050020;
         public static final int hybrid=0x7f050004;
+        public static final int imageView1=0x7f050021;
         public static final int left_drawer=0x7f050008;
         public static final int months_infinite_pager=0x7f05000e;
-        public static final int navmenuitem_icon=0x7f050021;
-        public static final int navmenuitem_label=0x7f050022;
-        public static final int navmenusection_label=0x7f050023;
+        public static final int navmenuitem_icon=0x7f050022;
+        public static final int navmenuitem_label=0x7f050023;
+        public static final int navmenusection_label=0x7f050024;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
         public static final int satellite=0x7f050002;
@@ -308,8 +309,9 @@ containing a value of this type.
         public static final int fragment_chat=0x7f030009;
         public static final int fragment_presence_status=0x7f03000a;
         public static final int fragment_scale=0x7f03000b;
-        public static final int navdrawer_item=0x7f03000c;
-        public static final int navdrawer_section=0x7f03000d;
+        public static final int listitem_person=0x7f03000c;
+        public static final int navdrawer_item=0x7f03000d;
+        public static final int navdrawer_section=0x7f03000e;
     }
     public static final class menu {
         public static final int calendar=0x7f0a0000;

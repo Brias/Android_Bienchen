@@ -13,7 +13,7 @@ public class PresenceStatusActivity extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_presence_status,
+		View rootView = inflater.inflate(R.layout.listitem_person,
 				container, false);
 		return rootView;
 	}
