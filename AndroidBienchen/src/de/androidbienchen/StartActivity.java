@@ -1,5 +1,6 @@
 package de.androidbienchen;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 
@@ -52,8 +53,8 @@ public class StartActivity extends AbstractNavDrawerActivity {
         	getFragmentManager().beginTransaction().replace(R.id.content_frame, chat).commit();
             break;
 	    case 3:
-	    	CalendarActivity calendar = new CalendarActivity();
-        	getFragmentManager().beginTransaction().replace(R.id.content_frame, calendar).commit();
+	    	Intent intent = new Intent(this, CalendarActivity.class);
+	    	startActivity(intent);
 	        break;
 	    case 4:
 	    	ScaleActivity scale = new ScaleActivity(this);

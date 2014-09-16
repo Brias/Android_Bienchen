@@ -1,16 +1,17 @@
 package de.androidbienchen;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.roomorama.caldroid.CaldroidFragment;
@@ -18,25 +19,17 @@ import com.roomorama.caldroid.CaldroidListener;
 
 import de.androidbienchen.EventDatabase.SyncListener;
 
-public class CalendarActivity extends Fragment implements SyncListener{
+public class CalendarActivity extends FragmentActivity implements SyncListener {
 
 	private EventDatabase dbb;
 	private CaldroidFragment caldroidFragment;
-	private Bundle savedInstanceState;
-	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_calendar,
-				container, false);
-		this.savedInstanceState = savedInstanceState;
-		return rootView;
-	}
-	
-	@Override
-	public void onStart(){
-		super.onStart();
-		init();
+	ArrayList<Event> allEvents = new ArrayList<Event>();
+
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.calendar, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -46,8 +39,11 @@ public class CalendarActivity extends Fragment implements SyncListener{
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	void init(){
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_calendar);
 		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
 		caldroidFragment = new CaldroidFragment();
 
@@ -73,7 +69,7 @@ public class CalendarActivity extends Fragment implements SyncListener{
 		}
 
 		// // Attach to the activity
-		FragmentTransaction t = getFragmentManager().beginTransaction();
+		FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 		t.replace(R.id.calendar, caldroidFragment);
 		t.commit();
 
@@ -82,7 +78,7 @@ public class CalendarActivity extends Fragment implements SyncListener{
 
 			@Override
 			public void onSelectDate(Date date, View view) {
-				Toast.makeText(getActivity(), formatter.format(date),
+				Toast.makeText(getApplicationContext(), formatter.format(date),
 						Toast.LENGTH_SHORT).show();
 				for (int i = 0; i < allEvents.size(); i++) {
 					Date start = allEvents.get(i).StartDate;
@@ -94,7 +90,7 @@ public class CalendarActivity extends Fragment implements SyncListener{
 					}
 				}
 
-				new EventInsertDialog(getActivity(),
+				new EventInsertDialog(CalendarActivity.this,
 						new EventInsertDialog.InsertListener() {
 
 							@Override
@@ -105,19 +101,19 @@ public class CalendarActivity extends Fragment implements SyncListener{
 							}
 						}, date);
 				
-	}
+			}
 
 			@Override
 			public void onChangeMonth(int month, int year) {
 				String text = "month: " + month + " year: " + year;
-				Toast.makeText(getActivity(), text,
+				Toast.makeText(getApplicationContext(), text,
 						Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
 			public void onCaldroidViewCreated() {
 				if (caldroidFragment.getLeftArrowButton() != null) {
-					Toast.makeText(getActivity(),
+					Toast.makeText(getApplicationContext(),
 							"Caldroid view is created", Toast.LENGTH_SHORT)
 							.show();
 				}
@@ -128,7 +124,7 @@ public class CalendarActivity extends Fragment implements SyncListener{
 		// Setup Caldroid
 		caldroidFragment.setCaldroidListener(listener);
 
-		dbb = new EventDatabase(getActivity());
+		dbb = new EventDatabase(this);
 		dbb.syncToOnlineDB(this);
 
 	}
@@ -137,7 +133,7 @@ public class CalendarActivity extends Fragment implements SyncListener{
 	 * Save current states of the Caldroid here
 	 */
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
+	protected void onSaveInstanceState(Bundle outState) {
 		// TODO Auto-generated method stub
 		super.onSaveInstanceState(outState);
 
@@ -148,7 +144,7 @@ public class CalendarActivity extends Fragment implements SyncListener{
 
 	@Override
 	public void syncFinished() {
-		Toast.makeText(getActivity(), "Sync finished", Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "Sync finished", Toast.LENGTH_LONG).show();
 
 		refreshCalenderView();
 	}
@@ -166,3 +162,4 @@ public class CalendarActivity extends Fragment implements SyncListener{
 	}
 
 }
+

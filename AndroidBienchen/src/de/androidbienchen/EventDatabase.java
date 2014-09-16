@@ -13,6 +13,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.ParseException;
 import android.util.Log;
 
+import com.parse.FindCallback;
+import com.parse.Parse;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.SaveCallback;
+
 
 public class EventDatabase {
 	private dbOpenHelper dbH;
