@@ -9,7 +9,7 @@
     tools:context="de.androidbienchen.MainActivity$PlaceholderFragment" >
 
     <Button
-        android:id="@+id/Button01"
+        android:id="@+id/anwesend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -18,43 +18,43 @@
         android:text="Anwesend" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/chat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/Button01"
+        android:layout_below="@+id/anwesend"
         android:layout_centerHorizontal="true"
         android:text="Chat" />
 
     <Button
-        android:id="@+id/Button03"
+        android:id="@+id/kalender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button1"
+        android:layout_below="@+id/chat"
         android:layout_centerHorizontal="true"
         android:text="Kalender" />
 
     <Button
-        android:id="@+id/Button04"
+        android:id="@+id/statistik"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/Button03"
+        android:layout_below="@+id/kalender"
         android:layout_centerHorizontal="true"
         android:text="Statistik" />
 
     <Button
-        android:id="@+id/Button02"
+        android:id="@+id/cam"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/Button04"
+        android:layout_below="@+id/statistik"
         android:layout_centerHorizontal="true"
-        android:text="Live-Cam" />
+        android:text="Cam" />
 
     <Button
-        android:id="@+id/Button05"
+        android:id="@+id/website"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/Button02"
-        android:layout_centerHorizontal="true"
+        android:layout_alignLeft="@+id/cam"
+        android:layout_below="@+id/cam"
         android:text="Website" />
 
 </RelativeLayout>

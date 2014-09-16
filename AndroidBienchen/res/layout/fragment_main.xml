@@ -8,9 +8,53 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="de.androidbienchen.MainActivity$PlaceholderFragment" >
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/anwesend"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="72dp"
+        android:text="Anwesend" />
+
+    <Button
+        android:id="@+id/chat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/anwesend"
+        android:layout_centerHorizontal="true"
+        android:text="Chat" />
+
+    <Button
+        android:id="@+id/kalender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chat"
+        android:layout_centerHorizontal="true"
+        android:text="Kalender" />
+
+    <Button
+        android:id="@+id/statistik"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/kalender"
+        android:layout_centerHorizontal="true"
+        android:text="Statistik" />
+
+    <Button
+        android:id="@+id/cam"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/statistik"
+        android:layout_centerHorizontal="true"
+        android:text="Cam" />
+
+    <Button
+        android:id="@+id/website"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/cam"
+        android:layout_below="@+id/cam"
+        android:text="Website" />
 
 </RelativeLayout>

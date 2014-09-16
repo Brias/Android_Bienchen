@@ -1,18 +1,13 @@
 package de.androidbienchen;
 
-import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
+import java.util.Date;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -167,3 +162,4 @@ public class CalendarActivity extends FragmentActivity implements SyncListener {
 	}
 
 }
+
