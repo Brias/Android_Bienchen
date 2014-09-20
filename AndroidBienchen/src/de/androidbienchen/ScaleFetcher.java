@@ -52,7 +52,6 @@ public class ScaleFetcher {
 			try {
 				insertDataInDatabase(jsonArray.getJSONObject(i));
 			} catch (JSONException e) {
-				setScaleDataUpdated();
 				e.printStackTrace();
 			}
 		}

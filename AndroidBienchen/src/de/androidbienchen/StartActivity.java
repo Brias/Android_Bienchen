@@ -1,20 +1,54 @@
 package de.androidbienchen;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 
 public class StartActivity extends AbstractNavDrawerActivity {
     
+	private CamActivity cam;
+	private ScaleActivity scale;
+	private ChatActivity chat;
+	private PresenceStatusActivity presence;
+	
+	private Fragment current;
+	
+	
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
+        
         if ( savedInstanceState == null ) {
-        	PresenceStatusActivity status = new PresenceStatusActivity();
-        	getFragmentManager().beginTransaction().replace(R.id.content_frame, status).commit();
+        	init();
+        	setCurrent(presence);
+        	addFragments();
+        	hideFragments();
         }
+    }
+    
+    void init(){
+    	current = new Fragment();
+    	cam = new CamActivity();
+        scale = new ScaleActivity();
+        chat = new ChatActivity();
+        presence = new PresenceStatusActivity();
+    }
+    
+    void addFragments(){
+    	getFragmentManager().beginTransaction().add(R.id.content_frame, cam).commit();
+        getFragmentManager().beginTransaction().add(R.id.content_frame, scale).commit();
+        getFragmentManager().beginTransaction().add(R.id.content_frame, chat).commit();
+        getFragmentManager().beginTransaction().add(R.id.content_frame,	presence).commit();
+    }
+    
+    void hideFragments(){
+    	getFragmentManager().beginTransaction().hide(cam).commit();
+    	getFragmentManager().beginTransaction().hide(scale).commit();
+    	getFragmentManager().beginTransaction().hide(chat).commit();
     }
     
     @Override
@@ -43,32 +77,46 @@ public class StartActivity extends AbstractNavDrawerActivity {
     
     @Override
     protected void onNavItemSelected(int id) {
-        
+    	
     	switch ((int)id) {
         case 1:
-        	PresenceStatusActivity status = new PresenceStatusActivity();
-        	getFragmentManager().beginTransaction().replace(R.id.content_frame, status).commit();
+        	changeViewTo(presence);
             break;
         case 2:
-        	ChatActivity chat = new ChatActivity();
-        	getFragmentManager().beginTransaction().replace(R.id.content_frame, chat).commit();
+        	changeViewTo(chat);
             break;
 	    case 3:
 	    	Intent intent = new Intent(this, CalendarActivity.class);
 	    	startActivity(intent);
 	        break;
 	    case 4:
-	    	ScaleActivity scale = new ScaleActivity();
-        	getFragmentManager().beginTransaction().replace(R.id.content_frame, scale).commit();
+	    	changeViewTo(scale);
 	        break;
 	    case 5:
-	    	CamActivity cam = new CamActivity();
-        	getFragmentManager().beginTransaction().replace(R.id.content_frame, cam).commit();
+	    	changeViewTo(cam);
 	        break;
 	    case 6:
 	    	startWebsite();
 	        break;
 	    }
+    }
+    
+    void showClicked(Fragment clicked){
+    	getFragmentManager().beginTransaction().show(clicked).commit();
+    }
+    
+    void hideCurrent(){
+    	getFragmentManager().beginTransaction().hide(current).commit();
+    }
+    
+    void setCurrent(Fragment next){
+    	current = next;
+    }
+    
+    void changeViewTo(Fragment next){
+    	hideCurrent();
+    	showClicked(next);
+    	setCurrent(next);
     }
     
     void startWebsite(){

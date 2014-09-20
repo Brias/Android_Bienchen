@@ -43,8 +43,6 @@ public class ScaleActivity extends Fragment implements DataFetcherListener{
 	@Override
 	public void onStart(){
 		super.onStart();
-		
-
 		init();
 		fetchData();
 	}
@@ -70,7 +68,7 @@ public class ScaleActivity extends Fragment implements DataFetcherListener{
 		}else{
 			setupTemperatureGraph();
 			setupWeightGraph();
-			Toast.makeText(getActivity(), "Keine Internetverbindung vorhanden",
+			Toast.makeText(getActivity(), "Keine Internetverbindung vorhanden SCALE",
 					Toast.LENGTH_SHORT).show();
 		}
 		showGraph();

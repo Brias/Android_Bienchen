@@ -1,8 +1,10 @@
 package de.androidbienchen;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,30 +27,56 @@ public class CamActivity extends Fragment implements ImageFetcherListener{
 		return rootView;
 	}
 	
+	public void onAttach (Activity activity){
+		super.onAttach(activity);
+	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState){
+		super.onCreate(savedInstanceState);
+		initFetcher();
+		init();
+		fetchingData();
+		openDatabase();
+	}
+	
 	@Override
 	public void onStart(){
 		super.onStart();
-		
-		init();
-		fetchingData();
+	}
+	
+	void initFetcher(){
+		imageFetcher = new ImageFetcher(getActivity(),this);
 	}
 	
 	void init(){
-		imageFetcher = new ImageFetcher(getActivity(),this);
 		timer = new ImageFetcherTimer(getActivity(), this);
 		db = new LocationDatabase(getActivity());
+	}
+	
+	boolean getImage(){
 		try {
 			bm = db.getImage();
+			return true;
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		return false;
+	}
+	
+	void openDatabase(){
+		db.open();
+	}
+	
+	void closeDatabse(){
+		db.close();
 	}
 	
 	void fetchingData(){
 		if(NetworkAvailability.networkStatus(getActivity())){
-			db.open();
-			imageFetcher.startFetchingData();
-			
+				Toast.makeText(getActivity(), "Internetverbindung vorhanden",
+						Toast.LENGTH_SHORT).show();
+				imageFetcher.startFetchingData();	
 		}else{
 			Toast.makeText(getActivity(), "Keine Internetverbindung vorhanden",
 					Toast.LENGTH_SHORT).show();
@@ -56,7 +84,17 @@ public class CamActivity extends Fragment implements ImageFetcherListener{
 		}
 	}
 
+	@Override
+	public void onResume(){
+		super.onResume();
+	}
 
+	@Override
+	public void onStop(){
+		super.onStop();
+		imageFetcher.stopFetchingData();
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -77,8 +115,11 @@ public class CamActivity extends Fragment implements ImageFetcherListener{
 	
 	void setImageContent(){
 		if(bm != null){
-			ImageView v = (ImageView) getActivity().findViewById(R.id.cam_image);
-			v.setImageBitmap(this.bm);
+			try{
+				ImageView v = (ImageView) getActivity().findViewById(R.id.cam_image);
+				v.setImageBitmap(this.bm);
+			}catch(Exception e){
+			}	
 		}else{
 			Toast.makeText(getActivity(), "Keine Anzeige möglich", Toast.LENGTH_SHORT).show();
 		}

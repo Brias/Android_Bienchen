@@ -30,6 +30,10 @@ public class ImageFetcher {
 		new BackgroundTask().execute(AppConfig.server.IMAGE_URL);
 	}
 	
+	public void stopFetchingData(){
+		new BackgroundTask().cancel(true);
+	}
+	
 	private void processImage(Bitmap bm){
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
