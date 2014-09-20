@@ -45,12 +45,12 @@ public class LocationDatabase {
 	public Bitmap getImage(){
 		Cursor cursor = db.query(AppConfig.ImageData.TABLE_KEY_IMAGE, new String[] {AppConfig.ImageData.IMAGE_KEY}, null, null, null, null, null);
 		byte[] image = null;
+		Bitmap bitmap = null;
 		
 		if(cursor.moveToFirst()){
 			image = cursor.getBlob(0);
+			bitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
 		}
-		
-		Bitmap bitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
 		
 		return bitmap;
 	}
