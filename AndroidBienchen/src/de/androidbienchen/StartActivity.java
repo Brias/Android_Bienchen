@@ -14,8 +14,10 @@ public class StartActivity extends AbstractNavDrawerActivity {
 	private ScaleActivity scale;
 	private ChatActivity chat;
 	private PresenceStatusActivity presence;
+	private CalendarActivity calendar;
 	
 	private Fragment current;
+	private CalendarActivity currentCalendar;
 	
 	
     @Override
@@ -31,9 +33,11 @@ public class StartActivity extends AbstractNavDrawerActivity {
     }
     
     void init(){
-    	current = new Fragment();
+    	current = null;
+    	currentCalendar = null;
     	cam = new CamActivity();
         scale = new ScaleActivity();
+        calendar = new CalendarActivity();
         chat = new ChatActivity();
         presence = new PresenceStatusActivity();
     }
@@ -41,6 +45,7 @@ public class StartActivity extends AbstractNavDrawerActivity {
     void addFragments(){
     	getFragmentManager().beginTransaction().add(R.id.content_frame, cam).commit();
         getFragmentManager().beginTransaction().add(R.id.content_frame, scale).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.content_frame,	calendar).commit();
         getFragmentManager().beginTransaction().add(R.id.content_frame, chat).commit();
         getFragmentManager().beginTransaction().add(R.id.content_frame,	presence).commit();
     }
@@ -48,6 +53,7 @@ public class StartActivity extends AbstractNavDrawerActivity {
     void hideFragments(){
     	getFragmentManager().beginTransaction().hide(cam).commit();
     	getFragmentManager().beginTransaction().hide(scale).commit();
+    	getSupportFragmentManager().beginTransaction().hide(calendar).commit();
     	getFragmentManager().beginTransaction().hide(chat).commit();
     }
     
@@ -86,8 +92,7 @@ public class StartActivity extends AbstractNavDrawerActivity {
         	changeViewTo(chat);
             break;
 	    case 3:
-	    	Intent intent = new Intent(this, CalendarActivity.class);
-	    	startActivity(intent);
+	    	changeViewTo(calendar);
 	        break;
 	    case 4:
 	    	changeViewTo(scale);
@@ -105,15 +110,35 @@ public class StartActivity extends AbstractNavDrawerActivity {
     	getFragmentManager().beginTransaction().show(clicked).commit();
     }
     
+    void showClicked(CalendarActivity clicked){
+    	getSupportFragmentManager().beginTransaction().show(clicked).commit();
+    }
+    
     void hideCurrent(){
-    	getFragmentManager().beginTransaction().hide(current).commit();
+    	if(current != null){
+    		getFragmentManager().beginTransaction().hide(current).commit();
+    	}else{
+    		getSupportFragmentManager().beginTransaction().hide(currentCalendar).commit();
+    	}
     }
     
     void setCurrent(Fragment next){
     	current = next;
+    	currentCalendar = null;
+    }
+    
+    void setCurrent(CalendarActivity calendar){
+    	currentCalendar = calendar;
+    	current = null;
     }
     
     void changeViewTo(Fragment next){
+    	hideCurrent();
+    	showClicked(next);
+    	setCurrent(next);
+    }
+    
+    void changeViewTo(CalendarActivity next){
     	hideCurrent();
     	showClicked(next);
     	setCurrent(next);
