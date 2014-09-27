@@ -9,17 +9,19 @@
         android:targetSdkVersion="20" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <meta-data 
+            android:name="com.google.android.gms.version" 
+        	android:value="@integer/google_play_services_version"/>
         <activity
-            android:name="de.androidbienchen.StartActivity"
+            android:name="de.androidbienchen.activities.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,27 +30,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="de.androidbienchen.ScaleActivity"
+            android:name="de.androidbienchen.activities.StatisticActivity"
             android:label="@string/title_activity_scale" >
         </activity>
         <activity
-            android:name="de.androidbienchen.CamActivity"
+            android:name="de.androidbienchen.activities.CamActivity"
             android:label="@string/title_activity_cam" >
         </activity>
         <activity
-            android:name="de.androidbienchen.WebsiteLinkActivity"
-            android:label="@string/title_activity_website_link" >
-        </activity>
-        <activity
-            android:name="de.androidbienchen.ChatActivity"
+            android:name="de.androidbienchen.activities.ChatActivity"
             android:label="@string/title_activity_chat" >
         </activity>
         <activity
-            android:name="de.androidbienchen.PresenceStatusActivity"
+            android:name="de.androidbienchen.activities.PresenceStatusActivity"
             android:label="@string/title_activity_presence_status" >
         </activity>
         <activity
-            android:name="de.androidbienchen.CalendarActivity"
+            android:name="de.androidbienchen.activities.CalendarActivity"
             android:label="@string/title_activity_calendar" >
         </activity>
     </application>

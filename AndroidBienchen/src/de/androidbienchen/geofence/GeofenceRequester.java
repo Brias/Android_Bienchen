@@ -1,16 +1,9 @@
 package de.androidbienchen.geofence;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationStatusCodes;
-import com.google.android.gms.location.LocationClient.OnAddGeofencesResultListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import de.androidbienchen.R;
-import de.androidbienchen.R.string;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -18,10 +11,19 @@ import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
+import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationClient.OnAddGeofencesResultListener;
+import com.google.android.gms.location.LocationStatusCodes;
+
+import de.androidbienchen.R;
 
 /**
  * Class for connecting to Location Services and requesting geofences.
@@ -105,6 +107,7 @@ public class GeofenceRequester
      */
     public void addGeofences(List<Geofence> geofences) throws UnsupportedOperationException {
 
+    	Toast.makeText(mActivity, "AddGeofence", Toast.LENGTH_LONG);
         /*
          * Save the geofences so that they can be sent to Location Services once the
          * connection is available.
@@ -154,6 +157,7 @@ public class GeofenceRequester
      */
     private void continueAddGeofences() {
 
+    	Log.d("GEOFENCE REQUESTER", "continueAddGeofences");
         // Get a PendingIntent that Location Services issues when a geofence transition occurs
         mGeofencePendingIntent = createRequestPendingIntent();
 
@@ -238,6 +242,7 @@ public class GeofenceRequester
 
         Log.d(GeofenceUtils.APPTAG, mActivity.getString(R.string.connected));
 
+        Log.d("GEOFENCE REQUESTER", "On Connected");
         // Continue adding the geofences
         continueAddGeofences();
     }
@@ -276,9 +281,11 @@ public class GeofenceRequester
 
         // If no PendingIntent exists
         } else {
+        	Log.d("GEOFENCE REQUESTER", "createRequestPedingIntent");
 
             // Create an Intent pointing to the IntentService
             Intent intent = new Intent(mActivity, ReceiveTransitionsIntentService.class);
+            mActivity.startService(intent);
             /*
              * Return a PendingIntent to start the IntentService.
              * Always create a PendingIntent sent to Location Services

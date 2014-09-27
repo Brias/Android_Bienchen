@@ -1,11 +1,7 @@
 package de.androidbienchen.geofence;
 
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.LocationClient;
+import java.util.List;
 
-import de.androidbienchen.R;
-import de.androidbienchen.R.drawable;
-import de.androidbienchen.R.string;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -16,8 +12,14 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.List;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.LocationClient;
+
+import de.androidbienchen.R;
+import de.androidbienchen.activities.PresenceStatusActivity;
 
 /**
  * This class receives geofence transition events from Location Services, in the
@@ -31,7 +33,15 @@ public class ReceiveTransitionsIntentService extends IntentService {
      */
     public ReceiveTransitionsIntentService() {
         super("ReceiveTransitionsIntentService");
+        Log.d("ReceiveTransitionIntentService","Oh NOOOOO!!!");
+        
     }
+    
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Toast.makeText(getApplicationContext(), "Service started", Toast.LENGTH_LONG).show();
+        return START_NOT_STICKY;
+     }
 
     /**
      * Handles incoming intents
@@ -39,8 +49,10 @@ public class ReceiveTransitionsIntentService extends IntentService {
      * to Location Services (inside a PendingIntent) when you call addGeofences()
      */
     @Override
-    protected void onHandleIntent(Intent intent) {
-
+    public void onHandleIntent(Intent intent) {
+    	Log.d("onHandleIntent",""+LocationServiceErrorMessages.getErrorString(this, LocationClient.getErrorCode(intent)));
+    
+    	Toast.makeText(getApplicationContext(), "OnHandleIntent", Toast.LENGTH_LONG);
         // Create a local broadcast Intent
         Intent broadcastIntent = new Intent();
 
@@ -70,7 +82,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
         // If there's no error, get the transition type and create a notification
         } else {
-
+        	
             // Get the type of transition (entry or exit)
             int transition = LocationClient.getGeofenceTransition(intent);
 
@@ -126,13 +138,13 @@ public class ReceiveTransitionsIntentService extends IntentService {
 
         // Create an explicit content Intent that starts the main Activity
         Intent notificationIntent =
-                new Intent(getApplicationContext(),GeofenceActivity.class);
+                new Intent(getApplicationContext(),PresenceStatusActivity.class);
 
         // Construct a task stack
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 
         // Adds the main Activity to the task stack as the parent
-        stackBuilder.addParentStack(GeofenceActivity.class);
+        stackBuilder.addParentStack(PresenceStatusActivity.class);
 
         // Push the content Intent onto the stack
         stackBuilder.addNextIntent(notificationIntent);

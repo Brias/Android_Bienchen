@@ -10,19 +10,39 @@
     <string name="title_activity_chat">ChatActivity</string>
     <string name="title_activity_presence_status">PresenceStatusActivity</string>
     <string name="title_activity_calendar">CalendarActivity</string>
-    <string name="insertname">Veranstaltung</string>
-    <string name="insertinfo">Veranstaltungsinfo</string>
-	<string name="drawer_open">Open navigation drawer</string>
-	<string name="drawer_close">Close navigation drawer</string>	
-	<string name="presence">Presence</string>
+    
+    <!-- Fragment titles -->
+    <string name="presence">Presence</string>
 	<string name="chat">Chat</string>
 	<string name="calendar">Kalender</string>
 	<string name="statistic">Statistik</string>
 	<string name="cam">Cam</string>
 	<string name="website">Website</string>
+	
+	<!-- calendar dialog -->
+    <string name="insertname">Veranstaltung</string>
+    <string name="insertinfo">Veranstaltungsinfo</string>
+	
+	<!-- navigation drawer info -->
+	<string name="drawer_open">Open navigation drawer</string>
+	<string name="drawer_close">Close navigation drawer</string>	
+    
+    <!-- Statisic -->
     <string name="grad_kg">Kg/Celsius</string>
     <string name="day">Tag</string>
     
+    <!-- Error Messages -->
+    <string name="update_error">No Network Connection</string>
+    <string name="update_error_message">Unable to Update Data: </string>
+    <string name="update_local_data_error">Failed to Load Local Data: </string>
+    
+    <!-- Dialog Messages -->
+    <string name="updating_data">Updating...</string>
+    <string name="update_succeed">Update Succeed</string>
+    <string name="data_updated">All Data is Updated</string>
+    <string name="btn_ok">OK</string>
+    
+    <!-- Geofence -->
     <string name="invalid_action_detail">Invalid Action Detail</string>
     <string name="invalid_action">Invalid Action</string>
     <string name="geofence_input_error_radius_invalid">Input Error! Invalid Radius</string>

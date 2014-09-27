@@ -14,6 +14,6 @@
        android:paddingBottom="7dp"
        android:textColor="#FFFFFF"
        style="?android:attr/listSeparatorTextViewStyle"
-       android:background="@color/start_menu_background_color"/>
+       android:background="@color/yellow"/>
 
 </RelativeLayout>

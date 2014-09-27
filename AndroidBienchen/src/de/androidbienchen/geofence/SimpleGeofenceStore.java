@@ -16,6 +16,7 @@
 
 package de.androidbienchen.geofence;
 
+import de.androidbienchen.activities.PresenceStatusActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -32,7 +33,7 @@ public class SimpleGeofenceStore {
 
     // The name of the resulting SharedPreferences
     private static final String SHARED_PREFERENCE_NAME =
-                    GeofenceActivity.class.getSimpleName();
+                    PresenceStatusActivity.class.getSimpleName();
 
     // Create the SharedPreferences storage with private access only
     public SimpleGeofenceStore(Context context) {
