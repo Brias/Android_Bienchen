@@ -36,7 +36,7 @@ public class EventViewDialog {
 		date.setText(event.StartDate.toString() + " bis "
 				+ event.EndDate.toString());
 		builder.setView(v);
-		builder.setPositiveButton("Schlie√üen", new OnClickListener() {
+		builder.setPositiveButton("Schlieﬂen", new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {

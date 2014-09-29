@@ -95,7 +95,7 @@ public class EventInsertDialog {
 			}
 		});
 
-		builder.setPositiveButton("HinzufÃ¼gen", new OnClickListener() {
+		builder.setPositiveButton("Hinzufügen", new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {

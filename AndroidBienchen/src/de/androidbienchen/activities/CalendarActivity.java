@@ -149,7 +149,7 @@ public class CalendarActivity extends Fragment implements SyncListener {
 			Event event = allEvents.get(i);
 
 			caldroidFragment.setBackgroundResourceForDate(
-					getResources().getColor(R.color.yellow), event.StartDate);
+					R.color.yellow, event.StartDate);
 
 			caldroidFragment.refreshView();
 		}
