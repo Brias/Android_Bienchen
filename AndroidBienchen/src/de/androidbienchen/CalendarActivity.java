@@ -25,12 +25,12 @@ public class CalendarActivity extends Fragment implements SyncListener {
 	private CaldroidFragment caldroidFragment;
 	ArrayList<Event> allEvents = new ArrayList<Event>();
 
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//
-//		MenuInflater inflater = getMenuInflater();
-//		inflater.inflate(R.menu.calendar, menu);
-//		return super.onCreateOptionsMenu(menu);
-//	}
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	//
+	// MenuInflater inflater = getMenuInflater();
+	// inflater.inflate(R.menu.calendar, menu);
+	// return super.onCreateOptionsMenu(menu);
+	// }
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_refresh) {
@@ -39,21 +39,21 @@ public class CalendarActivity extends Fragment implements SyncListener {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.activity_calendar,
-				container, false);
+		View rootView = inflater.inflate(R.layout.activity_calendar, container,
+				false);
 		return rootView;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.activity_calendar);
-		
-		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
+		// setContentView(R.layout.activity_calendar);
+
+//		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
 		caldroidFragment = new CaldroidFragment();
 
 		//
@@ -87,8 +87,8 @@ public class CalendarActivity extends Fragment implements SyncListener {
 
 			@Override
 			public void onSelectDate(Date date, View view) {
-				Toast.makeText(getActivity(), formatter.format(date),
-						Toast.LENGTH_SHORT).show();
+//				Toast.makeText(getActivity(), formatter.format(date),
+//						Toast.LENGTH_SHORT).show();
 				for (int i = 0; i < allEvents.size(); i++) {
 					Date start = allEvents.get(i).StartDate;
 					if (start.getDate() == date.getDate()
@@ -109,23 +109,6 @@ public class CalendarActivity extends Fragment implements SyncListener {
 								refreshCalenderView();
 							}
 						}, date);
-				
-			}
-
-			@Override
-			public void onChangeMonth(int month, int year) {
-				String text = "month: " + month + " year: " + year;
-				Toast.makeText(getActivity(), text,
-						Toast.LENGTH_SHORT).show();
-			}
-
-			@Override
-			public void onCaldroidViewCreated() {
-				if (caldroidFragment.getLeftArrowButton() != null) {
-					Toast.makeText(getActivity(),
-							"Caldroid view is created", Toast.LENGTH_SHORT)
-							.show();
-				}
 			}
 
 		};
@@ -153,7 +136,6 @@ public class CalendarActivity extends Fragment implements SyncListener {
 
 	@Override
 	public void syncFinished() {
-		Toast.makeText(getActivity(), "Sync finished", Toast.LENGTH_LONG).show();
 
 		refreshCalenderView();
 	}
@@ -163,12 +145,11 @@ public class CalendarActivity extends Fragment implements SyncListener {
 		for (int i = 0; i < allEvents.size(); i++) {
 			Event event = allEvents.get(i);
 
-			caldroidFragment.setBackgroundResourceForDate(
-					R.color.caldroid_sky_blue, event.StartDate);
+			caldroidFragment.setBackgroundResourceForDate(R.color.yellow,
+					event.StartDate);
 
 			caldroidFragment.refreshView();
 		}
 	}
 
 }
-

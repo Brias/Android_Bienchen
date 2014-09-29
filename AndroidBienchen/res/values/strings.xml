@@ -12,6 +12,11 @@
     <string name="title_activity_calendar">CalendarActivity</string>
     <string name="insertname">Veranstaltung</string>
     <string name="insertinfo">Veranstaltungsinfo</string>
+    <string name="nameveranst">Name:</string>
+    <string name="infoveranst">Info:</string>
+    <string name="anfzeitveranst">Startzeit:</string>
+    <string name="endzeitveranst">Endzeit:</string>
+    <string name="auswahl">Auswählen</string>
 	<string name="drawer_open">Open navigation drawer</string>
 	<string name="drawer_close">Close navigation drawer</string>	
 	<string name="presence">Presence</string>

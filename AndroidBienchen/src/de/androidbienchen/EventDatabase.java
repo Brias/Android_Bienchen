@@ -11,13 +11,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.SaveCallback;
+import com.parse.ParseException;
 
 public class EventDatabase {
 	private dbOpenHelper dbH;
@@ -87,7 +88,7 @@ public class EventDatabase {
 				Date startDate = new Date(cursor.getLong(2));
 				Date endDate = new Date(cursor.getLong(3));
 				event.StartDate = startDate;
-				Log.e("MARK", startDate.toString());
+				Log.e("Events", startDate.toString());
 				event.EndDate = endDate;
 				event.Info = cursor.getString(5);
 				event.parseId = cursor.getString(4);
@@ -108,7 +109,7 @@ public class EventDatabase {
 		data.put(END_DATE, end.getTime());
 
 		openDB();
-		final long id = database.insert(TABLE_KEY, null, data); // Returns key
+		final long id = database.insert(TABLE_KEY, null, data); 
 		database.close();
 
 		final ParseObject parseData = new ParseObject(TABLE_KEY);
@@ -147,13 +148,11 @@ public class EventDatabase {
 					for (int j = 0; j < localEvents.size(); j++) {
 						String localParseId = localEvents.get(j).parseId;
 
-						if (localParseId == null) { // catch, maybe other
-													// solution
+						if (localParseId == null) { 
 							continue;
 						}
 						String onlineParseId = curObject.getObjectId();
-						if (localParseId.equals(onlineParseId)) { // Hier
-																	// Vergleich
+						if (localParseId.equals(onlineParseId)) { 
 							entryfound = true;
 						}
 					}

@@ -1,5 +1,8 @@
 package de.androidbienchen;
 
+import java.text.SimpleDateFormat;
+
+import de.androidbienchen.EventInsertDialog.InsertListener;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,12 +16,21 @@ public class EventViewDialog {
 
 	private Context cont;
 	private Event event;
+	private InsertListener dl;
 
+	// public EventViewDialog(Context cont, Event vt, InsertListener dl)
 	public EventViewDialog(Context cont, Event vt) {
 		this.cont = cont;
 		this.event = vt;
+		// this.dl = dl;
 		createDialog();
 	}
+
+	public interface InsertListener {
+		public void deletEvent(Event event);
+	}
+
+	public SimpleDateFormat formatter = new SimpleDateFormat(" HH:mm ");
 
 	private void createDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(cont);
@@ -32,9 +44,10 @@ public class EventViewDialog {
 		TextView date = (TextView) v.findViewById(R.id.eventdialog_time);
 
 		info.setText(event.Info);
-		date.setText(event.StartDate.toString() + " bis "
-				+ event.EndDate.toString());
+		date.setText(formatter.format(event.StartDate) + " - "
+				+ formatter.format(event.EndDate));
 		builder.setView(v);
+
 		builder.setPositiveButton("Schließen", new OnClickListener() {
 
 			@Override
@@ -45,6 +58,16 @@ public class EventViewDialog {
 		});
 		builder.create().show();
 
-	}
+		// builder.setPositiveButton("Löschen", new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(DialogInterface dialog, int which) {
+		// dl.deletEvent(event);
+		// dialog.dismiss();
+		// }
+		// });
+		// builder.create().show();
+		// }
 
+	}
 }

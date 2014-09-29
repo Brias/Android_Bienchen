@@ -1,5 +1,6 @@
 package de.androidbienchen;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -24,7 +25,8 @@ public class EventInsertDialog {
 
 	private Context cont;
 	private Date clickedDate;
-
+	private InsertListener ln;
+	
 	public EventInsertDialog(Context cont, InsertListener ln, Date clickedDate) {
 		this.cont = cont;
 		this.ln = ln;
@@ -36,7 +38,7 @@ public class EventInsertDialog {
 		public void insertComplt(Event event);
 	}
 
-	private InsertListener ln;
+	public SimpleDateFormat formatter = new SimpleDateFormat(" HH:mm ");
 
 	public void insertDialog() {
 
@@ -56,11 +58,13 @@ public class EventInsertDialog {
 		final Button startButton = (Button) v.findViewById(R.id.startButton);
 		final Button endButton = (Button) v.findViewById(R.id.endButton);
 
-		final Date startDate = new Date(clickedDate.getTime());
-		final Date endDate = new Date(clickedDate.getTime() + 1000*60*30);
-		startZeit.setText(startDate.toString());
-		endZeit.setText(endDate.toString());
+		final Date startDate = new Date(clickedDate.getTime()); // 00:00
+		final Date endDate = new Date(clickedDate.getTime());
 
+		startZeit.setText(formatter.format(startDate));
+		endZeit.setText(formatter.format(endDate));
+
+		// sets the start time
 		startButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -72,6 +76,7 @@ public class EventInsertDialog {
 			}
 		});
 
+		// sets the end time
 		endButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -129,10 +134,12 @@ public class EventInsertDialog {
 			final Calendar c = Calendar.getInstance();
 			int hour = c.get(Calendar.HOUR_OF_DAY);
 			int minute = c.get(Calendar.MINUTE);
+			// endZeit.setText(formatter.format(endDate));
 
 			// Create a new instance of TimePickerDialog and return it
 			return new TimePickerDialog(getActivity(), this, hour, minute,
 					DateFormat.is24HourFormat(getActivity()));
+
 		}
 
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -140,12 +147,12 @@ public class EventInsertDialog {
 			date.setMinutes(minute);
 			outPutText.setText(date.toString());
 		}
-		
-		private void copyDate(Date source, Date dest){
+
+		private void copyDate(Date source, Date dest) {
 			dest.setMonth(source.getMonth());
 			dest.setDate(source.getDate());
 			dest.setYear(source.getYear());
-			
+
 		}
 	}
 }
