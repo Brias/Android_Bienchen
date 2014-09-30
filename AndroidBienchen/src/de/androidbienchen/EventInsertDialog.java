@@ -26,7 +26,7 @@ public class EventInsertDialog {
 	private Context cont;
 	private Date clickedDate;
 	private InsertListener ln;
-	
+
 	public EventInsertDialog(Context cont, InsertListener ln, Date clickedDate) {
 		this.cont = cont;
 		this.ln = ln;
@@ -134,11 +134,13 @@ public class EventInsertDialog {
 			final Calendar c = Calendar.getInstance();
 			int hour = c.get(Calendar.HOUR_OF_DAY);
 			int minute = c.get(Calendar.MINUTE);
+
 			// endZeit.setText(formatter.format(endDate));
 
 			// Create a new instance of TimePickerDialog and return it
 			return new TimePickerDialog(getActivity(), this, hour, minute,
-					DateFormat.is24HourFormat(getActivity()));
+					DateFormat.is24HourFormat(getActivity())); // Hier
+																// Fehler!!!!
 
 		}
 

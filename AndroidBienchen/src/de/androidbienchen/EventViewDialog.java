@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,17 +17,17 @@ public class EventViewDialog {
 
 	private Context cont;
 	private Event event;
-	private InsertListener dl;
+	private DeletListener dl;
 
-	// public EventViewDialog(Context cont, Event vt, InsertListener dl)
-	public EventViewDialog(Context cont, Event vt) {
+	 public EventViewDialog(Context cont, Event vt){
+//	public EventViewDialog(FragmentActivity activity, DeletListener dl, Event vt) {
 		this.cont = cont;
 		this.event = vt;
-		// this.dl = dl;
+		this.dl = dl;
 		createDialog();
 	}
 
-	public interface InsertListener {
+	public interface DeletListener {
 		public void deletEvent(Event event);
 	}
 
@@ -46,7 +47,15 @@ public class EventViewDialog {
 		info.setText(event.Info);
 		date.setText(formatter.format(event.StartDate) + " - "
 				+ formatter.format(event.EndDate));
+
 		builder.setView(v);
+		builder.setNegativeButton("Löschen", new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				arg0.dismiss();
+			}
+		});
 
 		builder.setPositiveButton("Schließen", new OnClickListener() {
 
@@ -58,16 +67,6 @@ public class EventViewDialog {
 		});
 		builder.create().show();
 
-		// builder.setPositiveButton("Löschen", new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(DialogInterface dialog, int which) {
-		// dl.deletEvent(event);
-		// dialog.dismiss();
-		// }
-		// });
-		// builder.create().show();
-		// }
-
 	}
+
 }

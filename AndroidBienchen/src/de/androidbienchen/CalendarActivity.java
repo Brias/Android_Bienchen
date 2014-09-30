@@ -53,7 +53,8 @@ public class CalendarActivity extends Fragment implements SyncListener {
 		super.onCreate(savedInstanceState);
 		// setContentView(R.layout.activity_calendar);
 
-//		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
+		// final SimpleDateFormat formatter = new
+		// SimpleDateFormat("dd MMM yyyy");
 		caldroidFragment = new CaldroidFragment();
 
 		//
@@ -71,9 +72,6 @@ public class CalendarActivity extends Fragment implements SyncListener {
 			args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
 			args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
 
-			// Uncomment this to customize startDayOfWeek
-			// args.putInt(CaldroidFragment.START_DAY_OF_WEEK,
-			// CaldroidFragment.TUESDAY); // Tuesday
 			caldroidFragment.setArguments(args);
 		}
 
@@ -87,8 +85,8 @@ public class CalendarActivity extends Fragment implements SyncListener {
 
 			@Override
 			public void onSelectDate(Date date, View view) {
-//				Toast.makeText(getActivity(), formatter.format(date),
-//						Toast.LENGTH_SHORT).show();
+				// Toast.makeText(getActivity(), formatter.format(date),
+				// Toast.LENGTH_SHORT).show();
 				for (int i = 0; i < allEvents.size(); i++) {
 					Date start = allEvents.get(i).StartDate;
 					if (start.getDate() == date.getDate()
@@ -97,6 +95,17 @@ public class CalendarActivity extends Fragment implements SyncListener {
 						new EventViewDialog(getActivity(), allEvents.get(i));
 						return;
 					}
+//					else {
+//						new EventViewDialog (getActivity(), 
+//								new EventViewDialog.DeletListener() {
+//									
+//									@Override
+//									public void deletEvent(Event event) {
+//										dbb.deletEvent(event);
+//										
+//									}
+//								}, allEvents.get(i));
+//					}
 				}
 
 				new EventInsertDialog(getActivity(),
