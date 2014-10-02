@@ -7,6 +7,7 @@ public class AppConfig {
 		public static final String TEMPERATURE_URL = "http://app.iv-sinzing.de/temperatur";
 		public static final String IMAGE_URL = "http://app.iv-sinzing.de/snapshot.jpg";
 		public static final String WEBSITE_URL = "http://www.iv-sinzing.de/";
+		public static final String CHAT_URL = ""; 
 	}
 	
 	public class SizeData{
