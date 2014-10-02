@@ -43,7 +43,7 @@ public class ChatListAdapter extends ArrayAdapter<ChatListItem>{
 			TextView receivedDate = (TextView) v.findViewById(R.id.message_date);
 			TextView username = (TextView) v.findViewById(R.id.username_container);
 			
-			message.setText(chatItem.getTask());
+			message.setText(chatItem.getMessage());
 			receivedDate.setText(chatItem.getDate());
 			username.setText(chatItem.getUsername());
 		}

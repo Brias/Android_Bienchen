@@ -21,7 +21,7 @@ public class ChatListItem {
 		this.date = dateFormat.format(new Date());
 	}
 
-	public String getTask() {
+	public String getMessage() {
 		return message;
 	}
 

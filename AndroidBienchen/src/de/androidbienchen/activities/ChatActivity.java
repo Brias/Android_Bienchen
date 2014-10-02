@@ -46,7 +46,7 @@ public class ChatActivity extends Fragment implements IOCallback{
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		//initChat();
+		initChat();
 	}
 	
 	void initChatList(){
