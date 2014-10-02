@@ -36,7 +36,6 @@ public class MainActivity extends AbstractNavDrawerActivity implements UpdateSta
         	initUpdateDialog();
         	init();
         	setCurrent(presence);
-        	setCurrent(chat);
         	addFragments();
         	hideFragments();
         }

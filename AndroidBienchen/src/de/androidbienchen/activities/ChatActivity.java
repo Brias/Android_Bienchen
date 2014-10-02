@@ -6,6 +6,7 @@ import io.socket.SocketIO;
 import io.socket.SocketIOException;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 
 import org.json.JSONObject;
 
@@ -14,25 +15,79 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import de.androidbienchen.R;
+import de.androidbienchen.chathelper.ChatListAdapter;
+import de.androidbienchen.chathelper.ChatListItem;
 import de.androidbienchen.data.AppConfig;
 
-public class ChatActivity extends Fragment {
+public class ChatActivity extends Fragment implements IOCallback{
+	
+	private ArrayList<ChatListItem> chatList;
+	private ArrayAdapter<ChatListItem> chatListAdapter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_chat,
+		View rootView = inflater.inflate(R.layout.chat_input,
 				container, false);
+		
+		initChatList();
+		initUI(rootView);
+		
 		return rootView;
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		initChat();
+		//initChat();
 	}
+	
+	void initChatList(){
+		chatList = new ArrayList<ChatListItem>();
+	}
+	
+	void initUI(View rootView){
+		initTaskButton(rootView);
+		initListAdapter(rootView);
+	}
+	
+	private void initTaskButton(View rootView) {
+		Button sendButton = (Button) rootView.findViewById(R.id.send_button);
+		sendButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				EditText edit = (EditText) getActivity().findViewById(R.id.chat_input_container);
+				String sendingMessage = edit.getText().toString();
+				addMessage(sendingMessage);
+				edit.setText("");
+			}
+		});
+	}
+
+	private void initListAdapter(View rootView) {
+		ListView list = (ListView) rootView.findViewById(R.id.message_list);
+		chatListAdapter = new ChatListAdapter(getActivity(), chatList);
+		list.setAdapter(chatListAdapter);
+	}
+	
+	void addMessage(String sendMessage){
+		if (sendMessage.equals("")) {
+			return;
+		} else {
+			chatList.add(new ChatListItem(sendMessage, "Myself"));
+			chatListAdapter.notifyDataSetChanged();
+			ListView list = (ListView) getActivity().findViewById(R.id.message_list);
+			list.setSelection(chatListAdapter.getCount()-1);
+		}
+	}
+
 	
 	void initChat(){
 		SocketIO socket = null;
@@ -42,46 +97,10 @@ public class ChatActivity extends Fragment {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		socket.connect(new IOCallback() {
-			
-			@Override
-			public void onMessage(JSONObject arg0, IOAcknowledge arg1) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onMessage(String arg0, IOAcknowledge arg1) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onError(SocketIOException arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onDisconnect() {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void onConnect() {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void on(String arg0, IOAcknowledge arg1, Object... arg2) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
-		socket.send("Hello Server");
+		if(socket != null){
+			socket.connect(this);
+			socket.send("Hello Server");
+		}
 	}
 	
 	@Override
@@ -108,5 +127,41 @@ public class ChatActivity extends Fragment {
 
 		public PlaceholderFragment() {
 		}
+	}
+
+	@Override
+	public void on(String arg0, IOAcknowledge arg1, Object... arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onConnect() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDisconnect() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onError(SocketIOException arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMessage(String arg0, IOAcknowledge arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onMessage(JSONObject arg0, IOAcknowledge arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 }

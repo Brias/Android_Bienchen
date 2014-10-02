@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import de.androidbienchen.R;
+
 
 
 public class ChatListAdapter extends ArrayAdapter<ChatListItem>{
@@ -16,7 +18,7 @@ public class ChatListAdapter extends ArrayAdapter<ChatListItem>{
 	private Context context;
 
 	public ChatListAdapter(Context context, List<ChatListItem> chatList) {
-		super(context, R.id.chat_income_message_item, chatList);
+		super(context, R.id.message_list, chatList);
 
 		this.context = context;
 		this.chatList = chatList;
@@ -30,18 +32,20 @@ public class ChatListAdapter extends ArrayAdapter<ChatListItem>{
 		if (v == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = inflater.inflate(R.layout.todo_item, null);
+			v = inflater.inflate(R.layout.chat_income_message_item, null);
 
 		}
 
-		ChatListItem task = chatList.get(position);
+		ChatListItem chatItem = chatList.get(position);
 
-		if (task != null) {
-			TextView message = (TextView) v.findViewById(R.id.task_name);
-			TextView receivedDate = (TextView) v.findViewById(R.id.task_date);
-
-			message.setText(task.getTask());
-			receivedDate.setText(task.getDate());
+		if (chatItem != null) {
+			TextView message = (TextView) v.findViewById(R.id.message_container);
+			TextView receivedDate = (TextView) v.findViewById(R.id.message_date);
+			TextView username = (TextView) v.findViewById(R.id.username_container);
+			
+			message.setText(chatItem.getTask());
+			receivedDate.setText(chatItem.getDate());
+			username.setText(chatItem.getUsername());
 		}
 
 		return v;
