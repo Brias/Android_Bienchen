@@ -54,8 +54,8 @@ public class CalendarActivity extends Fragment implements SyncListener {
 
 		caldroidFragment = new CaldroidFragment();
 
-		//
 		// If Activity is created after rotation
+		
 		if (savedInstanceState != null) {
 			caldroidFragment.restoreStatesFromKey(savedInstanceState,
 					"CALDROID_SAVED_STATE");
@@ -77,7 +77,6 @@ public class CalendarActivity extends Fragment implements SyncListener {
 		t.replace(R.id.calendar, caldroidFragment);
 		t.commit();
 
-		
 		
 		// Setup listener
 		final CaldroidListener listener = new CaldroidListener() {
@@ -102,10 +101,10 @@ public class CalendarActivity extends Fragment implements SyncListener {
 							@Override
 							public void insertComplt(Event event) {
 
-									dbb.addEvent(event.Titel, event.Info,
-											event.StartDate, event.EndDate);
-									refreshCalenderView();
-								}
+								dbb.addEvent(event.Titel, event.Info,
+										event.StartDate, event.EndDate);
+								refreshCalenderView();
+							}
 						}, date);
 			}
 

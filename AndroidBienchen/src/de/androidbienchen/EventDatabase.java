@@ -143,21 +143,28 @@ public class EventDatabase {
 	}
 
 	// deletes from online db
+
 	public void deleteEvent(Event event) {
-//		if (event.parseId.equals("0")) { // wenn nicht ausge.. stürzt immer ab. 
-//			return;
-//		}
+		// if (event.parseId.equals("0")) { // wenn nicht ausge.. stürzt immer
+		// ab.
+		// return;
+		// }
 		ParseQuery<ParseObject> pquery = new ParseQuery<ParseObject>(TABLE_KEY);
 
 		pquery.getInBackground(event.parseId, new GetCallback<ParseObject>() {
 
 			@Override
 			public void done(ParseObject pquery, ParseException e) {
-				if (pquery == null)	Log.d("SCHEISSE", "SCHEISSE");
-				
+				if (pquery == null)
+					Log.d("SCHEISSE", "SCHEISSE");
+
 				if (e == null) { // wichtig!
+
 					pquery.deleteInBackground();
-					
+					openDB();
+					final long id = database.delete(TABLE_KEY, ID_KEY, null);
+					database.close();
+
 				}
 			}
 		});

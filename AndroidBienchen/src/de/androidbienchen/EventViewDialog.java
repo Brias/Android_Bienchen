@@ -55,15 +55,8 @@ public class EventViewDialog {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				
 				dbb.deleteEvent(event);
-				Log.e("Eventtttt", event.toString());
-//				if (NetworkAvailability.networkStatus(cont)){
-//				dbb.deleteEvent(event);		
-//				} else {
-//					dbb.deleteEvent(parseData);
-//				}
-//				Log.e("Eventtttt", event.toString());
+				
 				dialog.dismiss();
 			}
 		});
