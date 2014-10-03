@@ -162,7 +162,7 @@ public class EventDatabase {
 
 					pquery.deleteInBackground();
 					openDB();
-					final long id = database.delete(TABLE_KEY, ID_KEY, null);
+					database.delete(TABLE_KEY, ID_KEY, null);
 					database.close();
 
 				}
