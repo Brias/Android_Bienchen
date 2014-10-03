@@ -18,12 +18,14 @@ public class EventViewDialog {
 	private Context cont;
 	private Event event;
 	private DeletListener dl;
+	private EventDatabase dbb;
 
-	 public EventViewDialog(Context cont, Event vt){
-//	public EventViewDialog(FragmentActivity activity, DeletListener dl, Event vt) {
+
+	 public EventViewDialog(Context cont, Event vt, EventDatabase dbb){
 		this.cont = cont;
 		this.event = vt;
 		this.dl = dl;
+		this.dbb = dbb;
 		createDialog();
 	}
 
@@ -35,7 +37,7 @@ public class EventViewDialog {
 
 	private void createDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(cont);
-		Log.e("AYLA", this.event.toString());
+//		Log.e("AYLA", this.event.toString());
 		builder.setTitle(this.event.Titel);
 		LayoutInflater inflater = (LayoutInflater) cont
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -52,8 +54,17 @@ public class EventViewDialog {
 		builder.setNegativeButton("Löschen", new OnClickListener() {
 
 			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
-				arg0.dismiss();
+			public void onClick(DialogInterface dialog, int which) {
+				
+				dbb.deleteEvent(event);
+				Log.e("Eventtttt", event.toString());
+//				if (NetworkAvailability.networkStatus(cont)){
+//				dbb.deleteEvent(event);		
+//				} else {
+//					dbb.deleteEvent(parseData);
+//				}
+//				Log.e("Eventtttt", event.toString());
+				dialog.dismiss();
 			}
 		});
 

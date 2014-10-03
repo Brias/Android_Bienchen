@@ -25,11 +25,16 @@ public class EventDatabase {
 	private dbOpenHelper dbH;
 
 	public EventDatabase(Context context) {
+
 		this.context = context;
 		dbH = new dbOpenHelper(context, DATABASE_KEY, null, DATABASE_VERSION);
-		Parse.initialize(this.context,
-				"4RP3AlbWRKmrrhi542rrP3jFuleZN9TSgwAek8N0",
-				"FjLHxQAqH7gcZzoBvFiTvtntMRHeW36LbzGrg1A9");
+		try {
+			Parse.initialize(this.context,
+					"4RP3AlbWRKmrrhi542rrP3jFuleZN9TSgwAek8N0",
+					"FjLHxQAqH7gcZzoBvFiTvtntMRHeW36LbzGrg1A9");
+		} catch (Exception e) {
+
+		}
 	}
 
 	private SQLiteDatabase database;
@@ -76,6 +81,7 @@ public class EventDatabase {
 		database = dbH.getWritableDatabase();
 	}
 
+	// Creats the Database with all events
 	public ArrayList<Event> getAllEvents() {
 		ArrayList<Event> events = new ArrayList<Event>();
 		openDB();
@@ -102,17 +108,20 @@ public class EventDatabase {
 		return events;
 	}
 
+	// Inserts Events in local and online database
 	public void addEvent(String title, String infotext, Date start, Date end) {
+
+		// local database
 		ContentValues data = new ContentValues();
 		data.put(TITLE_KEY, title);
 		data.put(INFO_KEY, infotext);
 		data.put(START_DATE, start.getTime());
 		data.put(END_DATE, end.getTime());
-
 		openDB();
 		final long id = database.insert(TABLE_KEY, null, data);
 		database.close();
 
+		// online database
 		final ParseObject parseData = new ParseObject(TABLE_KEY);
 		parseData.put(TITLE_KEY, title);
 		parseData.put(INFO_KEY, infotext);
@@ -132,20 +141,29 @@ public class EventDatabase {
 
 		});
 	}
-	
-//	public void deleteEvent(String titel, String info, Date startDate,
-//			Date endDate) {
-//		ContentValues data = new ContentValues();
-//		data.remove(TITLE_KEY);
-//		data.remove(INFO_KEY);
-//		data.remove(START_DATE);
-//		data.remove(END_DATE);
-//
-//		openDB();
-//		final long id = database.insert(TABLE_KEY, null, data);
-//		database.close();
-//	}
-//	
+
+	// deletes from online db
+	public void deleteEvent(Event event) {
+//		if (event.parseId.equals("0")) { // wenn nicht ausge.. stürzt immer ab. 
+//			return;
+//		}
+		ParseQuery<ParseObject> pquery = new ParseQuery<ParseObject>(TABLE_KEY);
+
+		pquery.getInBackground(event.parseId, new GetCallback<ParseObject>() {
+
+			@Override
+			public void done(ParseObject pquery, ParseException e) {
+				if (pquery == null)	Log.d("SCHEISSE", "SCHEISSE");
+				
+				if (e == null) { // wichtig!
+					pquery.deleteInBackground();
+					
+				}
+			}
+		});
+	}
+
+	// }
 
 	// Syns with the online database and check's if event is in Database or not
 	// if the local parse id equals online id, the entry is found, otherwise put
@@ -171,18 +189,10 @@ public class EventDatabase {
 							continue;
 						}
 						String onlineParseId = curObject.getObjectId();
-						if (localParseId.equals(onlineParseId)) { // Hier löschen! 																	// löschen
-														
+						if (localParseId.equals(onlineParseId)) {
+							// maybe delete here?
 							entryfound = true;
 						}
-//						if (localParseId.equals("null")){
-//							return; 
-//								curObject.delete();
-//							} catch (ParseException e1) {
-//								// TODO Auto-generated catch block
-//								e1.printStackTrace();
-//							}
-//						}
 					}
 					if (entryfound == false) {
 
@@ -198,8 +208,7 @@ public class EventDatabase {
 						database.close();
 
 					}
-					
-					
+
 					if (sl != null) {
 						sl.syncFinished();
 					}
@@ -208,21 +217,6 @@ public class EventDatabase {
 			}
 
 		});
-	}
-	
-	public void deletEvent(Event events){
-		ParseQuery<ParseObject> pquery = new ParseQuery<ParseObject>(TABLE_KEY);
-		pquery.getInBackground(events.parseId,
-				new GetCallback<ParseObject>() {
-					
-					@Override
-					public void done(ParseObject ob, ParseException e) {
-						if (e == null){
-							ob.deleteInBackground();
-						}					
-					}
-				});
-		
 	}
 
 	public interface SyncListener {

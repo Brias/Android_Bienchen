@@ -82,8 +82,7 @@ public class EventInsertDialog {
 			@Override
 			public void onClick(View v) {
 				FragmentActivity fa = (FragmentActivity) cont;
-				new TimePickerFragment(endDate, endZeit).show(
-						fa.getSupportFragmentManager(), "datePicker");
+				new TimePickerFragment(endDate, endZeit).show(fa.getSupportFragmentManager(), "datePicker");
 
 			}
 		});
@@ -105,6 +104,7 @@ public class EventInsertDialog {
 
 				String inserTt = insertTitel.getText().toString();
 				String insertInf = insertInfo.getText().toString();
+				
 				Event event = new Event();
 				event.Titel = inserTt;
 				event.Info = insertInf;

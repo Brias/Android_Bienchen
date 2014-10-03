@@ -51,10 +51,7 @@ public class CalendarActivity extends Fragment implements SyncListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// setContentView(R.layout.activity_calendar);
 
-		// final SimpleDateFormat formatter = new
-		// SimpleDateFormat("dd MMM yyyy");
 		caldroidFragment = new CaldroidFragment();
 
 		//
@@ -80,32 +77,23 @@ public class CalendarActivity extends Fragment implements SyncListener {
 		t.replace(R.id.calendar, caldroidFragment);
 		t.commit();
 
+		
+		
 		// Setup listener
 		final CaldroidListener listener = new CaldroidListener() {
 
 			@Override
 			public void onSelectDate(Date date, View view) {
-				// Toast.makeText(getActivity(), formatter.format(date),
-				// Toast.LENGTH_SHORT).show();
+
 				for (int i = 0; i < allEvents.size(); i++) {
 					Date start = allEvents.get(i).StartDate;
 					if (start.getDate() == date.getDate()
 							&& start.getMonth() == date.getMonth()
 							&& start.getYear() == date.getYear()) {
-						new EventViewDialog(getActivity(), allEvents.get(i));
+						new EventViewDialog(getActivity(), allEvents.get(i),
+								dbb);
 						return;
 					}
-//					else {
-//						new EventViewDialog (getActivity(), 
-//								new EventViewDialog.DeletListener() {
-//									
-//									@Override
-//									public void deletEvent(Event event) {
-//										dbb.deletEvent(event);
-//										
-//									}
-//								}, allEvents.get(i));
-//					}
 				}
 
 				new EventInsertDialog(getActivity(),
@@ -113,10 +101,11 @@ public class CalendarActivity extends Fragment implements SyncListener {
 
 							@Override
 							public void insertComplt(Event event) {
-								dbb.addEvent(event.Titel, event.Info,
-										event.StartDate, event.EndDate);
-								refreshCalenderView();
-							}
+
+									dbb.addEvent(event.Titel, event.Info,
+											event.StartDate, event.EndDate);
+									refreshCalenderView();
+								}
 						}, date);
 			}
 
@@ -145,7 +134,6 @@ public class CalendarActivity extends Fragment implements SyncListener {
 
 	@Override
 	public void syncFinished() {
-
 		refreshCalenderView();
 	}
 
