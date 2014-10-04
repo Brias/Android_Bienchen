@@ -4,24 +4,29 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.util.Log;
 import de.androidbienchen.activities.PresenceStatusActivity;
 
 public class ReachedReceiver extends BroadcastReceiver{
 
+	PresenceStatusActivity presenceActivity;
+	
+	public ReachedReceiver(PresenceStatusActivity presenceActivity){
+		this.presenceActivity = presenceActivity;
+	}
+	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		boolean entering = intent.getBooleanExtra(LocationManager.KEY_PROXIMITY_ENTERING, false);
+		Log.d("ONRECEIVE", "INRADIUS");
+		updateUI(entering);
+	}
+	
+	private void updateUI(boolean entering){
 		if(entering) {
-			launchActivity(context);
+			presenceActivity.updateUIThere("Myself");
+		}else{
+			presenceActivity.updateUINotThere("Myself");
 		}
 	}
-
-	private void launchActivity(Context context) {
-		Intent intent = new Intent();
-		intent.putExtra(PresenceStatusActivity.EXTRA_KEY_PROXMITY_REACHED, true);
-		intent.setClassName("de.androidbienchen.activities", "de.androidbienchen.activities.PresenceStatusActivity");
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-	}
-
 }

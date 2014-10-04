@@ -4,5 +4,5 @@
     <color name="start_menu_button_color_light">#F9CE1D</color>
     <color name="start_menu_button_color_dark">#FF8800</color> 
     <color name="yellow">#FFEA40</color>
-
+	<color name="green">#00BA00</color>
 </resources>

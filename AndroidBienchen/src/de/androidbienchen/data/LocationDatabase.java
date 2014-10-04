@@ -86,7 +86,8 @@ public class LocationDatabase {
 	
 	public ArrayList<Weight> getWeights(){
 		ArrayList<Weight> weights = new ArrayList<Weight>();
-		Cursor cursor =  db.query(AppConfig.SizeData.TABLE_KEY_SCALE, new String[] {AppConfig.Data.ID_KEY, AppConfig.SizeData.SCALE_KEY, AppConfig.Data.DATE_KEY}, null, null, null, null, null);
+		Cursor cursor =  db.query(AppConfig.SizeData.TABLE_KEY_SCALE, new String[] 
+						{AppConfig.Data.ID_KEY, AppConfig.SizeData.SCALE_KEY, AppConfig.Data.DATE_KEY}, null, null, null, null, null);
 		
 		if(cursor.moveToFirst()){
 			do{
@@ -104,7 +105,8 @@ public class LocationDatabase {
 	
 	public ArrayList<Temperature> getTemperatures(){
 		ArrayList<Temperature> temperatures = new ArrayList<Temperature>();
-		Cursor cursor =  db.query(AppConfig.TemperatureData.TABLE_KEY_TEMPERATURE, new String[] {AppConfig.Data.ID_KEY, AppConfig.TemperatureData.TEMPERTURE_KEY, AppConfig.Data.DATE_KEY}, null, null, null, null, null);
+		Cursor cursor =  db.query(AppConfig.TemperatureData.TABLE_KEY_TEMPERATURE, new String[] 
+						{AppConfig.Data.ID_KEY, AppConfig.TemperatureData.TEMPERTURE_KEY, AppConfig.Data.DATE_KEY}, null, null, null, null, null);
 		
 		if(cursor.moveToFirst()){
 			do{
@@ -136,17 +138,25 @@ public class LocationDatabase {
 		}
 	}
 	
-	/*public boolean removeOldestWeight(){
-		int oldestId = getOldestWeightId();
+	public long insertUsername(String username){
+		ContentValues user = new ContentValues();
 		
-		return db.delete(AppConfig.SizeData.TABLE_KEY_SCALE, ""+AppConfig.Data.ID_KEY + " = " + oldestId+"", null) > 0;
+		user.put(AppConfig.UsernameData.USERNAME_KEY, username);
+	    
+	    return db.insert( AppConfig.UsernameData.TABLE_KEY_USERNAME, null, user);
 	}
 	
-	private int getOldestWeightId(){
-		final SQLiteStatement stmt = db.compileStatement("SELECT MIN(" +AppConfig.Data.ID_KEY+ ") FROM " +AppConfig.SizeData.TABLE_KEY_SCALE);
-
-	    return (int) stmt.simpleQueryForLong();
-	}*/
+	public String getUsername(){
+		String username = null;
+		Cursor cursor = db.query(AppConfig.UsernameData.TABLE_KEY_USERNAME, new String[] 
+						{AppConfig.Data.ID_KEY, AppConfig.UsernameData.USERNAME_KEY}, null, null, null, null, null);
+		
+		if(cursor.moveToFirst()){
+			username = cursor.getString(1);
+		}
+		
+		return username;
+	}
 	
 	private class LocationDatabaseHelper extends SQLiteOpenHelper{
 		
@@ -165,6 +175,11 @@ public class LocationDatabase {
 				+ AppConfig.Data.ID_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, "
 				+ AppConfig.ImageData.IMAGE_KEY + " BLOB);";
 		
+		private static final String DATABASE_CREATE_USERNAME_TABLE = "create table "
+				+ AppConfig.UsernameData.TABLE_KEY_USERNAME + " ("
+				+ AppConfig.Data.ID_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+				+ AppConfig.UsernameData.USERNAME_KEY+ " TEXT NOT NULL);";
+		
 		public LocationDatabaseHelper(Context context, String name, CursorFactory factory, int version){
 			super(context, name, factory, version);
 		}
@@ -174,6 +189,7 @@ public class LocationDatabase {
 			db.execSQL(DATABASE_CREATE_SCALE_TABLE);
 			db.execSQL(DATABASE_CREATE_TEMPERATURE_TABLE);
 			db.execSQL(DATABASE_CREATE_IMAGE_TABLE);
+			db.execSQL(DATABASE_CREATE_USERNAME_TABLE);
 		}
 
 		@Override

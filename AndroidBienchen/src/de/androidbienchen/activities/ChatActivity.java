@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 import de.androidbienchen.R;
 import de.androidbienchen.chathelper.ChatListAdapter;
 import de.androidbienchen.chathelper.ChatListItem;
@@ -100,7 +102,10 @@ public class ChatActivity extends Fragment implements IOCallback{
 		if(socket != null){
 			socket.connect(this);
 			socket.send("Hello Server");
+			Log.d("SOCKETISCONNECTED", ""+socket.isConnected());
+			Toast.makeText(getActivity(), ""+socket.isConnected(), Toast.LENGTH_LONG);
 		}
+		Toast.makeText(getActivity(), ""+socket.isConnected(), Toast.LENGTH_LONG);
 	}
 	
 	@Override
@@ -138,18 +143,21 @@ public class ChatActivity extends Fragment implements IOCallback{
 	@Override
 	public void onConnect() {
 		// TODO Auto-generated method stub
+		Toast.makeText(getActivity(), "CONNECTED", Toast.LENGTH_LONG);
 		
 	}
 
 	@Override
 	public void onDisconnect() {
 		// TODO Auto-generated method stub
+		Toast.makeText(getActivity(), "DISCONNECTED", Toast.LENGTH_LONG);
 		
 	}
 
 	@Override
 	public void onError(SocketIOException arg0) {
 		// TODO Auto-generated method stub
+		
 		
 	}
 

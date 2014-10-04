@@ -36,7 +36,11 @@
     <string name="update_error_message">Unable to Update Data: </string>
     <string name="update_local_data_error">Failed to Load Local Data: </string>
     
+    <!-- Presence Status -->
+    <string name="online">Online</string>
+    
     <!-- Dialog Messages -->
+    <string name="username_title">Bitten geben Sie ihren Benutzernamen ein!</string>
     <string name="updating_data">Updating...</string>
     <string name="update_succeed">Update Succeed</string>
     <string name="data_updated">All Data is Updated</string>
