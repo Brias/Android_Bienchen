@@ -5,10 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.media.MediaDrm;
-import android.os.Message;
-import android.text.InputType;
-import android.widget.EditText;
 import de.androidbienchen.R;
 
 public class UpdateDialogHelper {

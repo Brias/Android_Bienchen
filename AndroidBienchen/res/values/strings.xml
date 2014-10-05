@@ -10,6 +10,7 @@
     <string name="title_activity_chat">ChatActivity</string>
     <string name="title_activity_presence_status">PresenceStatusActivity</string>
     <string name="title_activity_calendar">CalendarActivity</string>
+    <string name="title_activity_main">MainActivity</string>
     
     <!-- Fragment titles -->
     <string name="presence">Presence</string>
@@ -40,7 +41,11 @@
     <string name="online">Online</string>
     
     <!-- Dialog Messages -->
-    <string name="username_title">Bitten geben Sie ihren Benutzernamen ein!</string>
+    <string name="username_description">Bitte geben Sie einen möglichst eindeutigen Name als ihren Benutzernamen ein.\n 
+        								Der Benutzername dient als Erkennungsmerkmal für alle anderen Appbenutzer.\n
+        								Dieses Feld erscheint einmalig und bei jeder Neuinstallation dieser App.\n 
+        								Der gewählte Benutzernam ist somit fest und nicht veränderbar.</string>
+    <string name="username_title">Bitten geben Sie ihren gewünschten Benutzernamen ein!</string>
     <string name="updating_data">Updating...</string>
     <string name="update_succeed">Update Succeed</string>
     <string name="data_updated">All Data is Updated</string>

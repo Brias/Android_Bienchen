@@ -7,12 +7,13 @@ public class AppConfig {
 		public static final String TEMPERATURE_URL = "http://app.iv-sinzing.de/temperatur";
 		public static final String IMAGE_URL = "http://app.iv-sinzing.de/snapshot.jpg";
 		public static final String WEBSITE_URL = "http://www.iv-sinzing.de/";
-		public static final String CHAT_URL = "https://localhost:80/"; 
+		public static final String CHAT_URL = "http://127.0.0.1:1337/"; 
 	}
 	
 	public class UsernameData{
 		public static final String TABLE_KEY_USERNAME = "_username";
 		public static final String USERNAME_KEY = "_usernameValue";
+		public static final String ANDROID_ID_KEY ="_androidId";
 	}
 	
 	public class SizeData{

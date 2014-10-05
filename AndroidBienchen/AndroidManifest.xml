@@ -21,33 +21,19 @@
             android:name="com.google.android.gms.version" 
         	android:value="@integer/google_play_services_version"/>
         <activity
-            android:name="de.androidbienchen.activities.MainActivity"
-            android:label="@string/app_name" >
+            android:name="de.androidbienchen.activities.UsernameActivity"
+            android:label="@string/app_name" 
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="de.androidbienchen.activities.StatisticActivity"
-            android:label="@string/title_activity_scale" >
-        </activity>
-        <activity
-            android:name="de.androidbienchen.activities.CamActivity"
-            android:label="@string/title_activity_cam" >
-        </activity>
-        <activity
-            android:name="de.androidbienchen.activities.ChatActivity"
-            android:label="@string/title_activity_chat" >
-        </activity>
-        <activity
-            android:name="de.androidbienchen.activities.PresenceStatusActivity"
-            android:label="@string/title_activity_presence_status" >
-        </activity>
-        <activity
-            android:name="de.androidbienchen.activities.CalendarActivity"
-            android:label="@string/title_activity_calendar" >
+        <activity 
+            android:name="de.androidbienchen.activities.MainActivity"
+            android:label="@string/title_activity_presence_status"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

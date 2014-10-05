@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +26,11 @@ public class PresenceStatusActivity extends Fragment {
 	public static final String EXTRA_KEY_IN_RADIUS = "Present";
 //	public static final double LATITUDE = 48.59662;	 //location data
 //	public static final double LONGITUDE = 12.02154; //of Bienenstand
-	public static final double LATITUDE = 49.03129;
-	public static final double LONGITUDE = 11.97801;
-	public static final float PROXIMITY_RADIUS = 30;
+	//public static final double LATITUDE = 49.03129;
+	//public static final double LONGITUDE = 11.97801;
+	public static final double LATITUDE = 49.03129100;
+	public static final double LONGITUDE = 11.9780100;
+	public static final float PROXIMITY_RADIUS = 5f;
 	
 	private ArrayList<PresenceStatusItem> statusList;
 	private PresenceListAdapter statusListAdapter;
@@ -37,6 +38,7 @@ public class PresenceStatusActivity extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
 		View rootView = inflater.inflate(R.layout.fragment_presence_status,
 				container, false);
 		
@@ -54,12 +56,12 @@ public class PresenceStatusActivity extends Fragment {
 	
 	private void initProxmityAlert() {	
 		getActivity().registerReceiver(new ReachedReceiver(this), new IntentFilter(ACTION_FILTER));
-		LocationManager locationManger = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+		LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 		Intent inRadiusIntent = new Intent();
 		inRadiusIntent.setAction(ACTION_FILTER);
 		PendingIntent proximityIntent = PendingIntent.getBroadcast(getActivity(), -1, inRadiusIntent, 0);
 		
-		locationManger.addProximityAlert(LATITUDE, LONGITUDE, PROXIMITY_RADIUS, -1, proximityIntent);
+		locationManager.addProximityAlert(LATITUDE, LONGITUDE, PROXIMITY_RADIUS, -1, proximityIntent);
 	}
 	
 	private void initList(){
@@ -73,16 +75,20 @@ public class PresenceStatusActivity extends Fragment {
 	}
 	  
 	  public void updateUIThere(String username){
-		statusList.add(new PresenceStatusItem(username));
+		//statusList.add(new PresenceStatusItem(username));
+		  for(int i = 0; i < 4; i++){
+			  statusList.add(new PresenceStatusItem(username+""+i));
+		  }
 		notifyListChanges();
 	  }
 	  
 	  public void updateUINotThere(String username){
 		  for(int i = 0; i < statusList.size(); i++){
-			  if(statusList.get(i).getUsername().equals(username)){
+			  if(statusList.get(i).getUsername().equals(username+""+0)){
 				  statusList.remove(i);
 				  break;
 			  }
+			  statusList.add(new PresenceStatusItem("EXIT LOCATION"));
 			  notifyListChanges();
 		  }
 	  }

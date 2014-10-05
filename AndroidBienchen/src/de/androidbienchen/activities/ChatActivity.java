@@ -95,17 +95,12 @@ public class ChatActivity extends Fragment implements IOCallback{
 		SocketIO socket = null;
 		try {
 			socket = new SocketIO(AppConfig.server.CHAT_URL);
+			socket.connect(this);
+			socket.send("Hello Server");
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if(socket != null){
-			socket.connect(this);
-			socket.send("Hello Server");
-			Log.d("SOCKETISCONNECTED", ""+socket.isConnected());
-			Toast.makeText(getActivity(), ""+socket.isConnected(), Toast.LENGTH_LONG);
-		}
-		Toast.makeText(getActivity(), ""+socket.isConnected(), Toast.LENGTH_LONG);
 	}
 	
 	@Override
@@ -137,39 +132,39 @@ public class ChatActivity extends Fragment implements IOCallback{
 	@Override
 	public void on(String arg0, IOAcknowledge arg1, Object... arg2) {
 		// TODO Auto-generated method stub
-		
+		Log.d("On", "TRUE");
 	}
 
 	@Override
 	public void onConnect() {
 		// TODO Auto-generated method stub
-		Toast.makeText(getActivity(), "CONNECTED", Toast.LENGTH_LONG);
+		Log.d("OnConnect", "TRUE");
 		
 	}
 
 	@Override
 	public void onDisconnect() {
 		// TODO Auto-generated method stub
-		Toast.makeText(getActivity(), "DISCONNECTED", Toast.LENGTH_LONG);
+		Log.d("OnDisconnect", "TRUE");
 		
 	}
 
 	@Override
 	public void onError(SocketIOException arg0) {
 		// TODO Auto-generated method stub
-		
+		Log.d("OnError", ""+arg0);
 		
 	}
 
 	@Override
 	public void onMessage(String arg0, IOAcknowledge arg1) {
 		// TODO Auto-generated method stub
-		
+		Log.d("OnMessage", "TRUE");
 	}
 
 	@Override
 	public void onMessage(JSONObject arg0, IOAcknowledge arg1) {
 		// TODO Auto-generated method stub
-		
+		Log.d("OnMessage", "TRUE");
 	}
 }

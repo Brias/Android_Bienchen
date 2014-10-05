@@ -13,6 +13,7 @@ public class ReachedReceiver extends BroadcastReceiver{
 	
 	public ReachedReceiver(PresenceStatusActivity presenceActivity){
 		this.presenceActivity = presenceActivity;
+		Log.d("Receiver", "Erstellt");
 	}
 	
 	@Override

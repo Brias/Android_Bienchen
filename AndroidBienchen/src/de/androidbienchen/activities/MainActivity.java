@@ -1,19 +1,11 @@
 package de.androidbienchen.activities;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.View;
-import android.widget.EditText;
 import de.androidbienchen.R;
 import de.androidbienchen.data.AppConfig;
-import de.androidbienchen.data.LocationDatabase;
 import de.androidbienchen.data.NetworkAvailability;
 import de.androidbienchen.data.UpdateDialogHelper;
 import de.androidbienchen.listener.UpdateStatusListener;
@@ -32,53 +24,15 @@ public class MainActivity extends AbstractNavDrawerActivity implements UpdateSta
 	private PresenceStatusActivity presence;
 	private CalendarActivity calendar;
 	
-	private LocationDatabase db;
-	
 	private Fragment current;
 	private CalendarActivity currentCalendar;
-	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
         if ( savedInstanceState == null ) {
-        	initDatabase();
-        	checkUsernameDialogNecessary();
+        	initAll();
         }
-    }
-    
-    void initDatabase(){
-    	db = new LocationDatabase(this);
-    }
-    
-    void checkUsernameDialogNecessary(){
-    	openDatabse();
-    	usernameDialog();
-//    	if(getUsernameOfDatabase() == null){
-//    		closeDatabse();
-//    		usernameDialog();
-//    	}else{
-//    		initAll();
-//    	}
-    }
-    
-    void openDatabse(){
-    	db.open();
-    }
-    
-    void closeDatabse(){
-    	db.close();
-    }
-    
-    void insertUsernameIntoDatabse(String username){
-    	openDatabse();
-		db.insertUsername(username);
-		closeDatabse();
-	}
-    
-    private String getUsernameOfDatabase(){
-    	return db.getUsername();
     }
     
     void initAll(){
@@ -211,31 +165,6 @@ public class MainActivity extends AbstractNavDrawerActivity implements UpdateSta
     void startWebsite(){
 		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConfig.server.WEBSITE_URL));
 		startActivity(browserIntent);
-	}
-
-	void usernameDialog(){
-		AlertDialog.Builder usernameDialog = new AlertDialog.Builder(this);
-		
-		usernameDialog.setTitle(R.string.username_title);
-		
-		final EditText usernameInput = new EditText(this);
-		
-		setUsernameConfirmButton(usernameDialog, usernameInput);
-		
-		usernameDialog.setView(usernameInput);
-		usernameDialog.show();
-	}
-	
-	void setUsernameConfirmButton(AlertDialog.Builder usernameDialog, final EditText usernameInput){
-		usernameDialog.setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-				initAll();
-				insertUsernameIntoDatabse(usernameInput.getText().toString());
-			}
-		});
 	}
 	
 	@Override

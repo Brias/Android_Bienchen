@@ -8,7 +8,10 @@ import java.util.Date;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +33,10 @@ public class CalendarActivity extends Fragment implements SyncListener {
 	private CaldroidFragment caldroidFragment;
 	ArrayList<Event> allEvents = new ArrayList<Event>();
 
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//
-//		MenuInflater inflater = getMenuInflater();
-//		inflater.inflate(R.menu.calendar, menu);
-//		return super.onCreateOptionsMenu(menu);
-//	}
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.calendar, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_refresh) {
@@ -57,6 +58,7 @@ public class CalendarActivity extends Fragment implements SyncListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.activity_calendar);
+		setHasOptionsMenu(true);
 		
 		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
 		caldroidFragment = new CaldroidFragment();

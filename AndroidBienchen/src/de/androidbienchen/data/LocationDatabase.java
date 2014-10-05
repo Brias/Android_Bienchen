@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import de.androidbienchen.statistichelper.Temperature;
 import de.androidbienchen.statistichelper.Weight;
+import de.androidbienchen.usernamehelper.UserIdentification;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -138,24 +139,25 @@ public class LocationDatabase {
 		}
 	}
 	
-	public long insertUsername(String username){
+	public long insertUserIdentification(UserIdentification ui){
 		ContentValues user = new ContentValues();
 		
-		user.put(AppConfig.UsernameData.USERNAME_KEY, username);
+		user.put(AppConfig.UsernameData.USERNAME_KEY, ui.getUsername());
+		user.put(AppConfig.UsernameData.ANDROID_ID_KEY, ui.getAndroidId());
 	    
 	    return db.insert( AppConfig.UsernameData.TABLE_KEY_USERNAME, null, user);
 	}
 	
-	public String getUsername(){
-		String username = null;
+	public UserIdentification getUserIdentification(){
+		UserIdentification ui = null;
 		Cursor cursor = db.query(AppConfig.UsernameData.TABLE_KEY_USERNAME, new String[] 
-						{AppConfig.Data.ID_KEY, AppConfig.UsernameData.USERNAME_KEY}, null, null, null, null, null);
+						{AppConfig.Data.ID_KEY, AppConfig.UsernameData.USERNAME_KEY, AppConfig.UsernameData.ANDROID_ID_KEY}, null, null, null, null, null);
 		
 		if(cursor.moveToFirst()){
-			username = cursor.getString(1);
+			ui = new UserIdentification(cursor.getString(1), cursor.getString(2));	
 		}
 		
-		return username;
+		return ui;
 	}
 	
 	private class LocationDatabaseHelper extends SQLiteOpenHelper{
@@ -178,7 +180,8 @@ public class LocationDatabase {
 		private static final String DATABASE_CREATE_USERNAME_TABLE = "create table "
 				+ AppConfig.UsernameData.TABLE_KEY_USERNAME + " ("
 				+ AppConfig.Data.ID_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-				+ AppConfig.UsernameData.USERNAME_KEY+ " TEXT NOT NULL);";
+				+ AppConfig.UsernameData.USERNAME_KEY+ " TEXT NOT NULL, "
+				+ AppConfig.UsernameData.ANDROID_ID_KEY+" );";
 		
 		public LocationDatabaseHelper(Context context, String name, CursorFactory factory, int version){
 			super(context, name, factory, version);
