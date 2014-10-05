@@ -1,18 +1,19 @@
 package de.androidbienchen;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.graphics.BitmapFactory.Options;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
@@ -25,12 +26,10 @@ public class CalendarActivity extends Fragment implements SyncListener {
 	private CaldroidFragment caldroidFragment;
 	ArrayList<Event> allEvents = new ArrayList<Event>();
 
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	//
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.calendar, menu);
-	// return super.onCreateOptionsMenu(menu);
-	// }
+	 public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	 inflater.inflate(R.menu.calendar, menu);
+	 super.onCreateOptionsMenu(menu, inflater);
+	 }
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_refresh) {
@@ -51,7 +50,8 @@ public class CalendarActivity extends Fragment implements SyncListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		setHasOptionsMenu(true);
+		
 		caldroidFragment = new CaldroidFragment();
 
 		// If Activity is created after rotation
