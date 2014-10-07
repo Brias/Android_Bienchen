@@ -4,8 +4,9 @@
 
     <item
         android:id="@+id/action_settings"
+        android:icon="@android:drawable/btn_plus"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
         android:title="@string/action_settings"/>
 
 </menu>

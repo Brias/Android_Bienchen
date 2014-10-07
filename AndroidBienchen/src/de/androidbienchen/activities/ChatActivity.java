@@ -27,18 +27,21 @@ import de.androidbienchen.R;
 import de.androidbienchen.chathelper.ChatListAdapter;
 import de.androidbienchen.chathelper.ChatListItem;
 import de.androidbienchen.data.AppConfig;
+import de.androidbienchen.data.LocationDatabase;
 
 public class ChatActivity extends Fragment implements IOCallback{
 	
 	private ArrayList<ChatListItem> chatList;
 	private ArrayAdapter<ChatListItem> chatListAdapter;
-	
+	private LocationDatabase db;
+	private SocketIO socket;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.chat_input,
 				container, false);
 		
+		initDatabase();
 		initChatList();
 		initUI(rootView);
 		
@@ -49,6 +52,10 @@ public class ChatActivity extends Fragment implements IOCallback{
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		initChat();
+	}
+	
+	void initDatabase(){
+		db = new LocationDatabase(getActivity());
 	}
 	
 	void initChatList(){
@@ -87,12 +94,13 @@ public class ChatActivity extends Fragment implements IOCallback{
 			chatListAdapter.notifyDataSetChanged();
 			ListView list = (ListView) getActivity().findViewById(R.id.message_list);
 			list.setSelection(chatListAdapter.getCount()-1);
+			socket.emit("user message", "bla");
 		}
 	}
 
 	
 	void initChat(){
-		SocketIO socket = null;
+		socket = null;
 		try {
 			socket = new SocketIO(AppConfig.server.CHAT_URL);
 			socket.connect(this);

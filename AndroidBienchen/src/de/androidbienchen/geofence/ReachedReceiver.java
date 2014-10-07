@@ -9,11 +9,11 @@ import de.androidbienchen.activities.PresenceStatusActivity;
 
 public class ReachedReceiver extends BroadcastReceiver{
 
+	private static final String USERNAME = "Enter Location";
 	PresenceStatusActivity presenceActivity;
 	
 	public ReachedReceiver(PresenceStatusActivity presenceActivity){
 		this.presenceActivity = presenceActivity;
-		Log.d("Receiver", "Erstellt");
 	}
 	
 	@Override
@@ -25,9 +25,9 @@ public class ReachedReceiver extends BroadcastReceiver{
 	
 	private void updateUI(boolean entering){
 		if(entering) {
-			presenceActivity.updateUIThere("Myself");
+			presenceActivity.updateUIThere(USERNAME);
 		}else{
-			presenceActivity.updateUINotThere("Myself");
+			presenceActivity.updateUINotThere(USERNAME);
 		}
 	}
 }

@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Criteria;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import de.androidbienchen.R;
+import de.androidbienchen.data.LocationDatabase;
 import de.androidbienchen.geofence.ReachedReceiver;
 import de.androidbienchen.presencestatushelper.PresenceListAdapter;
 import de.androidbienchen.presencestatushelper.PresenceStatusItem;
@@ -30,10 +32,11 @@ public class PresenceStatusActivity extends Fragment {
 	//public static final double LONGITUDE = 11.97801;
 	public static final double LATITUDE = 49.03129100;
 	public static final double LONGITUDE = 11.9780100;
-	public static final float PROXIMITY_RADIUS = 5f;
+	public static final float PROXIMITY_RADIUS = 100f;
 	
 	private ArrayList<PresenceStatusItem> statusList;
 	private PresenceListAdapter statusListAdapter;
+	private LocationDatabase db;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,6 +45,7 @@ public class PresenceStatusActivity extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_presence_status,
 				container, false);
 		
+		initDatabase();
 		initList();
 		initListAdapter(rootView);
 		
@@ -54,13 +58,26 @@ public class PresenceStatusActivity extends Fragment {
 		initProxmityAlert();
 	}
 	
-	private void initProxmityAlert() {	
-		getActivity().registerReceiver(new ReachedReceiver(this), new IntentFilter(ACTION_FILTER));
+	void initDatabase(){
+		db = new LocationDatabase(getActivity());
+	}
+	
+	void initProxmityAlert() {	
+		Criteria criteria = new Criteria();
+		criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+		criteria.setPowerRequirement(Criteria.POWER_HIGH);
+		criteria.setAltitudeRequired(false);
+		criteria.setBearingRequired(false);
+		criteria.setSpeedRequired(false);
+		criteria.setCostAllowed(true);
 		LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+		String bestProvider =
+		locationManager.getBestProvider(criteria,true);
+		locationManager.getLastKnownLocation(bestProvider);
+		getActivity().registerReceiver(new ReachedReceiver(this), new IntentFilter(ACTION_FILTER));
 		Intent inRadiusIntent = new Intent();
 		inRadiusIntent.setAction(ACTION_FILTER);
 		PendingIntent proximityIntent = PendingIntent.getBroadcast(getActivity(), -1, inRadiusIntent, 0);
-		
 		locationManager.addProximityAlert(LATITUDE, LONGITUDE, PROXIMITY_RADIUS, -1, proximityIntent);
 	}
 	
@@ -75,22 +92,22 @@ public class PresenceStatusActivity extends Fragment {
 	}
 	  
 	  public void updateUIThere(String username){
-		//statusList.add(new PresenceStatusItem(username));
-		  for(int i = 0; i < 4; i++){
-			  statusList.add(new PresenceStatusItem(username+""+i));
-		  }
+		statusList.add(new PresenceStatusItem(db.getUserIdentification().getUsername(), db.getUserIdentification().getAndroidId(), true));
+//		  for(int i = 0; i < 4; i++){
+//			  statusList.add(new PresenceStatusItem(username+""+i));
+//		  }
 		notifyListChanges();
 	  }
 	  
 	  public void updateUINotThere(String username){
 		  for(int i = 0; i < statusList.size(); i++){
-			  if(statusList.get(i).getUsername().equals(username+""+0)){
+			  if(statusList.get(i).getUsername().equals(username)){
 				  statusList.remove(i);
 				  break;
 			  }
-			  statusList.add(new PresenceStatusItem("EXIT LOCATION"));
-			  notifyListChanges();
 		  }
+		  statusList.add(new PresenceStatusItem("EXIT LOCATION", db.getUserIdentification().getAndroidId(), false));
+		  notifyListChanges();
 	  }
 	  
 	  void notifyListChanges(){

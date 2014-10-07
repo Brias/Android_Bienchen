@@ -1,9 +1,14 @@
 package de.androidbienchen.activities;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import de.androidbienchen.R;
 import de.androidbienchen.data.AppConfig;
 import de.androidbienchen.data.NetworkAvailability;
@@ -177,5 +182,21 @@ public class MainActivity extends AbstractNavDrawerActivity implements UpdateSta
 	public void onLocalDataError(String description) {
 		// TODO Auto-generated method stub
 		UpdateDialogHelper.UpdateCanceledDialog(this, getResources().getString(R.string.update_local_data_error), description);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu){
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return super.onCreateOptionsMenu(menu);
+		
+	}
+	
+	@Override 
+	public boolean onOptionsItemSelected(MenuItem item){
+		if(item.getItemId() == R.id.action_settings){
+			
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

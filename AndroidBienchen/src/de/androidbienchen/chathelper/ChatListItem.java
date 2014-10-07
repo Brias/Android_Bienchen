@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.json.JSONObject;
+
 public class ChatListItem {
 
 	private String message;
@@ -31,5 +33,17 @@ public class ChatListItem {
 	
 	public String getUsername(){
 		return username;
+	}
+	
+	public JSONObject getItemAsJSONObject(){
+		JSONObject item = new JSONObject();
+		try{
+			item.put("username", username);
+			item.put("date", date);
+			item.put("message", message);
+		}catch(Exception e){
+			
+		}
+		return item;
 	}
 }
