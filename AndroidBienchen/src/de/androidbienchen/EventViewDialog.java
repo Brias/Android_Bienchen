@@ -55,8 +55,8 @@ public class EventViewDialog {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				dbb.deleteEvent(event);
 				
+				dbb.deleteEvent(event);
 				dialog.dismiss();
 			}
 		});

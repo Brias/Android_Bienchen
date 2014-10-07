@@ -76,7 +76,7 @@ public class EventDatabase {
 
 		}
 	}
-
+	// Openhelper class
 	public void openDB() {
 		database = dbH.getWritableDatabase();
 	}
@@ -109,7 +109,7 @@ public class EventDatabase {
 	}
 
 	// Inserts Events in local and online database
-	public void addEvent(String title, String infotext, Date start, Date end) {
+	public void addEventLocal (String title, String infotext, Date start, Date end) {
 
 		// local database
 		ContentValues data = new ContentValues();
@@ -120,6 +120,9 @@ public class EventDatabase {
 		openDB();
 		final long id = database.insert(TABLE_KEY, null, data);
 		database.close();
+	}
+	
+	public void addEventOnline (String title, String infotext, Date start, Date end) {
 
 		// online database
 		final ParseObject parseData = new ParseObject(TABLE_KEY);
@@ -134,6 +137,7 @@ public class EventDatabase {
 				ContentValues cid = new ContentValues();
 				cid.put(PARSE_KEY, parseData.getObjectId());
 				openDB();
+				final long id = database.insert(TABLE_KEY, null, cid);
 				database.update(TABLE_KEY, cid,
 						ID_KEY + "=" + String.valueOf(id), null);
 				database.close();
@@ -142,13 +146,10 @@ public class EventDatabase {
 		});
 	}
 
-	// deletes from online db
+	// deletes from local db
 
 	public void deleteEvent(Event event) {
-		// if (event.parseId.equals("0")) { // wenn nicht ausge.. stürzt immer
-		// ab.
-		// return;
-		// }
+
 		ParseQuery<ParseObject> pquery = new ParseQuery<ParseObject>(TABLE_KEY);
 
 		pquery.getInBackground(event.parseId, new GetCallback<ParseObject>() {
@@ -157,17 +158,20 @@ public class EventDatabase {
 			public void done(ParseObject pquery, ParseException e) {
 				if (pquery == null)
 					Log.d("SCHEISSE", "SCHEISSE");
-
-				if (e == null) { // wichtig!
-
+				
+				if (e == null) {
 					pquery.deleteInBackground();
-					openDB();
-					database.delete(TABLE_KEY, ID_KEY, null);
-					database.close();
-
-				}
+	
+ 				}
 			}
 		});
+		delete(event);
+	}
+
+	private void delete(Event event) {
+		openDB();
+		database.delete(TABLE_KEY, event.parseId, null);
+		database.close();
 	}
 
 	// }
@@ -197,7 +201,6 @@ public class EventDatabase {
 						}
 						String onlineParseId = curObject.getObjectId();
 						if (localParseId.equals(onlineParseId)) {
-							// maybe delete here?
 							entryfound = true;
 						}
 					}

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -55,7 +56,7 @@ public class CalendarActivity extends Fragment implements SyncListener {
 		caldroidFragment = new CaldroidFragment();
 
 		// If Activity is created after rotation
-		
+
 		if (savedInstanceState != null) {
 			caldroidFragment.restoreStatesFromKey(savedInstanceState,
 					"CALDROID_SAVED_STATE");
@@ -77,7 +78,6 @@ public class CalendarActivity extends Fragment implements SyncListener {
 		t.replace(R.id.calendar, caldroidFragment);
 		t.commit();
 
-		
 		// Setup listener
 		final CaldroidListener listener = new CaldroidListener() {
 
@@ -100,10 +100,20 @@ public class CalendarActivity extends Fragment implements SyncListener {
 
 							@Override
 							public void insertComplt(Event event) {
+								// if keine Internetverbindung vorhanden
+								if (NetworkAvailability
+										.networkStatus(getActivity())) {
+									
+									addLocal(event);
+									addOnline(event);
 
-								dbb.addEvent(event.Titel, event.Info,
-										event.StartDate, event.EndDate);
-								refreshCalenderView();
+									refreshCalenderView();
+								} else {
+									// if Internetverbindung
+
+									addLocal(event);
+									refreshCalenderView();
+								}
 							}
 						}, date);
 			}
@@ -134,6 +144,16 @@ public class CalendarActivity extends Fragment implements SyncListener {
 	@Override
 	public void syncFinished() {
 		refreshCalenderView();
+	}
+
+	private void addLocal(Event event) {
+		dbb.addEventLocal(event.Titel, event.Info, event.StartDate,
+				event.EndDate);
+	}
+
+	private void addOnline(Event event) {
+		dbb.addEventOnline(event.Titel, event.Info, event.StartDate,
+				event.EndDate);
 	}
 
 	private void refreshCalenderView() {
