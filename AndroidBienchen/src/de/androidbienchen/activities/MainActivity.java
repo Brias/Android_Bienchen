@@ -17,6 +17,7 @@ import de.androidbienchen.navigationdrawerhelper.NavDrawerActivityConfiguration;
 import de.androidbienchen.navigationdrawerhelper.NavDrawerAdapter;
 import de.androidbienchen.navigationdrawerhelper.NavDrawerItem;
 import de.androidbienchen.navigationdrawerhelper.NavMenuItem;
+import de.androidbienchen.socketiohelper.SocketIOHelper;
 
 
 public class MainActivity extends AbstractNavDrawerActivity implements UpdateStatusListener{
@@ -47,13 +48,15 @@ public class MainActivity extends AbstractNavDrawerActivity implements UpdateSta
     }
     
     void init(){
+    	SocketIOHelper socketIOHelper = new SocketIOHelper();
+    	
     	current = null;
     	currentCalendar = null;
     	
         scale = new StatisticActivity();
         calendar = new CalendarActivity();
-        chat = new ChatActivity();
-        presence = new PresenceStatusActivity();
+        chat = new ChatActivity(socketIOHelper);
+        presence = new PresenceStatusActivity(socketIOHelper);
         cam = new CamActivity(this);
     }
     

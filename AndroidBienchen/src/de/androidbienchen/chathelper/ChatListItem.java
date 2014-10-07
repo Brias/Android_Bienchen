@@ -38,7 +38,7 @@ public class ChatListItem {
 	public JSONObject getItemAsJSONObject(){
 		JSONObject item = new JSONObject();
 		try{
-			item.put("username", username);
+			item.put("user", username);
 			item.put("date", date);
 			item.put("message", message);
 		}catch(Exception e){

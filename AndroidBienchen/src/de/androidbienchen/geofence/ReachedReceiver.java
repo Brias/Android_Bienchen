@@ -9,7 +9,6 @@ import de.androidbienchen.activities.PresenceStatusActivity;
 
 public class ReachedReceiver extends BroadcastReceiver{
 
-	private static final String USERNAME = "Enter Location";
 	PresenceStatusActivity presenceActivity;
 	
 	public ReachedReceiver(PresenceStatusActivity presenceActivity){
@@ -25,9 +24,7 @@ public class ReachedReceiver extends BroadcastReceiver{
 	
 	private void updateUI(boolean entering){
 		if(entering) {
-			presenceActivity.updateUIThere(USERNAME);
-		}else{
-			presenceActivity.updateUINotThere(USERNAME);
+			presenceActivity.sendStatus(entering);
 		}
 	}
 }

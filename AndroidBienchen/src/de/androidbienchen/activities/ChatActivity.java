@@ -1,13 +1,8 @@
 package de.androidbienchen.activities;
 
-import io.socket.IOAcknowledge;
-import io.socket.IOCallback;
-import io.socket.SocketIO;
-import io.socket.SocketIOException;
-
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Fragment;
@@ -22,19 +17,25 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 import de.androidbienchen.R;
 import de.androidbienchen.chathelper.ChatListAdapter;
 import de.androidbienchen.chathelper.ChatListItem;
-import de.androidbienchen.data.AppConfig;
 import de.androidbienchen.data.LocationDatabase;
+import de.androidbienchen.listener.MessageReceivedListener;
+import de.androidbienchen.socketiohelper.SocketIOHelper;
 
-public class ChatActivity extends Fragment implements IOCallback{
+public class ChatActivity extends Fragment implements MessageReceivedListener{
 	
 	private ArrayList<ChatListItem> chatList;
 	private ArrayAdapter<ChatListItem> chatListAdapter;
 	private LocationDatabase db;
-	private SocketIO socket;
+	private SocketIOHelper socketIOhelper;
+	
+	public ChatActivity(SocketIOHelper socketIOhelper){
+		this.socketIOhelper = socketIOhelper;
+		setListener();
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -51,7 +52,10 @@ public class ChatActivity extends Fragment implements IOCallback{
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		initChat();
+	}
+	
+	void setListener(){
+		socketIOhelper.setMessageReceivedListener(this);
 	}
 	
 	void initDatabase(){
@@ -87,28 +91,10 @@ public class ChatActivity extends Fragment implements IOCallback{
 	}
 	
 	void addMessage(String sendMessage){
-		if (sendMessage.equals("")) {
-			return;
-		} else {
-			chatList.add(new ChatListItem(sendMessage, "Myself"));
-			chatListAdapter.notifyDataSetChanged();
-			ListView list = (ListView) getActivity().findViewById(R.id.message_list);
-			list.setSelection(chatListAdapter.getCount()-1);
-			socket.emit("user message", "bla");
+		if (!sendMessage.equals("")) {
+			socketIOhelper.sendMessage(new ChatListItem(sendMessage, db.getUserIdentification().getUsername()));
 		}
-	}
 
-	
-	void initChat(){
-		socket = null;
-		try {
-			socket = new SocketIO(AppConfig.server.CHAT_URL);
-			socket.connect(this);
-			socket.send("Hello Server");
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	@Override
@@ -138,41 +124,18 @@ public class ChatActivity extends Fragment implements IOCallback{
 	}
 
 	@Override
-	public void on(String arg0, IOAcknowledge arg1, Object... arg2) {
+	public void onMessageReceived(JSONObject object) {
 		// TODO Auto-generated method stub
-		Log.d("On", "TRUE");
-	}
-
-	@Override
-	public void onConnect() {
-		// TODO Auto-generated method stub
-		Log.d("OnConnect", "TRUE");
+		Log.d("ONMESSAGERECEIVED", ""+object);
 		
-	}
-
-	@Override
-	public void onDisconnect() {
-		// TODO Auto-generated method stub
-		Log.d("OnDisconnect", "TRUE");
-		
-	}
-
-	@Override
-	public void onError(SocketIOException arg0) {
-		// TODO Auto-generated method stub
-		Log.d("OnError", ""+arg0);
-		
-	}
-
-	@Override
-	public void onMessage(String arg0, IOAcknowledge arg1) {
-		// TODO Auto-generated method stub
-		Log.d("OnMessage", "TRUE");
-	}
-
-	@Override
-	public void onMessage(JSONObject arg0, IOAcknowledge arg1) {
-		// TODO Auto-generated method stub
-		Log.d("OnMessage", "TRUE");
+		try {
+			chatList.add(new ChatListItem(object.getString("message"), object.getString("username")));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		chatListAdapter.notifyDataSetChanged();
+		ListView list = (ListView) getActivity().findViewById(R.id.message_list);
+		list.setSelection(chatListAdapter.getCount()-1);
 	}
 }
