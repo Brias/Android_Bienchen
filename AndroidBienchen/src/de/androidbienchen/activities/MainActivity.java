@@ -1,7 +1,5 @@
 package de.androidbienchen.activities;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;

@@ -49,7 +49,7 @@ public class CamActivity extends Fragment implements ImageFetcherListener{
 		init();
 		fetchingData();
 		openDatabase();
-		Log.d("USERID", ""+db.getUserIdentification().getAndroidId());
+		Log.d("USERID", db.getUserIdentification().getAndroidId());
 		Log.d("USERNAME", db.getUserIdentification().getUsername());
 	}
 	
