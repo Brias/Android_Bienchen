@@ -148,10 +148,9 @@ public class EventDatabase {
 
 	// deletes from local db
 
-	public void deleteEvent(Event event) {
+	public void deleteEvent(final Event event) {
 
 		ParseQuery<ParseObject> pquery = new ParseQuery<ParseObject>(TABLE_KEY);
-
 		pquery.getInBackground(event.parseId, new GetCallback<ParseObject>() {
 
 			@Override
@@ -161,17 +160,19 @@ public class EventDatabase {
 				
 				if (e == null) {
 					pquery.deleteInBackground();
-	
+					openDB();
+					database.delete(TABLE_KEY, ID_KEY + " = "  + "" + event.parseId, null);
+					database.close();
  				}
 			}
 		});
-		delete(event);
-	}
-
-	private void delete(Event event) {
-		openDB();
-		database.delete(TABLE_KEY, event.parseId, null);
-		database.close();
+//		delete(event);
+//	}
+//
+//	private void delete(Event event) {
+//		openDB();
+//		database.delete(TABLE_KEY, event.parseId, null);
+//		database.close();
 	}
 
 	// }
