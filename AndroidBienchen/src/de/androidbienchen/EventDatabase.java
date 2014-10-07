@@ -23,6 +23,17 @@ import com.parse.ParseException;
 
 public class EventDatabase {
 	private dbOpenHelper dbH;
+	private SQLiteDatabase database;
+	public static final int DATABASE_VERSION = 1;
+	public static final String DATABASE_KEY = "bienendatabase";
+	public static final String TABLE_KEY = "events";
+	public static final String ID_KEY = "id";
+	public static final String TITLE_KEY = "title";
+	public static final String INFO_KEY = "infotext";
+	public static final String START_DATE = "start";
+	public static final String END_DATE = "end";
+	public static final String PARSE_KEY = "parse_key";
+	private Context context;
 
 	public EventDatabase(Context context) {
 
@@ -36,20 +47,6 @@ public class EventDatabase {
 
 		}
 	}
-
-	private SQLiteDatabase database;
-
-	public static final int DATABASE_VERSION = 1;
-	public static final String DATABASE_KEY = "bienendatabase";
-	public static final String TABLE_KEY = "events";
-	public static final String ID_KEY = "id";
-	public static final String TITLE_KEY = "title";
-	public static final String INFO_KEY = "infotext";
-	public static final String START_DATE = "start";
-	public static final String END_DATE = "end";
-	public static final String PARSE_KEY = "parse_key";
-
-	private Context context;
 
 	private class dbOpenHelper extends SQLiteOpenHelper {
 		private static final String DATABASE_CREATE = "create table "
@@ -76,9 +73,15 @@ public class EventDatabase {
 
 		}
 	}
+
 	// Openhelper class
 	public void openDB() {
 		database = dbH.getWritableDatabase();
+	}
+
+	// Closehelper class
+	public void closeDB() {
+		database.close();
 	}
 
 	// Creats the Database with all events
@@ -98,18 +101,29 @@ public class EventDatabase {
 				Log.e("Events", startDate.toString());
 				event.EndDate = endDate;
 				event.Info = cursor.getString(5);
-				event.parseId = cursor.getString(4);
+				event.id = cursor.getString(0);
 				events.add(event);
 
 			} while (cursor.moveToNext());
 
 		}
-		database.close();
+		closeDB();
 		return events;
 	}
 
+	public void addEventOnlineAndLocal(String title, String infotext,
+			Date start, Date end) {
+		if (NetworkAvailability.networkStatus(context)) {
+			long id = addEventLocal(title, infotext, start, end);
+			addEventOnline(title, infotext, start, end, id);
+		} else {
+			addEventLocal(title, infotext, start, end);
+		}
+	}
+
 	// Inserts Events in local and online database
-	public void addEventLocal (String title, String infotext, Date start, Date end) {
+	private long addEventLocal(String title, String infotext, Date start,
+			Date end) {
 
 		// local database
 		ContentValues data = new ContentValues();
@@ -118,11 +132,14 @@ public class EventDatabase {
 		data.put(START_DATE, start.getTime());
 		data.put(END_DATE, end.getTime());
 		openDB();
-		final long id = database.insert(TABLE_KEY, null, data);
-		database.close();
+		long id = database.insert(TABLE_KEY, null, data);
+		closeDB();
+		return id; 
 	}
-	
-	public void addEventOnline (String title, String infotext, Date start, Date end) {
+
+
+	private void addEventOnline(String title, String infotext, Date start,
+			Date end, long id) {
 
 		// online database
 		final ParseObject parseData = new ParseObject(TABLE_KEY);
@@ -130,49 +147,48 @@ public class EventDatabase {
 		parseData.put(INFO_KEY, infotext);
 		parseData.put(START_DATE, start.getTime());
 		parseData.put(END_DATE, end.getTime());
+		parseData.put(ID_KEY, id);
 		parseData.saveInBackground(new SaveCallback() {
 
 			@Override
-			public void done(ParseException e) {
-				ContentValues cid = new ContentValues();
-				cid.put(PARSE_KEY, parseData.getObjectId());
-				openDB();
-				final long id = database.insert(TABLE_KEY, null, cid);
-				database.update(TABLE_KEY, cid,
-						ID_KEY + "=" + String.valueOf(id), null);
-				database.close();
+			public void done(ParseException arg0) {
+				// TODO Auto-generated method stub
+
 			}
 
 		});
 	}
+	
 
 	// deletes from local db
 
 	public void deleteEvent(final Event event) {
 
 		ParseQuery<ParseObject> pquery = new ParseQuery<ParseObject>(TABLE_KEY);
-		pquery.getInBackground(event.parseId, new GetCallback<ParseObject>() {
+		pquery.getInBackground(event.id, new GetCallback<ParseObject>() {
 
 			@Override
 			public void done(ParseObject pquery, ParseException e) {
 				if (pquery == null)
 					Log.d("SCHEISSE", "SCHEISSE");
-				
+
 				if (e == null) {
 					pquery.deleteInBackground();
 					openDB();
-					database.delete(TABLE_KEY, ID_KEY + " = "  + "" + event.parseId, null);
-					database.close();
- 				}
+					
+					database.delete(TABLE_KEY, ID_KEY + " = " + ""
+							+ event.id, null);
+					closeDB();
+				}
 			}
 		});
-//		delete(event);
-//	}
-//
-//	private void delete(Event event) {
-//		openDB();
-//		database.delete(TABLE_KEY, event.parseId, null);
-//		database.close();
+		// delete(event);
+		// }
+		//
+		// private void delete(Event event) {
+		// openDB();
+		// database.delete(TABLE_KEY, event.parseId, null);
+		// database.close();
 	}
 
 	// }
@@ -195,7 +211,7 @@ public class EventDatabase {
 					ParseObject curObject = objects.get(i);
 					boolean entryfound = false;
 					for (int j = 0; j < localEvents.size(); j++) {
-						String localParseId = localEvents.get(j).parseId;
+						String localParseId = localEvents.get(j).id;
 
 						if (localParseId == null) {
 							continue;
@@ -216,7 +232,7 @@ public class EventDatabase {
 						cvs.put(PARSE_KEY, curObject.getObjectId());
 						openDB();
 						database.insert(TABLE_KEY, null, cvs);
-						database.close();
+						closeDB();
 
 					}
 

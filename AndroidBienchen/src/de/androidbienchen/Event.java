@@ -9,6 +9,5 @@ public class Event {
 	public String Info;
 	public Date StartDate;
 	public Date EndDate;
-	public String parseId;
-
+	public String id;
 }

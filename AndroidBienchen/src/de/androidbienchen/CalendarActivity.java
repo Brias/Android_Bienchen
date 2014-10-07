@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +38,10 @@ public class CalendarActivity extends Fragment implements SyncListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.action_refresh) {
 			dbb.syncToOnlineDB(this);
+			for(int i = 0; i < dbb.getAllEvents().size(); i++){
+			Log.d("AllEventsAfterRefresh", ""+dbb.getAllEvents().get(i));
+			}
+			refreshCalenderView();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -54,7 +59,10 @@ public class CalendarActivity extends Fragment implements SyncListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-
+		dbb = new EventDatabase(getActivity());
+		for(int i = 0; i < dbb.getAllEvents().size(); i++){
+			Log.d("AllEventsAfterRefresh", ""+dbb.getAllEvents().get(i));
+			}
 		caldroidFragment = new CaldroidFragment();
 
 		// If Activity is created after rotation
@@ -101,23 +109,11 @@ public class CalendarActivity extends Fragment implements SyncListener {
 						new EventInsertDialog.InsertListener() {
 
 							@Override
-							public void insertComplt(Event event) {
-								// if Internetverbindung vorhanden
-								if (NetworkAvailability
-										.networkStatus(getActivity())) {
-
-									addLocal(event);
-									addOnline(event);
-
+							public void insertComplt(Event event) {							
+									addLocalandOnline(event);
 									refreshCalenderView();
 									
-								} else {
-									// if keine Internetverbindung
-
-									addLocal(event);
-									refreshCalenderView();
 								}
-							}
 						}, date);
 			}
 
@@ -126,7 +122,7 @@ public class CalendarActivity extends Fragment implements SyncListener {
 		// Setup Caldroid
 		caldroidFragment.setCaldroidListener(listener);
 
-		dbb = new EventDatabase(getActivity());
+//		dbb = new EventDatabase(getActivity());
 		dbb.syncToOnlineDB(this);
 
 	}
@@ -149,15 +145,11 @@ public class CalendarActivity extends Fragment implements SyncListener {
 		refreshCalenderView();
 	}
 
-	private void addLocal(Event event) {
-		dbb.addEventLocal(event.Titel, event.Info, event.StartDate,
+	private void addLocalandOnline(Event event) {
+		dbb.addEventOnlineAndLocal(event.Titel, event.Info, event.StartDate,
 				event.EndDate);
 	}
 
-	private void addOnline(Event event) {
-		dbb.addEventOnline(event.Titel, event.Info, event.StartDate,
-				event.EndDate);
-	}
 
 	private void refreshCalenderView() {
 		allEvents = dbb.getAllEvents();
