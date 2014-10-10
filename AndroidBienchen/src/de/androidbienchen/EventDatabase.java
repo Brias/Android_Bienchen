@@ -122,7 +122,7 @@ public class EventDatabase {
 		database.close();
 	}
 	
-	public void addEventOnline (String title, String infotext, Date start, Date end) {
+	public void addEventOnline (final String title, final String infotext, final Date start, final Date end, final SyncListener sl) {
 
 		// online database
 		final ParseObject parseData = new ParseObject(TABLE_KEY);
@@ -137,10 +137,16 @@ public class EventDatabase {
 				ContentValues cid = new ContentValues();
 				cid.put(PARSE_KEY, parseData.getObjectId());
 				openDB();
-				final long id = database.insert(TABLE_KEY, null, cid);
-				database.update(TABLE_KEY, cid,
-						ID_KEY + "=" + String.valueOf(id), null);
+				
+				Log.d("DELETE", "parseid is now "+parseData.getObjectId());
+//				final long id = database.insert(TABLE_KEY, null, cid);
+				database.update(TABLE_KEY
+						, cid
+						, TITLE_KEY + "=? and " + INFO_KEY + "=? and " + START_DATE + "=? and " + END_DATE + "=?"
+						, new String[]{title, infotext, ""+start.getTime(), ""+end.getTime()});
 				database.close();
+				
+				sl.onDatabaseUpdated();
 			}
 
 		});
@@ -148,32 +154,20 @@ public class EventDatabase {
 
 	// deletes from local db
 
-	public void deleteEvent(Event event) {
-
+	public void deleteEvent(final Event event, GetCallback<ParseObject> callback) {
 		ParseQuery<ParseObject> pquery = new ParseQuery<ParseObject>(TABLE_KEY);
 
-		pquery.getInBackground(event.parseId, new GetCallback<ParseObject>() {
-
-			@Override
-			public void done(ParseObject pquery, ParseException e) {
-				if (pquery == null)
-					Log.d("SCHEISSE", "SCHEISSE");
-				
-				if (e == null) {
-					pquery.deleteInBackground();
-	
- 				}
-			}
-		});
-		delete(event);
+		pquery.getInBackground(event.parseId, callback);	
+//		
 	}
 
-	private void delete(Event event) {
+	public void deleteLocal(Event event){
 		openDB();
-		database.delete(TABLE_KEY, event.parseId, null);
+		Log.d("DELETE", "Event: "+event+"; parseid = "+event.parseId);
+		int rows = database.delete(TABLE_KEY, PARSE_KEY + "=?", new String[]{event.parseId});
+		Log.d("DELETE", rows + " Events gelöscht");
 		database.close();
 	}
-
 	// }
 
 	// Syns with the online database and check's if event is in Database or not
@@ -231,7 +225,8 @@ public class EventDatabase {
 
 	public interface SyncListener {
 		public void syncFinished();
-
+		public void onDatabaseUpdated();
 	}
+	
 
 }

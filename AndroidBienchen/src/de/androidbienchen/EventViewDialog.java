@@ -17,11 +17,11 @@ public class EventViewDialog {
 
 	private Context cont;
 	private Event event;
-	private DeletListener dl;
+	private OnDeleteListener dl;
 	private EventDatabase dbb;
 
 
-	 public EventViewDialog(Context cont, Event vt, EventDatabase dbb){
+	 public EventViewDialog(Context cont, Event vt, EventDatabase dbb, OnDeleteListener dl){
 		this.cont = cont;
 		this.event = vt;
 		this.dl = dl;
@@ -29,8 +29,8 @@ public class EventViewDialog {
 		createDialog();
 	}
 
-	public interface DeletListener {
-		public void deletEvent(Event event);
+	public interface OnDeleteListener {
+		public void onDeleteEvent(Event event);
 	}
 
 	public SimpleDateFormat formatter = new SimpleDateFormat(" HH:mm ");
@@ -56,7 +56,7 @@ public class EventViewDialog {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				
-				dbb.deleteEvent(event);
+				dl.onDeleteEvent(event);
 				dialog.dismiss();
 			}
 		});

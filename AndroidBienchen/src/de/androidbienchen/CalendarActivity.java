@@ -1,26 +1,28 @@
 package de.androidbienchen;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
 import de.androidbienchen.EventDatabase.SyncListener;
+import de.androidbienchen.EventViewDialog.OnDeleteListener;
 
-public class CalendarActivity extends Fragment implements SyncListener {
+public class CalendarActivity extends Fragment implements SyncListener, OnDeleteListener {
 
 	private EventDatabase dbb;
 	private CaldroidFragment caldroidFragment;
@@ -83,14 +85,14 @@ public class CalendarActivity extends Fragment implements SyncListener {
 
 			@Override
 			public void onSelectDate(Date date, View view) {
-
+				Log.d("DELETE", "allEvents.size() in onSelectDate = "+allEvents.size());
 				for (int i = 0; i < allEvents.size(); i++) {
 					Date start = allEvents.get(i).StartDate;
 					if (start.getDate() == date.getDate()
 							&& start.getMonth() == date.getMonth()
 							&& start.getYear() == date.getYear()) {
 						new EventViewDialog(getActivity(), allEvents.get(i),
-								dbb);
+								dbb, CalendarActivity.this);
 						return;
 					}
 				}
@@ -100,20 +102,19 @@ public class CalendarActivity extends Fragment implements SyncListener {
 
 							@Override
 							public void insertComplt(Event event) {
-								// if keine Internetverbindung vorhanden
-								if (NetworkAvailability
-										.networkStatus(getActivity())) {
-									
-									addLocal(event);
+								// if Internetverbindung vorhanden
+//								if (NetworkAvailability
+//										.networkStatus(getActivity())) {
 									addOnline(event);
-
-									refreshCalenderView();
-								} else {
-									// if Internetverbindung
-
 									addLocal(event);
 									refreshCalenderView();
-								}
+//									
+//								} else {
+//									// if keine Internetverbindung
+//
+//									addLocal(event);
+//									refreshCalenderView();
+//								}
 							}
 						}, date);
 			}
@@ -122,10 +123,10 @@ public class CalendarActivity extends Fragment implements SyncListener {
 
 		// Setup Caldroid
 		caldroidFragment.setCaldroidListener(listener);
-
 		dbb = new EventDatabase(getActivity());
 		dbb.syncToOnlineDB(this);
 
+		refreshCalenderView();
 	}
 
 	/**
@@ -153,19 +154,54 @@ public class CalendarActivity extends Fragment implements SyncListener {
 
 	private void addOnline(Event event) {
 		dbb.addEventOnline(event.Titel, event.Info, event.StartDate,
-				event.EndDate);
+				event.EndDate, this);
 	}
 
 	private void refreshCalenderView() {
+		allEvents.clear();
 		allEvents = dbb.getAllEvents();
+		
 		for (int i = 0; i < allEvents.size(); i++) {
 			Event event = allEvents.get(i);
-
+			
 			caldroidFragment.setBackgroundResourceForDate(R.color.yellow,
 					event.StartDate);
-
-			caldroidFragment.refreshView();
 		}
+
+		caldroidFragment.refreshView();
 	}
+
+	@Override
+	public void onDeleteEvent(final Event event) {
+		dbb.deleteEvent(event, new GetCallback<ParseObject>() {
+
+			@Override
+			public void done(ParseObject pquery, ParseException e) {
+//				if (pquery == null)
+//					Log.d("SCHEISSE", "SCHEISSE");
+				
+				if (pquery != null) {
+					pquery.deleteInBackground();									
+ 				}
+				
+				dbb.deleteLocal(event);
+				
+				Log.d("DELETE", "allEvents.size() in onDeleteEvent = "+allEvents.size());
+				caldroidFragment.setBackgroundResourceForDate(R.color.caldroid_white, event.StartDate);
+				onDatabaseUpdated();
+			}
+		});
+		
+//		refreshCalenderView();
+	}
+
+	@Override
+	public void onDatabaseUpdated() {
+		allEvents.clear();
+		allEvents = dbb.getAllEvents();
+		caldroidFragment.refreshView();
+	}
+	
+	
 
 }
