@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphView.LegendAlign;
@@ -22,7 +21,6 @@ import de.androidbienchen.R;
 import de.androidbienchen.data.LocationDatabase;
 import de.androidbienchen.data.NetworkAvailability;
 import de.androidbienchen.listener.DataFetcherListener;
-import de.androidbienchen.listener.UpdateStatusListener;
 import de.androidbienchen.statistichelper.ScaleFetcher;
 import de.androidbienchen.statistichelper.Temperature;
 import de.androidbienchen.statistichelper.TemperatureFetcher;
@@ -82,9 +80,10 @@ public class StatisticActivity extends Fragment implements DataFetcherListener{
 		showGraph();
 	}
 		
+	@SuppressWarnings("deprecation")
 	void showGraph(){
 		graphView.setViewPort(0, 30);
-		//graphView.setScalable(true);
+		graphView.setScalable(true);
 		graphView.setShowLegend(true);
 		graphView.setLegendAlign(LegendAlign.TOP);
 		graphView.setLegendWidth(200);

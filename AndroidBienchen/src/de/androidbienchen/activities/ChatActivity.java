@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,10 +20,11 @@ import de.androidbienchen.R;
 import de.androidbienchen.chathelper.ChatListAdapter;
 import de.androidbienchen.chathelper.ChatListItem;
 import de.androidbienchen.data.LocationDatabase;
+import de.androidbienchen.data.NetworkAvailability;
 import de.androidbienchen.listener.MessageReceivedListener;
 import de.androidbienchen.socketiohelper.SocketIOHelper;
 
-public class ChatActivity extends Fragment implements MessageReceivedListener{
+public class ChatActivity extends Fragment implements MessageReceivedListener, Runnable{
 	
 	private ArrayList<ChatListItem> chatList;
 	private ArrayAdapter<ChatListItem> chatListAdapter;
@@ -78,7 +78,7 @@ public class ChatActivity extends Fragment implements MessageReceivedListener{
 			public void onClick(View v) {
 				EditText edit = (EditText) getActivity().findViewById(R.id.chat_input_container);
 				String sendingMessage = edit.getText().toString();
-				addMessage(sendingMessage);
+				sendMessage(sendingMessage);
 				edit.setText("");
 			}
 		});
@@ -90,11 +90,25 @@ public class ChatActivity extends Fragment implements MessageReceivedListener{
 		list.setAdapter(chatListAdapter);
 	}
 	
-	void addMessage(String sendMessage){
-		if (!sendMessage.equals("")) {
+	void sendMessage(String sendMessage){
+		if (!sendMessage.equals("") && NetworkAvailability.networkStatus(getActivity())) {
 			socketIOhelper.sendMessage(new ChatListItem(sendMessage, db.getUserIdentification().getUsername()));
 		}
-
+	}
+	
+	void addMessageToList(JSONObject object){
+		try {
+			chatList.add(new ChatListItem(object.getString(ChatListItem.JSON_MESSAGE), object.getString(ChatListItem.JSON_USERNAME), object.getString(ChatListItem.JSON_DATE)));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	void updateChatView(){
+		chatListAdapter.notifyDataSetChanged();
+		ListView list = (ListView) getActivity().findViewById(R.id.message_list);
+		list.setSelection(chatListAdapter.getCount()-1);
 	}
 	
 	@Override
@@ -126,16 +140,13 @@ public class ChatActivity extends Fragment implements MessageReceivedListener{
 	@Override
 	public void onMessageReceived(JSONObject object) {
 		// TODO Auto-generated method stub
-		Log.d("ONMESSAGERECEIVED", ""+object);
-		
-		try {
-			chatList.add(new ChatListItem(object.getString("message"), object.getString("username")));
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		chatListAdapter.notifyDataSetChanged();
-		ListView list = (ListView) getActivity().findViewById(R.id.message_list);
-		list.setSelection(chatListAdapter.getCount()-1);
+			addMessageToList(object);
+			getActivity().runOnUiThread(this);
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		updateChatView();
 	}
 }

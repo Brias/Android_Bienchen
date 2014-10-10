@@ -7,7 +7,10 @@ import java.util.Locale;
 import org.json.JSONObject;
 
 public class ChatListItem {
-
+	public static final String JSON_USERNAME = "user";
+	public static final String JSON_DATE = "date";
+	public static final String JSON_MESSAGE = "message";
+	
 	private String message;
 	private String date;
 	private String username;
@@ -16,6 +19,12 @@ public class ChatListItem {
 		this.message = message;
 		this.username = username;
 		initDate();
+	}
+	
+	public ChatListItem(String message, String username, String date) {
+		this.message = message;
+		this.username = username;
+		this.date = date;
 	}
 	
 	private void initDate() {
@@ -38,9 +47,9 @@ public class ChatListItem {
 	public JSONObject getItemAsJSONObject(){
 		JSONObject item = new JSONObject();
 		try{
-			item.put("user", username);
-			item.put("date", date);
-			item.put("message", message);
+			item.put(JSON_USERNAME, username);
+			item.put(JSON_DATE, date);
+			item.put(JSON_MESSAGE, message);
 		}catch(Exception e){
 			
 		}

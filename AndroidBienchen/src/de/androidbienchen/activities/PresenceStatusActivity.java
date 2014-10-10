@@ -11,8 +11,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +31,7 @@ import de.androidbienchen.usernamehelper.UserIdentification;
 
 
 
-public class PresenceStatusActivity extends Fragment implements UserStatusReceivedListener{
+public class PresenceStatusActivity extends Fragment implements UserStatusReceivedListener, LocationListener{
 	
 	public static final String ACTION_FILTER = "de.androidbienchen.intent.action.PresenceStatus";
 	public static final String EXTRA_KEY_IN_RADIUS = "Present";
@@ -39,6 +42,25 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 	public static final double LATITUDE = 49.03129100;
 	public static final double LONGITUDE = 11.9780100;
 	public static final float PROXIMITY_RADIUS = 100f;
+	
+    // flag for GPS status
+    boolean isGPSEnabled = false;
+
+    // flag for network status
+    boolean isNetworkEnabled = false;
+
+    // flag for GPS status
+    boolean canGetLocation = false;
+
+    Location location; // location
+    double latitude; // latitude
+    double longitude; // longitude
+
+    // The minimum distance to change Updates in meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 100; // 10 meters
+
+    // The minimum time between updates in milliseconds
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
 	
 	private ArrayList<PresenceStatusItem> statusList;
 	private PresenceListAdapter statusListAdapter;
@@ -83,28 +105,14 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 	}
 	
 	void initProxmityAlert() {	
-		Criteria criteria = getCriteria();
 		
 		LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-		String bestProvider =
-		locationManager.getBestProvider(criteria,true);
-		locationManager.getLastKnownLocation(bestProvider);
 		getActivity().registerReceiver(new ReachedReceiver(this), new IntentFilter(ACTION_FILTER));
 		Intent inRadiusIntent = new Intent();
 		inRadiusIntent.setAction(ACTION_FILTER);
 		PendingIntent proximityIntent = PendingIntent.getBroadcast(getActivity(), -1, inRadiusIntent, 0);
 		locationManager.addProximityAlert(LATITUDE, LONGITUDE, PROXIMITY_RADIUS, -1, proximityIntent);
-	}
-	
-	private Criteria getCriteria(){
-		Criteria criteria = new Criteria();
-		criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-		criteria.setPowerRequirement(Criteria.POWER_HIGH);
-		criteria.setAltitudeRequired(false);
-		criteria.setBearingRequired(false);
-		criteria.setSpeedRequired(false);
-		criteria.setCostAllowed(true);
-		return criteria;
+		Log.d("ALERT", "ALERT");
 	}
 	
 	void initList(){
@@ -124,24 +132,35 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 		socketIOHelper.sendPresenceStatus(new PresenceStatusItem(username, id, status));
 	}
 	  
-	void updateUIThere(String username){
-		statusList.add(new PresenceStatusItem(db.getUserIdentification().getUsername(), db.getUserIdentification().getAndroidId(), true));
+	void updateUIThere(String username, String id){
+		statusList.add(new PresenceStatusItem(username, id));
 		notifyListChanges();
 	  }
 	  
-	void updateUINotThere(String username){
+	void updateUINotThere(String id){
 		  for(int i = 0; i < statusList.size(); i++){
-			  if(statusList.get(i).getUsername().equals(username)){
+			  if(statusList.get(i).getId().equals(id)){
 				  statusList.remove(i);
 				  break;
 			  }
 		  }
-		  statusList.add(new PresenceStatusItem("EXIT LOCATION", db.getUserIdentification().getAndroidId(), false));
-		  notifyListChanges();
 	  }
 	  
 	  void notifyListChanges(){
 		  statusListAdapter.notifyDataSetChanged();
+	  }
+	  
+	  void updatePresenceStatusView(JSONObject object){
+			try {
+				if(object.getBoolean(PresenceStatusItem.JSON_STATUS)){
+					updateUIThere(object.getString(PresenceStatusItem.JSON_USERNAME), object.getString(PresenceStatusItem.JSON_ID));
+				}else{
+					updateUINotThere(object.getString(PresenceStatusItem.JSON_USERNAME));
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	  }
 	  
 	@Override
@@ -152,15 +171,30 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 	@Override
 	public void onUserStatusReceived(JSONObject object) {
 		// TODO Auto-generated method stub
-		try {
-			if(object.getBoolean("status")){
-				updateUIThere(object.getString("username"));
-			}else{
-				updateUINotThere(object.getString("username"));
-			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		updatePresenceStatusView(object);
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+		
 	}
 }
