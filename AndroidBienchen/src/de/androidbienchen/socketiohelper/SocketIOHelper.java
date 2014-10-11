@@ -56,7 +56,6 @@ public class SocketIOHelper implements IOCallback {
 	public void getMessageHistory(){
 		if(socketConnected()){
 			socket.emit(MESSAGE_HISTORY);
-			Log.d("requestMESSAGEHistory", "TRUE");
 		}
 	}
 	
@@ -94,7 +93,10 @@ public class SocketIOHelper implements IOCallback {
 	
 	
 	void processFetchedData(Object fetchedData, String eventName){
-		checkEventName(eventName, createJSONOfFetched(fetchedData));
+		JSONObject obj = createJSONOfFetched(fetchedData);
+		if(obj != null){
+			checkEventName(eventName, obj);
+		}
 	}
 	
 	private JSONObject createJSONOfFetched(Object fetchedData){
@@ -109,7 +111,7 @@ public class SocketIOHelper implements IOCallback {
 	}
 	
 	void checkEventName(String eventName, JSONObject fetchedData){
-		if(eventName.equals(MESSAGE_EVENT)){
+		if(eventName.equals(MESSAGE_EVENT) || eventName.equals(MESSAGE_HISTORY)){
 			addMessageToChat(fetchedData);
 		}
 		else if(eventName.equals(PRESENCE_EVENT)){
@@ -136,14 +138,18 @@ public class SocketIOHelper implements IOCallback {
 		// TODO Auto-generated method stub
 			Object[] obj = arg2;
 			String eventName = arg0;
-			
-			if(!messageHistoryReceived || !statusesReceived){
+		
+			if(eventName.equals(CURRENT_STATUSES) && !statusesReceived){
 				processMessageHistory(eventName, obj[0]);
-				Log.d("On", "TRUE");
-			}else{
+				statusesReceived = true;
+			}else
+				if(eventName.equals(MESSAGE_HISTORY) && !messageHistoryReceived){
+				processMessageHistory(eventName, obj[0]);
+				messageHistoryReceived = true;
+			}else
+				if(eventName.equals(MESSAGE_EVENT)){
 				processFetchedData(obj[0], eventName);
 			}
-			Log.d("On", obj.toString());
 	}
 
 	@Override
@@ -152,7 +158,7 @@ public class SocketIOHelper implements IOCallback {
 		try {
 			messageListener.onSocketIOConnected();
 			statusListener.onSocketIOConnected();
-			Log.d("messageHistoryOnsdonnect", "True");
+			Log.d("messageHistoryOnconnect", "True");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

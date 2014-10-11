@@ -2,10 +2,6 @@ package de.androidbienchen.data;
 
 import java.util.ArrayList;
 
-import de.androidbienchen.statistichelper.Temperature;
-import de.androidbienchen.statistichelper.Weight;
-import de.androidbienchen.usernamehelper.UserIdentification;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -16,6 +12,9 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import de.androidbienchen.statistichelper.Temperature;
+import de.androidbienchen.statistichelper.Weight;
+import de.androidbienchen.usernamehelper.UserIdentification;
 
 public class LocationDatabase {
 

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="Name:" />
+        android:text="@string/nameveranst" />
 
     <EditText
         android:id="@+id/eventinsert_titel"
@@ -20,8 +20,6 @@
         android:layout_below="@+id/textView1"
         android:ems="10"
         android:hint="@string/insertname" >
-
-        <requestFocus />
     </EditText>
 
     <EditText
@@ -39,34 +37,51 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/eventinsert_titel"
-        android:text="Info:" />
+        android:text="@string/infoveranst" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/endZeit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/eventinsert_info"
-        android:text="Startzeit:" />
+        android:layout_alignBottom="@+id/textView5"
+        android:layout_alignLeft="@+id/startZeit"
+        android:text="TextView" 
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <TextView
-        android:id="@+id/startZeit"
+    <Button
+        android:id="@+id/endButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView3"
-        android:layout_alignBottom="@+id/textView3"
-        android:layout_marginLeft="21dp"
-        android:layout_toRightOf="@+id/textView3"
-        android:text="TextView" />
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/textView5"
+        android:text="@string/auswahl" />
 
     <Button
         android:id="@+id/startButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/startZeit"
-        android:layout_alignBottom="@+id/startZeit"
         android:layout_alignParentRight="true"
-        android:text="Auswählen" />
+        android:layout_below="@+id/eventinsert_info"
+        android:text="@string/auswahl" />
+
+    <TextView
+        android:id="@+id/startZeit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_marginLeft="14dp"
+        android:layout_toRightOf="@+id/textView5"
+        android:text="TextView"
+        android:textAppearance="?android:attr/textAppearanceMedium"  />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView5"
+        android:layout_alignParentLeft="true"
+        android:text="@string/anfzeitveranst"
+        android:textAppearance="?android:attr/textAppearanceMedium"  />
 
     <TextView
         android:id="@+id/textView5"
@@ -74,26 +89,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/startButton"
-        android:layout_marginTop="24dp"
-        android:text="Endzeit:"
+        android:layout_marginTop="26dp"
+        android:text="@string/endzeitveranst"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/endZeit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView5"
-        android:layout_alignBottom="@+id/textView5"
-        android:layout_alignLeft="@+id/startButton"
-        android:text="TextView" />
-
-    <Button
-        android:id="@+id/endButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/textView5"
-        android:layout_marginTop="22dp"
-        android:text="Auswählen" />
 
 </RelativeLayout>

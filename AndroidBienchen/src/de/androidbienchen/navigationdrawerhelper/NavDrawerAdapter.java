@@ -1,6 +1,5 @@
 package de.androidbienchen.navigationdrawerhelper;
 
-import de.androidbienchen.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import de.androidbienchen.R;
 
 public class NavDrawerAdapter extends ArrayAdapter<NavDrawerItem> {
 

@@ -2,9 +2,8 @@ package de.androidbienchen.camhelper;
 
 import java.util.TimerTask;
 
-import de.androidbienchen.listener.ImageFetcherListener;
-
 import android.content.Context;
+import de.androidbienchen.listener.ImageFetcherListener;
 
 public class ImageFetcherTimer extends TimerTask{
 

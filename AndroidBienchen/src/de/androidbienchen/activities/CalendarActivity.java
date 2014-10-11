@@ -1,22 +1,18 @@
 package de.androidbienchen.activities;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -24,112 +20,96 @@ import de.androidbienchen.R;
 import de.androidbienchen.calendarhelper.Event;
 import de.androidbienchen.calendarhelper.EventInsertDialog;
 import de.androidbienchen.calendarhelper.EventViewDialog;
+import de.androidbienchen.calendarhelper.EventViewDialog.OnDeleteListener;
 import de.androidbienchen.data.EventDatabase;
+import de.androidbienchen.data.NetworkAvailability;
 import de.androidbienchen.data.EventDatabase.SyncListener;
+import de.androidbienchen.data.UpdateDialogHelper;
 
-public class CalendarActivity extends Fragment implements SyncListener {
+public class CalendarActivity extends Fragment implements SyncListener,
+		OnDeleteListener {
 
 	private EventDatabase dbb;
 	private CaldroidFragment caldroidFragment;
 	ArrayList<Event> allEvents = new ArrayList<Event>();
 
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.calendar, menu);
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_refresh) {
-			dbb.syncToOnlineDB(this);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.activity_calendar,
-				container, false);
+		View rootView = inflater.inflate(R.layout.activity_calendar, container,
+				false);
 		return rootView;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.activity_calendar);
-		setHasOptionsMenu(true);
-		
-		final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
+
 		caldroidFragment = new CaldroidFragment();
 
-		//
-		// If Activity is created after rotation
-		if (savedInstanceState != null) {
-			caldroidFragment.restoreStatesFromKey(savedInstanceState,
-					"CALDROID_SAVED_STATE");
-		}
-		// If activity is created from fresh
-		else {
-			Bundle args = new Bundle();
-			Calendar cal = Calendar.getInstance();
-			args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
-			args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
-			args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
-			args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
-
-			// Uncomment this to customize startDayOfWeek
-			// args.putInt(CaldroidFragment.START_DAY_OF_WEEK,
-			// CaldroidFragment.TUESDAY); // Tuesday
-			caldroidFragment.setArguments(args);
-		}
-
-		// // Attach to the activity
+		// Attach to the activity
 		FragmentTransaction t = getFragmentManager().beginTransaction();
 		t.replace(R.id.calendar, caldroidFragment);
 		t.commit();
 
-		// Setup listener
+		// Setup listener, which listen to events and
+		// creates new dialogs depending on what was clicked
+
 		final CaldroidListener listener = new CaldroidListener() {
 
+			@SuppressWarnings("deprecation")
 			@Override
 			public void onSelectDate(Date date, View view) {
-				Toast.makeText(getActivity(), formatter.format(date),
-						Toast.LENGTH_SHORT).show();
+
+				// shows a already existing event in the calendar
 				for (int i = 0; i < allEvents.size(); i++) {
 					Date start = allEvents.get(i).StartDate;
 					if (start.getDate() == date.getDate()
 							&& start.getMonth() == date.getMonth()
 							&& start.getYear() == date.getYear()) {
-						new EventViewDialog(getActivity(), allEvents.get(i));
+						new EventViewDialog(getActivity(), allEvents.get(i),
+								CalendarActivity.this);
 						return;
 					}
 				}
+
+				// creates a new event in the calendar which is filled
+				// with information from EventInsertDialog
 
 				new EventInsertDialog(getActivity(),
 						new EventInsertDialog.InsertListener() {
 
 							@Override
 							public void insertComplt(Event event) {
-								dbb.addEvent(event.Titel, event.Info,
-										event.StartDate, event.EndDate);
-								refreshCalenderView();
+								// if Internetverbindung vorhanden
+
+								if (NetworkAvailability
+										.networkStatus(getActivity())) {
+									addOnline(event);
+									addLocal(event);
+									refreshCalenderView();
+								} else {
+									updateCanceledDialog();
+								}
 							}
-						}, date);	
+						}, date);
 			}
+
 		};
 
-		// Setup Caldroid
+		// Setup Caldroid, initializing, synchronization and refreshing of new
+		// database
+
 		caldroidFragment.setCaldroidListener(listener);
-
 		dbb = new EventDatabase(getActivity());
-		dbb.syncToOnlineDB(this);
-
+		if (NetworkAvailability.networkStatus(getActivity())) {
+			dbb.syncToOnlineDB(this);
+		}
+		refreshCalenderView();
 	}
 
-	/**
-	 * Save current states of the Caldroid here
-	 */
+	// Save current states of the caldroid
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		// TODO Auto-generated method stub
@@ -145,17 +125,65 @@ public class CalendarActivity extends Fragment implements SyncListener {
 		refreshCalenderView();
 	}
 
+	private void addLocal(Event event) {
+		dbb.addEventLocal(event.Titel, event.Info, event.StartDate,
+				event.EndDate);
+	}
+
+	private void addOnline(Event event) {
+		dbb.addEventOnline(event.Titel, event.Info, event.StartDate,
+				event.EndDate, this);
+	}
+
+	// refreshes the calendar if events are added
+
 	private void refreshCalenderView() {
+		allEvents.clear();
 		allEvents = dbb.getAllEvents();
 		for (int i = 0; i < allEvents.size(); i++) {
 			Event event = allEvents.get(i);
-
-			caldroidFragment.setBackgroundResourceForDate(
-					R.color.yellow, event.StartDate);
-
-			caldroidFragment.refreshView();
+			caldroidFragment.setBackgroundResourceForDate(R.color.yellow,
+					event.StartDate);
 		}
+
+		caldroidFragment.refreshView();
+	}
+	
+	private void deleteEvent(final Event event){
+		dbb.deleteEvent(event, new GetCallback<ParseObject>() {
+
+			@Override
+			public void done(ParseObject pquery, ParseException e) {
+
+				if (pquery != null) {
+					pquery.deleteInBackground();
+				}
+				dbb.deleteLocal(event);
+				caldroidFragment.setBackgroundResourceForDate(
+						R.color.caldroid_white, event.StartDate);
+				onDatabaseUpdated();
+			}
+		});
+	}
+	
+	private void updateCanceledDialog(){
+		UpdateDialogHelper.UpdateCanceledDialog(getActivity(), getActivity().getResources().getString(R.string.no_network_error_message), "");
 	}
 
-}
+	// deletes an event out of online and local database
+	@Override
+	public void onDeleteEvent(Event event) {
+		if(NetworkAvailability.networkStatus(getActivity())){
+			deleteEvent(event);
+		}else updateCanceledDialog();
+	}
 
+	// updates the database after deleting
+
+	@Override
+	public void onDatabaseUpdated() {
+		allEvents.clear();
+		allEvents = dbb.getAllEvents();
+		caldroidFragment.refreshView();
+	}
+}

@@ -14,14 +14,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.androidbienchen.data.AppConfig;
-import de.androidbienchen.data.LocationDatabase;
-import de.androidbienchen.data.AppConfig.server;
-import de.androidbienchen.listener.DataFetcherListener;
-
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
+import de.androidbienchen.data.AppConfig;
+import de.androidbienchen.data.LocationDatabase;
+import de.androidbienchen.listener.DataFetcherListener;
 
 public class TemperatureFetcher {
 	private ArrayList<String> resultArrayList;

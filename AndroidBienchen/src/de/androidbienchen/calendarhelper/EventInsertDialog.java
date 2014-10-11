@@ -1,9 +1,8 @@
 package de.androidbienchen.calendarhelper;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import de.androidbienchen.R;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -21,11 +20,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import de.androidbienchen.R;
 
 public class EventInsertDialog {
 
 	private Context cont;
 	private Date clickedDate;
+	private InsertListener ln;
 
 	public EventInsertDialog(Context cont, InsertListener ln, Date clickedDate) {
 		this.cont = cont;
@@ -38,7 +39,9 @@ public class EventInsertDialog {
 		public void insertComplt(Event event);
 	}
 
-	private InsertListener ln;
+	private SimpleDateFormat formatter = new SimpleDateFormat(" HH:mm ");
+
+	// method to organize the inserted info of the event with a new alert dialog
 
 	public void insertDialog() {
 
@@ -58,11 +61,13 @@ public class EventInsertDialog {
 		final Button startButton = (Button) v.findViewById(R.id.startButton);
 		final Button endButton = (Button) v.findViewById(R.id.endButton);
 
-		final Date startDate = new Date(clickedDate.getTime());
-		final Date endDate = new Date(clickedDate.getTime() + 1000*60*30);
-		startZeit.setText(startDate.toString());
-		endZeit.setText(endDate.toString());
+		final Date startDate = new Date(clickedDate.getTime()); // 00:00
+		final Date endDate = new Date(clickedDate.getTime());
 
+		startZeit.setText(formatter.format(startDate));
+		endZeit.setText(formatter.format(endDate));
+
+		// sets the start time
 		startButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -70,10 +75,10 @@ public class EventInsertDialog {
 				FragmentActivity fa = (FragmentActivity) cont;
 				new TimePickerFragment(startDate, startZeit).show(
 						fa.getSupportFragmentManager(), "datePicker");
-
 			}
 		});
 
+		// sets the end time
 		endButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -81,20 +86,20 @@ public class EventInsertDialog {
 				FragmentActivity fa = (FragmentActivity) cont;
 				new TimePickerFragment(endDate, endZeit).show(
 						fa.getSupportFragmentManager(), "datePicker");
-
 			}
 		});
-
+		
+		// sets the "Abbrechen" button, which breaks the and closes dialog
 		builder.setView(v);
 		builder.setNegativeButton("Abbrechen", new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
 				arg0.dismiss();
-
 			}
 		});
-
+		
+		// sets the "Hinzufügen" button, organizes the event info
 		builder.setPositiveButton("Hinzufügen", new OnClickListener() {
 
 			@Override
@@ -114,6 +119,8 @@ public class EventInsertDialog {
 		builder.create().show();
 	}
 
+	// Enables the user to pick time of the event and creates the new dialog
+
 	public class TimePickerFragment extends DialogFragment implements
 			TimePickerDialog.OnTimeSetListener {
 
@@ -132,22 +139,25 @@ public class EventInsertDialog {
 			int hour = c.get(Calendar.HOUR_OF_DAY);
 			int minute = c.get(Calendar.MINUTE);
 
-			// Create a new instance of TimePickerDialog and return it
+			// Create a new instance of TimePickerDialog
 			return new TimePickerDialog(getActivity(), this, hour, minute,
 					DateFormat.is24HourFormat(getActivity()));
 		}
 
+		@SuppressWarnings("deprecation")
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 			date.setHours(hourOfDay);
 			date.setMinutes(minute);
-			outPutText.setText(date.toString());
+			outPutText.setText(formatter.format(date));
 		}
+
+
 		
-		private void copyDate(Date source, Date dest){
+		@SuppressWarnings("deprecation")
+		private void copyDate(Date source, Date dest) {
 			dest.setMonth(source.getMonth());
 			dest.setDate(source.getDate());
 			dest.setYear(source.getYear());
-			
 		}
 	}
 }

@@ -110,15 +110,17 @@ public class ChatActivity extends Fragment implements MessageReceivedListener, R
 	}
 	
 	void addMessageToList(JSONObject object){
-		try {
-			chatList.add(new ChatListItem(object.getString(ChatListItem.JSON_MESSAGE), object.getString(ChatListItem.JSON_USERNAME), object.getString(ChatListItem.JSON_DATE)));
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			try {
+				chatList.add(new ChatListItem(object.getString(ChatListItem.JSON_MESSAGE), object.getString(ChatListItem.JSON_USERNAME), object.getString(ChatListItem.JSON_DATE)));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Log.d("AddMessaegToLIst", "TRUE");
 	}
 	
 	void updateChatView(){
+		
 		chatListAdapter.notifyDataSetChanged();
 		ListView list = (ListView) getActivity().findViewById(R.id.message_list);
 		list.setSelection(chatListAdapter.getCount()-1);

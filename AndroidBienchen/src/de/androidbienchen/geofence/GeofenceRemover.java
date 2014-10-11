@@ -19,9 +19,9 @@ import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailed
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationClient.OnRemoveGeofencesResultListener;
 import com.google.android.gms.location.LocationStatusCodes;
-import de.androidbienchen.geofence.GeofenceUtils.REMOVE_TYPE;
 
 import de.androidbienchen.R;
+import de.androidbienchen.geofence.GeofenceUtils.REMOVE_TYPE;
 
 
 

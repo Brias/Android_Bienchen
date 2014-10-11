@@ -1,6 +1,5 @@
 package de.androidbienchen.navigationdrawerhelper;
 
-import de.androidbienchen.R;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -13,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import de.androidbienchen.R;
 
 
 

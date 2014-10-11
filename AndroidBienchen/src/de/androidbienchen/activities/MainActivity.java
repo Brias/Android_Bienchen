@@ -85,12 +85,12 @@ public class MainActivity extends AbstractNavDrawerActivity implements UpdateSta
     protected NavDrawerActivityConfiguration getNavDrawerConfiguration() {
         
         NavDrawerItem[] menu = new NavDrawerItem[] {
-                NavMenuItem.create(1,"Start", "navdrawer_start", true, this),
+                NavMenuItem.create(1,"Anwesend", "navdrawer_start", true, this),
                 NavMenuItem.create(2, "Chat", "navdrawer_chat", true, this), 
                 NavMenuItem.create(3, "Kalender", "navdrawer_calendar", true, this),
                 NavMenuItem.create(4, "Statistik", "navdrawer_statistic", true, this), 
                 NavMenuItem.create(5, "Live-Cam", "navdrawer_live_cam", true, this),
-                NavMenuItem.create(6, "zur Website", "navdrawer_website", true, this)};
+                NavMenuItem.create(6, "Zur Website", "navdrawer_website", true, this)};
         
         NavDrawerActivityConfiguration navDrawerActivityConfiguration = new NavDrawerActivityConfiguration();
         navDrawerActivityConfiguration.setMainLayout(R.layout.activity_main);
@@ -183,21 +183,5 @@ public class MainActivity extends AbstractNavDrawerActivity implements UpdateSta
 	public void onLocalDataError(String description) {
 		// TODO Auto-generated method stub
 		UpdateDialogHelper.UpdateCanceledDialog(this, getResources().getString(R.string.update_local_data_error), description);
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu){
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
-		return super.onCreateOptionsMenu(menu);
-		
-	}
-	
-	@Override 
-	public boolean onOptionsItemSelected(MenuItem item){
-		if(item.getItemId() == R.id.action_settings){
-			
-		}
-		return super.onOptionsItemSelected(item);
 	}
 }

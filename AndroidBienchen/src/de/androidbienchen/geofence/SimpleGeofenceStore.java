@@ -16,10 +16,10 @@
 
 package de.androidbienchen.geofence;
 
-import de.androidbienchen.activities.PresenceStatusActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import de.androidbienchen.activities.PresenceStatusActivity;
 
 /**
  * Storage for geofence values, implemented in SharedPreferences.

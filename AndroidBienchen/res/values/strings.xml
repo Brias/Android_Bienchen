@@ -21,8 +21,13 @@
 	<string name="website">Website</string>
 	
 	<!-- calendar dialog -->
-    <string name="insertname">Veranstaltung</string>
+	<string name="insertname">Veranstaltung</string>
     <string name="insertinfo">Veranstaltungsinfo</string>
+    <string name="nameveranst">Name:</string>
+    <string name="infoveranst">Info:</string>
+    <string name="anfzeitveranst">Startzeit:</string>
+    <string name="endzeitveranst">Endzeit:</string>
+    <string name="auswahl">Auswählen</string>
 	
 	<!-- navigation drawer info -->
 	<string name="drawer_open">Open navigation drawer</string>
@@ -33,9 +38,10 @@
     <string name="day">Tag</string>
     
     <!-- Error Messages -->
-    <string name="update_error">No Network Connection</string>
+    <string name="update_error">Keine Internetverbindung!</string>
     <string name="update_error_message">Unable to Update Data: </string>
     <string name="update_local_data_error">Failed to Load Local Data: </string>
+    <string name="no_network_error_message">Lieber Bienenfreund! Der Kalender ist nur mit vorhandener Internetverbindung editierbar!</string>
     
     <!-- Presence Status -->
     <string name="online">Online</string>
