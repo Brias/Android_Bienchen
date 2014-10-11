@@ -53,10 +53,10 @@ public class MainActivity extends AbstractNavDrawerActivity implements UpdateSta
     	current = null;
     	currentCalendar = null;
     	
+    	chat = new ChatActivity(socketIOHelper);
+    	presence = new PresenceStatusActivity(socketIOHelper);
         scale = new StatisticActivity();
         calendar = new CalendarActivity();
-        chat = new ChatActivity(socketIOHelper);
-        presence = new PresenceStatusActivity(socketIOHelper);
         cam = new CamActivity(this);
     }
     

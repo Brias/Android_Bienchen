@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +21,7 @@ import de.androidbienchen.R;
 import de.androidbienchen.chathelper.ChatListAdapter;
 import de.androidbienchen.chathelper.ChatListItem;
 import de.androidbienchen.data.LocationDatabase;
-import de.androidbienchen.data.NetworkAvailability;
+import de.androidbienchen.data.UpdateDialogHelper;
 import de.androidbienchen.listener.MessageReceivedListener;
 import de.androidbienchen.socketiohelper.SocketIOHelper;
 
@@ -45,13 +46,23 @@ public class ChatActivity extends Fragment implements MessageReceivedListener, R
 		initDatabase();
 		initChatList();
 		initUI(rootView);
-		
+		Log.d("ENDOGFVIEW", "TRUE");
 		return rootView;
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+	}
+	
+	@Override
+	public void onStart(){
+		super.onStart();
+	}
+	
+	void requestMessageHistory(){
+		socketIOhelper.getMessageHistory();
+		Log.d("requestMESSAGEHistory", "TRUE");
 	}
 	
 	void setListener(){
@@ -91,8 +102,10 @@ public class ChatActivity extends Fragment implements MessageReceivedListener, R
 	}
 	
 	void sendMessage(String sendMessage){
-		if (!sendMessage.equals("") && NetworkAvailability.networkStatus(getActivity())) {
+		if (!sendMessage.equals("") && socketIOhelper.socketConnected()) {
 			socketIOhelper.sendMessage(new ChatListItem(sendMessage, db.getUserIdentification().getUsername()));
+		}else{
+			UpdateDialogHelper.UpdateCanceledDialog(getActivity(), getActivity().getResources().getString(R.string.connection_error_network), "");
 		}
 	}
 	
@@ -109,11 +122,6 @@ public class ChatActivity extends Fragment implements MessageReceivedListener, R
 		chatListAdapter.notifyDataSetChanged();
 		ListView list = (ListView) getActivity().findViewById(R.id.message_list);
 		list.setSelection(chatListAdapter.getCount()-1);
-	}
-	
-	@Override
-	public void onStart(){
-		super.onStart();
 	}
 
 	@Override
@@ -148,5 +156,12 @@ public class ChatActivity extends Fragment implements MessageReceivedListener, R
 	public void run() {
 		// TODO Auto-generated method stub
 		updateChatView();
+	}
+
+	@Override
+	public void onSocketIOConnected() {
+		// TODO Auto-generated method stub
+		requestMessageHistory();
+		Log.d("RequestMessageOnSocketIO", "TRUE");
 	}
 }

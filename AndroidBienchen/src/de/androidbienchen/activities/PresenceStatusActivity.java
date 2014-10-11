@@ -10,12 +10,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +35,6 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 	public static final String EXTRA_KEY_IN_RADIUS = "Present";
 //	public static final double LATITUDE = 48.59662;	 //location data
 //	public static final double LONGITUDE = 12.02154; //of Bienenstand
-	//public static final double LATITUDE = 49.03129;
-	//public static final double LONGITUDE = 11.97801;
 	public static final double LATITUDE = 49.03129100;
 	public static final double LONGITUDE = 11.9780100;
 	public static final float PROXIMITY_RADIUS = 100f;
@@ -112,7 +108,6 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 		inRadiusIntent.setAction(ACTION_FILTER);
 		PendingIntent proximityIntent = PendingIntent.getBroadcast(getActivity(), -1, inRadiusIntent, 0);
 		locationManager.addProximityAlert(LATITUDE, LONGITUDE, PROXIMITY_RADIUS, -1, proximityIntent);
-		Log.d("ALERT", "ALERT");
 	}
 	
 	void initList(){
@@ -129,7 +124,9 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 		UserIdentification userIdentification = getUserIdentification();
 		String username = userIdentification.getUsername();
 		String id = userIdentification.getAndroidId();
-		socketIOHelper.sendPresenceStatus(new PresenceStatusItem(username, id, status));
+		if(socketIOHelper.socketConnected()){
+			socketIOHelper.sendPresenceStatus(new PresenceStatusItem(username, id, status));
+		}
 	}
 	  
 	void updateUIThere(String username, String id){
@@ -138,30 +135,34 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 	  }
 	  
 	void updateUINotThere(String id){
-		  for(int i = 0; i < statusList.size(); i++){
-			  if(statusList.get(i).getId().equals(id)){
-				  statusList.remove(i);
-				  break;
-			  }
+	  for(int i = 0; i < statusList.size(); i++){
+		  if(statusList.get(i).getId().equals(id)){
+			  statusList.remove(i);
+			  break;
 		  }
 	  }
+	}
 	  
-	  void notifyListChanges(){
-		  statusListAdapter.notifyDataSetChanged();
-	  }
+	void notifyListChanges(){
+		statusListAdapter.notifyDataSetChanged();
+	}
 	  
-	  void updatePresenceStatusView(JSONObject object){
-			try {
-				if(object.getBoolean(PresenceStatusItem.JSON_STATUS)){
-					updateUIThere(object.getString(PresenceStatusItem.JSON_USERNAME), object.getString(PresenceStatusItem.JSON_ID));
-				}else{
-					updateUINotThere(object.getString(PresenceStatusItem.JSON_USERNAME));
-				}
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	void updatePresenceStatusView(JSONObject object){
+		try {
+			if(object.getBoolean(PresenceStatusItem.JSON_STATUS)){
+				updateUIThere(object.getString(PresenceStatusItem.JSON_USERNAME), object.getString(PresenceStatusItem.JSON_ID));
+			}else{
+				updateUINotThere(object.getString(PresenceStatusItem.JSON_USERNAME));
 			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	  }
+	  
+	void requestCurrentStatuses(){
+		socketIOHelper.getCurrentStatuses();
+	}
 	  
 	@Override
 	public void onResume() {
@@ -172,6 +173,14 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 	public void onUserStatusReceived(JSONObject object) {
 		// TODO Auto-generated method stub
 		updatePresenceStatusView(object);
+	}
+	
+	@Override
+	public void onSocketIOConnected() {
+		// TODO Auto-generated method stub
+		if(socketIOHelper.socketConnected()){
+			requestCurrentStatuses();
+		}
 	}
 
 	@Override
