@@ -1,25 +1,27 @@
 package de.androidbienchen.camhelper;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import de.androidbienchen.data.AppConfig;
-import de.androidbienchen.data.LocationDatabase;
-import de.androidbienchen.data.AppConfig.server;
-import de.androidbienchen.listener.ImageFetcherListener;
+import java.util.Date;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Environment;
+import android.util.Log;
+import de.androidbienchen.data.AppConfig;
+import de.androidbienchen.listener.ImageFetcherListener;
 
 public class ImageFetcher {
 
-	private LocationDatabase db;
 	private ImageFetcherListener listener;
 	
 	public ImageFetcher(Context context, ImageFetcherListener listener){
@@ -27,7 +29,6 @@ public class ImageFetcher {
 	}
 	
 	private void init(Context context, ImageFetcherListener listener){
-		db = new LocationDatabase(context);
 		this.listener = listener;
 	}
 	
@@ -39,29 +40,40 @@ public class ImageFetcher {
 		new BackgroundTask().cancel(true);
 	}
 	
+	private String getCurrentDate(){
+		Date date = new Date();
+		return date.toString();
+	}
+	
 	private void processImage(Bitmap bm){
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
-		byte[] img = stream.toByteArray();
+		File sdCardDirectory = Environment.getExternalStorageDirectory();
+		File dirImage = new File(sdCardDirectory.getAbsolutePath() + File.separator +
+				"Android" + File.separator + "data" + File.separator +
+				getClass().getPackage().getName() + File.separator + "images");
 		
-		if(db.removeImage()){
-			storeImageInDatabase(img);
-		}
-		setDataFetched();
+		dirImage.mkdirs();
+		
+		FileOutputStream out = null;
+		try{
+			File image = new File(dirImage, "BlaBla.jpg");
+			out = new FileOutputStream(image);
+			bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+//			out.flush();
+			try {
+				out.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		 } catch (FileNotFoundException e) {
+		        e.printStackTrace();
+		 }	
+		setDataFetched(bm);
 	}
 	
-	private void storeImageInDatabase(byte[] img){
-		 db.insertImage(img);
+	private void setDataFetched(Bitmap bm){
+		listener.onImageFetched(bm);
 	}
-	
-	private void setDataFetched(){
-		listener.onImageFetched(getImageFromDatabase());
-	}
-	
-	private Bitmap getImageFromDatabase(){
-		return db.getImage();
-	}
-	
 	
 	private class BackgroundTask extends AsyncTask<String, Void, Bitmap>{
 

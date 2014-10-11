@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ReceiverCallNotAllowedException;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -38,6 +39,8 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 	public static final double LATITUDE = 49.03129100;
 	public static final double LONGITUDE = 11.9780100;
 	public static final float PROXIMITY_RADIUS = 100f;
+	
+	private ReachedReceiver receiver;
 	
     // flag for GPS status
     boolean isGPSEnabled = false;
@@ -85,6 +88,7 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		initReceiver();
 		initProxmityAlert();
 	}
 	
@@ -100,10 +104,14 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 		return db.getUserIdentification();
 	}
 	
+	void initReceiver(){
+		receiver = new ReachedReceiver(this);
+	}
+	
 	void initProxmityAlert() {	
 		
 		LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-		getActivity().registerReceiver(new ReachedReceiver(this), new IntentFilter(ACTION_FILTER));
+		getActivity().registerReceiver(receiver, new IntentFilter(ACTION_FILTER));
 		Intent inRadiusIntent = new Intent();
 		inRadiusIntent.setAction(ACTION_FILTER);
 		PendingIntent proximityIntent = PendingIntent.getBroadcast(getActivity(), -1, inRadiusIntent, 0);
@@ -167,6 +175,12 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 	@Override
 	public void onResume() {
 		super.onResume();
+	}
+	
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		getActivity().unregisterReceiver(receiver);
 	}
 
 	@Override

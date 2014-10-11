@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,9 +47,6 @@ public class CamActivity extends Fragment implements ImageFetcherListener{
 		initFetcher();
 		init();
 		fetchingData();
-		openDatabase();
-		Log.d("USERID", db.getUserIdentification().getAndroidId());
-		Log.d("USERNAME", db.getUserIdentification().getUsername());
 	}
 	
 	@Override
@@ -65,24 +61,6 @@ public class CamActivity extends Fragment implements ImageFetcherListener{
 	void init(){
 		timer = new ImageFetcherTimer(getActivity(), this);
 		db = new LocationDatabase(getActivity());
-	}
-	
-	boolean getImage(){
-		try {
-			bm = db.getImage();
-			return true;
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return false;
-	}
-	
-	void openDatabase(){
-		db.open();
-	}
-	
-	void closeDatabse(){
-		db.close();
 	}
 	
 	void fetchingData(){
