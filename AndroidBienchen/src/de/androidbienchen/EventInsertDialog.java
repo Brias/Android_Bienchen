@@ -38,7 +38,9 @@ public class EventInsertDialog {
 		public void insertComplt(Event event);
 	}
 
-	public SimpleDateFormat formatter = new SimpleDateFormat(" HH:mm ");
+	private SimpleDateFormat formatter = new SimpleDateFormat(" HH:mm ");
+
+	// method to organize the inserted info of the event with a new alert dialog
 
 	public void insertDialog() {
 
@@ -72,7 +74,6 @@ public class EventInsertDialog {
 				FragmentActivity fa = (FragmentActivity) cont;
 				new TimePickerFragment(startDate, startZeit).show(
 						fa.getSupportFragmentManager(), "datePicker");
-
 			}
 		});
 
@@ -82,21 +83,22 @@ public class EventInsertDialog {
 			@Override
 			public void onClick(View v) {
 				FragmentActivity fa = (FragmentActivity) cont;
-				new TimePickerFragment(endDate, endZeit).show(fa.getSupportFragmentManager(), "datePicker");
-
+				new TimePickerFragment(endDate, endZeit).show(
+						fa.getSupportFragmentManager(), "datePicker");
 			}
 		});
-
+		
+		// sets the "Abbrechen" button, which breaks the and closes dialog
 		builder.setView(v);
 		builder.setNegativeButton("Abbrechen", new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
 				arg0.dismiss();
-
 			}
 		});
-
+		
+		// sets the "Hinzufügen" button, organizes the event info
 		builder.setPositiveButton("Hinzufügen", new OnClickListener() {
 
 			@Override
@@ -104,7 +106,6 @@ public class EventInsertDialog {
 
 				String inserTt = insertTitel.getText().toString();
 				String insertInf = insertInfo.getText().toString();
-				
 				Event event = new Event();
 				event.Titel = inserTt;
 				event.Info = insertInf;
@@ -116,6 +117,8 @@ public class EventInsertDialog {
 		});
 		builder.create().show();
 	}
+
+	// Enables the user to pick time of the event and creates the new dialog
 
 	public class TimePickerFragment extends DialogFragment implements
 			TimePickerDialog.OnTimeSetListener {
@@ -135,26 +138,22 @@ public class EventInsertDialog {
 			int hour = c.get(Calendar.HOUR_OF_DAY);
 			int minute = c.get(Calendar.MINUTE);
 
-			// endZeit.setText(formatter.format(endDate));
-
-			// Create a new instance of TimePickerDialog and return it
+			// Create a new instance of TimePickerDialog
 			return new TimePickerDialog(getActivity(), this, hour, minute,
-					DateFormat.is24HourFormat(getActivity())); // Hier
-																// Fehler!!!!
-
+					DateFormat.is24HourFormat(getActivity()));
 		}
 
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 			date.setHours(hourOfDay);
 			date.setMinutes(minute);
-			outPutText.setText(date.toString());
+			outPutText.setText(formatter.format(date));
 		}
+
 
 		private void copyDate(Date source, Date dest) {
 			dest.setMonth(source.getMonth());
 			dest.setDate(source.getDate());
 			dest.setYear(source.getYear());
-
 		}
 	}
 }

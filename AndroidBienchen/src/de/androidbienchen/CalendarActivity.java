@@ -1,15 +1,12 @@
 package de.androidbienchen;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,26 +19,12 @@ import com.roomorama.caldroid.CaldroidListener;
 import de.androidbienchen.EventDatabase.SyncListener;
 import de.androidbienchen.EventViewDialog.OnDeleteListener;
 
-public class CalendarActivity extends Fragment implements SyncListener, OnDeleteListener {
+public class CalendarActivity extends Fragment implements SyncListener,
+		OnDeleteListener {
 
 	private EventDatabase dbb;
 	private CaldroidFragment caldroidFragment;
 	ArrayList<Event> allEvents = new ArrayList<Event>();
-
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	//
-	// MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.calendar, menu);
-	// return super.onCreateOptionsMenu(menu);
-	// }
-
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.action_refresh) {
-			dbb.syncToOnlineDB(this);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,35 +40,20 @@ public class CalendarActivity extends Fragment implements SyncListener, OnDelete
 
 		caldroidFragment = new CaldroidFragment();
 
-		// If Activity is created after rotation
-
-		if (savedInstanceState != null) {
-			caldroidFragment.restoreStatesFromKey(savedInstanceState,
-					"CALDROID_SAVED_STATE");
-		}
-		// If activity is created from fresh
-		else {
-			Bundle args = new Bundle();
-			Calendar cal = Calendar.getInstance();
-			args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
-			args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
-			args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
-			args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
-
-			caldroidFragment.setArguments(args);
-		}
-
-		// // Attach to the activity
+		// Attach to the activity
 		FragmentTransaction t = getFragmentManager().beginTransaction();
 		t.replace(R.id.calendar, caldroidFragment);
 		t.commit();
 
-		// Setup listener
+		// Setup listener, which listen to events and
+		// creates new dialogs depending on what was clicked
+
 		final CaldroidListener listener = new CaldroidListener() {
 
 			@Override
 			public void onSelectDate(Date date, View view) {
-				Log.d("DELETE", "allEvents.size() in onSelectDate = "+allEvents.size());
+
+				// shows a already existing event in the calendar
 				for (int i = 0; i < allEvents.size(); i++) {
 					Date start = allEvents.get(i).StartDate;
 					if (start.getDate() == date.getDate()
@@ -97,41 +65,45 @@ public class CalendarActivity extends Fragment implements SyncListener, OnDelete
 					}
 				}
 
+				// creates a new event in the calendar which is filled
+				// with information from EventInsertDialog
+
 				new EventInsertDialog(getActivity(),
 						new EventInsertDialog.InsertListener() {
 
 							@Override
 							public void insertComplt(Event event) {
 								// if Internetverbindung vorhanden
-//								if (NetworkAvailability
-//										.networkStatus(getActivity())) {
-									addOnline(event);
-									addLocal(event);
-									refreshCalenderView();
-//									
-//								} else {
-//									// if keine Internetverbindung
-//
-//									addLocal(event);
-//									refreshCalenderView();
-//								}
+
+								// if (NetworkAvailability
+								// .networkStatus(getActivity())) {
+								addOnline(event);
+								addLocal(event);
+								refreshCalenderView();
+								//
+								// } else {
+								// // if keine Internetverbindung
+								//
+								// addLocal(event);
+								// refreshCalenderView();
+								// }
 							}
 						}, date);
 			}
 
 		};
 
-		// Setup Caldroid
+		// Setup Caldroid, initializing, synchronization and refreshing of new
+		// database
+
 		caldroidFragment.setCaldroidListener(listener);
 		dbb = new EventDatabase(getActivity());
 		dbb.syncToOnlineDB(this);
-
 		refreshCalenderView();
 	}
 
-	/**
-	 * Save current states of the Caldroid here
-	 */
+	// Save current states of the caldroid
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		// TODO Auto-generated method stub
@@ -157,13 +129,13 @@ public class CalendarActivity extends Fragment implements SyncListener, OnDelete
 				event.EndDate, this);
 	}
 
+	// refreshes the calendar if events are added
+
 	private void refreshCalenderView() {
 		allEvents.clear();
 		allEvents = dbb.getAllEvents();
-		
 		for (int i = 0; i < allEvents.size(); i++) {
 			Event event = allEvents.get(i);
-			
 			caldroidFragment.setBackgroundResourceForDate(R.color.yellow,
 					event.StartDate);
 		}
@@ -171,29 +143,27 @@ public class CalendarActivity extends Fragment implements SyncListener, OnDelete
 		caldroidFragment.refreshView();
 	}
 
+	// deletes an event out of online and local database
+
 	@Override
 	public void onDeleteEvent(final Event event) {
 		dbb.deleteEvent(event, new GetCallback<ParseObject>() {
 
 			@Override
 			public void done(ParseObject pquery, ParseException e) {
-//				if (pquery == null)
-//					Log.d("SCHEISSE", "SCHEISSE");
-				
+
 				if (pquery != null) {
-					pquery.deleteInBackground();									
- 				}
-				
+					pquery.deleteInBackground();
+				}
 				dbb.deleteLocal(event);
-				
-				Log.d("DELETE", "allEvents.size() in onDeleteEvent = "+allEvents.size());
-				caldroidFragment.setBackgroundResourceForDate(R.color.caldroid_white, event.StartDate);
+				caldroidFragment.setBackgroundResourceForDate(
+						R.color.caldroid_white, event.StartDate);
 				onDatabaseUpdated();
 			}
 		});
-		
-//		refreshCalenderView();
 	}
+
+	// updates the database after deleting
 
 	@Override
 	public void onDatabaseUpdated() {
@@ -201,7 +171,4 @@ public class CalendarActivity extends Fragment implements SyncListener, OnDelete
 		allEvents = dbb.getAllEvents();
 		caldroidFragment.refreshView();
 	}
-	
-	
-
 }

@@ -10,8 +10,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -73,15 +71,26 @@ public class EventDatabase {
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			// TODO Auto-generated method stub
-
 		}
 	}
-	// Openhelper class
+
+	// Open class helper for database
 	public void openDB() {
 		database = dbH.getWritableDatabase();
 	}
 
-	// Creats the Database with all events
+	// Close class helper for database
+	public void closeDB() {
+		database.close();
+	}
+
+	// Creates the database with all columns that are needed for a new event.
+	// Every row is an event with the title, information above the event,
+	// a start and end date and the parse id.
+	// the table key is the the id for the event
+	// this method is needed to now which events are in database and
+	// to return all events
+
 	public ArrayList<Event> getAllEvents() {
 		ArrayList<Event> events = new ArrayList<Event>();
 		openDB();
@@ -95,7 +104,6 @@ public class EventDatabase {
 				Date startDate = new Date(cursor.getLong(2));
 				Date endDate = new Date(cursor.getLong(3));
 				event.StartDate = startDate;
-				Log.e("Events", startDate.toString());
 				event.EndDate = endDate;
 				event.Info = cursor.getString(5);
 				event.parseId = cursor.getString(4);
@@ -104,12 +112,14 @@ public class EventDatabase {
 			} while (cursor.moveToNext());
 
 		}
-		database.close();
+		closeDB();
 		return events;
 	}
 
-	// Inserts Events in local and online database
-	public void addEventLocal (String title, String infotext, Date start, Date end) {
+	// adds event local with the parameters title, info text, start and end date
+
+	public void addEventLocal(String title, String infotext, Date start,
+			Date end) {
 
 		// local database
 		ContentValues data = new ContentValues();
@@ -118,11 +128,15 @@ public class EventDatabase {
 		data.put(START_DATE, start.getTime());
 		data.put(END_DATE, end.getTime());
 		openDB();
-		final long id = database.insert(TABLE_KEY, null, data);
-		database.close();
+		database.insert(TABLE_KEY, null, data);
+		closeDB();
 	}
-	
-	public void addEventOnline (final String title, final String infotext, final Date start, final Date end, final SyncListener sl) {
+
+	// adds events online with the parameters title, info text, start and end
+	// date. Updates the database with the new event
+
+	public void addEventOnline(final String title, final String infotext,
+			final Date start, final Date end, final SyncListener sl) {
 
 		// online database
 		final ParseObject parseData = new ParseObject(TABLE_KEY);
@@ -137,43 +151,35 @@ public class EventDatabase {
 				ContentValues cid = new ContentValues();
 				cid.put(PARSE_KEY, parseData.getObjectId());
 				openDB();
-				
-				Log.d("DELETE", "parseid is now "+parseData.getObjectId());
-//				final long id = database.insert(TABLE_KEY, null, cid);
-				database.update(TABLE_KEY
-						, cid
-						, TITLE_KEY + "=? and " + INFO_KEY + "=? and " + START_DATE + "=? and " + END_DATE + "=?"
-						, new String[]{title, infotext, ""+start.getTime(), ""+end.getTime()});
-				database.close();
-				
+				database.update(TABLE_KEY, cid, TITLE_KEY + "=? and "
+						+ INFO_KEY + "=? and " + START_DATE + "=? and "
+						+ END_DATE + "=?", new String[] { title, infotext,
+						"" + start.getTime(), "" + end.getTime() });
+				closeDB();
 				sl.onDatabaseUpdated();
 			}
 
 		});
 	}
 
-	// deletes from local db
+	// method for deleting an event 
 
 	public void deleteEvent(final Event event, GetCallback<ParseObject> callback) {
 		ParseQuery<ParseObject> pquery = new ParseQuery<ParseObject>(TABLE_KEY);
-
-		pquery.getInBackground(event.parseId, callback);	
-//		
+		pquery.getInBackground(event.parseId, callback);
 	}
 
-	public void deleteLocal(Event event){
+	// deletes out of local database
+	public void deleteLocal(Event event) {
 		openDB();
-		Log.d("DELETE", "Event: "+event+"; parseid = "+event.parseId);
-		int rows = database.delete(TABLE_KEY, PARSE_KEY + "=?", new String[]{event.parseId});
-		Log.d("DELETE", rows + " Events gelöscht");
-		database.close();
+		database.delete(TABLE_KEY, PARSE_KEY + "=?",
+				new String[] { event.parseId });
+		closeDB();
 	}
-	// }
 
-	// Syns with the online database and check's if event is in Database or not
+	// Sync with the online database and check's if event is in Database or not
 	// if the local parse id equals online id, the entry is found, otherwise put
 	// it into database
-	// if id in database exists and local id not, delete
 
 	public void syncToOnlineDB(final SyncListener sl) {
 		ParseQuery<ParseObject> pquery = new ParseQuery<ParseObject>(TABLE_KEY);
@@ -209,7 +215,7 @@ public class EventDatabase {
 						cvs.put(PARSE_KEY, curObject.getObjectId());
 						openDB();
 						database.insert(TABLE_KEY, null, cvs);
-						database.close();
+						closeDB();
 
 					}
 
@@ -225,8 +231,8 @@ public class EventDatabase {
 
 	public interface SyncListener {
 		public void syncFinished();
+
 		public void onDatabaseUpdated();
 	}
-	
 
 }

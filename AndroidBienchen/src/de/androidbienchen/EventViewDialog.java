@@ -20,8 +20,8 @@ public class EventViewDialog {
 	private OnDeleteListener dl;
 	private EventDatabase dbb;
 
-
-	 public EventViewDialog(Context cont, Event vt, EventDatabase dbb, OnDeleteListener dl){
+	public EventViewDialog(Context cont, Event vt, EventDatabase dbb,
+			OnDeleteListener dl) {
 		this.cont = cont;
 		this.event = vt;
 		this.dl = dl;
@@ -35,9 +35,10 @@ public class EventViewDialog {
 
 	public SimpleDateFormat formatter = new SimpleDateFormat(" HH:mm ");
 
+	// method to delete or close an event 
+	
 	private void createDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(cont);
-//		Log.e("AYLA", this.event.toString());
 		builder.setTitle(this.event.Titel);
 		LayoutInflater inflater = (LayoutInflater) cont
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -50,17 +51,19 @@ public class EventViewDialog {
 		date.setText(formatter.format(event.StartDate) + " - "
 				+ formatter.format(event.EndDate));
 
+		// sets the "Löschen" button which deletes the event
 		builder.setView(v);
 		builder.setNegativeButton("Löschen", new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				
+
 				dl.onDeleteEvent(event);
 				dialog.dismiss();
 			}
 		});
-
+		
+		// sets the "Schließen" button, which closes the dialog
 		builder.setPositiveButton("Schließen", new OnClickListener() {
 
 			@Override
