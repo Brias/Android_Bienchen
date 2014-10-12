@@ -7,9 +7,7 @@ import org.json.JSONObject;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -48,7 +46,7 @@ public class ChatActivity extends Fragment implements MessageReceivedListener,
 		setAndroidId();
 		initChatList();
 		initUI(rootView);
-		Log.d("ENDOGFVIEW", "TRUE");
+
 		return rootView;
 	}
 
@@ -64,7 +62,6 @@ public class ChatActivity extends Fragment implements MessageReceivedListener,
 
 	void requestMessageHistory() {
 		socketIOhelper.getMessageHistory();
-		Log.d("requestMESSAGEHistory", "TRUE");
 	}
 
 	void setListener() {
@@ -74,8 +71,8 @@ public class ChatActivity extends Fragment implements MessageReceivedListener,
 	void initDatabase() {
 		db = new LocationDatabase(getActivity());
 	}
-	
-	void setAndroidId(){
+
+	void setAndroidId() {
 		db.open();
 		this.id = db.getUserIdentification().getAndroidId();
 		db.close();
@@ -111,15 +108,33 @@ public class ChatActivity extends Fragment implements MessageReceivedListener,
 	}
 
 	void sendMessage(String sendMessage) {
-		if (!sendMessage.equals("") && socketIOhelper.socketConnected()) {
-			socketIOhelper.sendMessage(new ChatListItem(sendMessage, db
-					.getUserIdentification().getUsername(), db.getUserIdentification().getAndroidId()));
-		} else {
-			UpdateDialogHelper.UpdateCanceledDialog(
-					getActivity(),
-					getActivity().getResources().getString(
-							R.string.connection_error_network), "");
+		if (!sendMessage.equals("")) {
+			if (socketIOhelper.socketConnected()) {
+				socketIOhelper.sendMessage(new ChatListItem(sendMessage, db
+						.getUserIdentification().getUsername(), db
+						.getUserIdentification().getAndroidId()));
+			} else {
+				setCancelledSendMessageDialog();
+			}
+		}else{
+			
 		}
+	}
+
+	void setEmptyEditTextDialog(){
+		UpdateDialogHelper
+		.UpdateCanceledDialog(
+				getActivity(),
+				getActivity().getResources().getString(
+						R.string.empty_edit_text), "");
+	}
+	
+	void setCancelledSendMessageDialog() {
+		UpdateDialogHelper
+				.UpdateCanceledDialog(
+						getActivity(),
+						getActivity().getResources().getString(
+								R.string.server_connection_error), "");
 	}
 
 	void addMessageToList(JSONObject object) {
@@ -133,36 +148,13 @@ public class ChatActivity extends Fragment implements MessageReceivedListener,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Log.d("AddMessaegToLIst", "TRUE");
 	}
 
 	void updateChatView() {
-
 		chatListAdapter.notifyDataSetChanged();
 		ListView list = (ListView) getActivity()
 				.findViewById(R.id.message_list);
 		list.setSelection(chatListAdapter.getCount() - 1);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
 	}
 
 	@Override
@@ -182,6 +174,5 @@ public class ChatActivity extends Fragment implements MessageReceivedListener,
 	public void onSocketIOConnected() {
 		// TODO Auto-generated method stub
 		requestMessageHistory();
-		Log.d("RequestMessageOnSocketIO", "TRUE");
 	}
 }

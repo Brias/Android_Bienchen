@@ -1,4 +1,4 @@
-package de.androidbienchen.geofence;
+package de.androidbienchen.geofencehelper;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

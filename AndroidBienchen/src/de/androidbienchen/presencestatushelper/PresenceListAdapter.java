@@ -11,14 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import de.androidbienchen.R;
 
+public class PresenceListAdapter extends ArrayAdapter<PresenceStatusItem> {
 
-
-public class PresenceListAdapter extends ArrayAdapter<PresenceStatusItem>{
-	
 	private List<PresenceStatusItem> presenceList;
 	private Context context;
 
-	public PresenceListAdapter(Context context, List<PresenceStatusItem> chatList) {
+	public PresenceListAdapter(Context context,
+			List<PresenceStatusItem> chatList) {
 		super(context, R.id.status_list, chatList);
 
 		this.context = context;
@@ -42,12 +41,13 @@ public class PresenceListAdapter extends ArrayAdapter<PresenceStatusItem>{
 		if (presenceItem != null) {
 			TextView username = (TextView) v.findViewById(R.id.present_user);
 			TextView status = (TextView) v.findViewById(R.id.presence_status);
-			ImageView statusImage = (ImageView) v.findViewById(R.id.status_image);
-			
+			ImageView statusImage = (ImageView) v
+					.findViewById(R.id.status_image);
+
 			username.setText(presenceItem.getUsername());
 			status.setText(R.string.online);
 			statusImage.setImageResource(R.drawable.online_point);
-			
+
 		}
 
 		return v;

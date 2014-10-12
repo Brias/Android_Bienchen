@@ -17,18 +17,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:paddingLeft="20sp"
         android:layout_toRightOf="@+id/status_image"
         android:alpha=".87"
-        android:textSize="16sp" />
+        android:textSize="20sp" />
     
     <TextView
         android:id="@+id/presence_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/present_user"
+        android:paddingLeft="20sp"
         android:layout_toRightOf="@+id/status_image"
         android:alpha=".54"
-        android:textSize="14sp"
+        android:textSize="18sp"
+        android:textStyle="bold"
         android:textColor="@color/green"/>
 
 </RelativeLayout>
