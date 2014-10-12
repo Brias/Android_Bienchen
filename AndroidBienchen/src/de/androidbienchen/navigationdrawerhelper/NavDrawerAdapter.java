@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import de.androidbienchen.R;
 
@@ -37,12 +36,9 @@ public class NavDrawerAdapter extends ArrayAdapter<NavDrawerItem> {
             convertView = inflater.inflate( R.layout.navdrawer_item, parentView, false);
             TextView labelView = (TextView) convertView
                     .findViewById( R.id.navmenuitem_label );
-            ImageView iconView = (ImageView) convertView
-                    .findViewById( R.id.navmenuitem_icon );
 
             navMenuItemHolder = new NavMenuItemHolder();
             navMenuItemHolder.labelView = labelView ;
-            navMenuItemHolder.iconView = iconView ;
 
             convertView.setTag(navMenuItemHolder);
         }
@@ -52,7 +48,6 @@ public class NavDrawerAdapter extends ArrayAdapter<NavDrawerItem> {
         }
                     
         navMenuItemHolder.labelView.setText(menuItem.getLabel());
-        navMenuItemHolder.iconView.setImageResource(menuItem.getIcon());
         
         return convertView ;
     }
@@ -75,6 +70,5 @@ public class NavDrawerAdapter extends ArrayAdapter<NavDrawerItem> {
     
     private static class NavMenuItemHolder {
         private TextView labelView;
-        private ImageView iconView;
     }
 }

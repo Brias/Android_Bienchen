@@ -31,7 +31,7 @@ import de.androidbienchen.usernamehelper.UserIdentification;
 
 
 
-public class PresenceStatusActivity extends Fragment implements UserStatusReceivedListener, LocationListener{
+public class PresenceStatusActivity extends Fragment implements UserStatusReceivedListener, Runnable{
 	
 	public static final String ACTION_FILTER = "de.androidbienchen.intent.action.PresenceStatus";
 	public static final String EXTRA_KEY_IN_RADIUS = "Present";
@@ -121,13 +121,13 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 		PendingIntent proximityIntent = PendingIntent.getBroadcast(getActivity(), -1, inRadiusIntent, 0);
 		locationManager.addProximityAlert(LATITUDE, LONGITUDE, PROXIMITY_RADIUS, -1, proximityIntent);
 		
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, proximityIntent);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, proximityIntent);
+        
 		
 		Criteria criteria = new Criteria();
 		criteria.setAccuracy(criteria.ACCURACY_FINE);
+		criteria.setPowerRequirement(criteria.POWER_LOW);
 		criteria.setAltitudeRequired(false);
 		criteria.setBearingRequired(false);
 		criteria.setSpeedRequired(false);
@@ -150,13 +150,12 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 		String username = userIdentification.getUsername();
 		String id = userIdentification.getAndroidId();
 		if(socketIOHelper.socketConnected()){
-			socketIOHelper.sendPresenceStatus(new PresenceStatusItem(username, id, status));
+			socketIOHelper.sendPresenceStatus(new PresenceStatusItem(username, id, true));
 		}
 	}
 	  
 	void updateUIThere(String username, String id){
 		statusList.add(new PresenceStatusItem(username, id));
-		notifyListChanges();
 	  }
 	  
 	void updateUINotThere(String id){
@@ -166,7 +165,6 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 			  break;
 		  }
 	  }
-	  notifyListChanges();
 	}
 	  
 	void notifyListChanges(){
@@ -205,6 +203,7 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 	public void onUserStatusReceived(JSONObject object) {
 		// TODO Auto-generated method stub
 		updatePresenceStatusView(object);
+		getActivity().runOnUiThread(this);
 	}
 	
 	@Override
@@ -214,32 +213,10 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 			requestCurrentStatuses();
 		}
 	}
-
+	
 	@Override
-	public void onLocationChanged(Location location) {
+	public void run() {
 		// TODO Auto-generated method stub
-//		Intent inRadiusIntent = new Intent();
-//		inRadiusIntent.setAction(ACTION_FILTER);
-//		PendingIntent proximityIntent = PendingIntent.getBroadcast(getActivity(), -1, inRadiusIntent, 0);
-//		locationManager.addProximityAlert(LATITUDE, LONGITUDE, PROXIMITY_RADIUS, -1, proximityIntent);
-		Log.d("BLABLABLABLA", ""+location);
-	}
-
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
-		
+		notifyListChanges();
 	}
 }

@@ -28,7 +28,7 @@ import de.androidbienchen.statistichelper.Weight;
 
 public class StatisticActivity extends Fragment implements DataFetcherListener{
 
-	private final static String GRAPH_NAME = "Statistik";
+	private final static String GRAPH_NAME = "";
 	private final static String GRAPH_SERIES_TEMPERATURE = "Temperatur";
 	private final static String GRAPH_SERIES_SCALE = "Gewicht";
 	
@@ -83,6 +83,7 @@ public class StatisticActivity extends Fragment implements DataFetcherListener{
 	@SuppressWarnings("deprecation")
 	void showGraph(){
 		graphView.setViewPort(0, 30);
+		graphView.setScrollable(true);
 		graphView.setScalable(true);
 		graphView.setShowLegend(true);
 		graphView.setLegendAlign(LegendAlign.TOP);
@@ -90,18 +91,6 @@ public class StatisticActivity extends Fragment implements DataFetcherListener{
 		graphView.setBackgroundColor(getResources().getColor(R.color.black));
 		LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.statistic_layout);
 		layout.addView(graphView);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 	
 	/**

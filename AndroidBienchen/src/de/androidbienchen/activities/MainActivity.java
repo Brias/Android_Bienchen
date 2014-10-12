@@ -85,12 +85,12 @@ public class MainActivity extends AbstractNavDrawerActivity implements UpdateSta
     protected NavDrawerActivityConfiguration getNavDrawerConfiguration() {
         
         NavDrawerItem[] menu = new NavDrawerItem[] {
-                NavMenuItem.create(1,"Anwesend", "navdrawer_start", true, this),
-                NavMenuItem.create(2, "Chat", "navdrawer_chat", true, this), 
-                NavMenuItem.create(3, "Kalender", "navdrawer_calendar", true, this),
-                NavMenuItem.create(4, "Statistik", "navdrawer_statistic", true, this), 
-                NavMenuItem.create(5, "Live-Cam", "navdrawer_live_cam", true, this),
-                NavMenuItem.create(6, "Zur Website", "navdrawer_website", true, this)};
+                NavMenuItem.create(1,"Anwesend", true, this),
+                NavMenuItem.create(2, "Chat", true, this), 
+                NavMenuItem.create(3, "Kalender", true, this),
+                NavMenuItem.create(4, "Statistik", true, this), 
+                NavMenuItem.create(5, "Live-Cam", true, this),
+                NavMenuItem.create(6, "Zur Website", true, this)};
         
         NavDrawerActivityConfiguration navDrawerActivityConfiguration = new NavDrawerActivityConfiguration();
         navDrawerActivityConfiguration.setMainLayout(R.layout.activity_main);

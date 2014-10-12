@@ -7,9 +7,9 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import de.androidbienchen.R;
 
-public class UpdateDialogHelper {
+public class UpdateDialogHelper { 
 	
-	private static ProgressDialog update; 
+	private static ProgressDialog update;
 	
 	public static void setUpdateDialog(Context context){
 		update = new ProgressDialog(context);
@@ -20,7 +20,6 @@ public class UpdateDialogHelper {
 	
 	public static void UpdateCanceledDialog(Context context, String status, String description){
 		AlertDialog.Builder updateCanceled = buildUpdateDialog(context, context.getResources().getString(R.string.update_error), status, description);
-		
 		updateCanceled.create().show();
 	}
 	

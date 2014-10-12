@@ -38,34 +38,7 @@ public class ImageFetcher {
 		new BackgroundTask().cancel(true);
 	}
 	
-	private String getCurrentDate(){
-		Date date = new Date();
-		return date.toString();
-	}
-	
 	private void processImage(Bitmap bm){
-		File sdCardDirectory = Environment.getExternalStorageDirectory();
-		File dirImage = new File(sdCardDirectory.getAbsolutePath() + File.separator +
-				"Android" + File.separator + "data" + File.separator +
-				getClass().getPackage().getName() + File.separator + "images");
-		
-		dirImage.mkdirs();
-		
-		FileOutputStream out = null;
-		try{
-			File image = new File(dirImage, "BlaBla.jpg");
-			out = new FileOutputStream(image);
-			bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
-//			out.flush();
-			try {
-				out.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		 } catch (FileNotFoundException e) {
-		        e.printStackTrace();
-		 }	
 		setDataFetched(bm);
 	}
 	

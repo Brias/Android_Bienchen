@@ -46,7 +46,7 @@ public class PresenceListAdapter extends ArrayAdapter<PresenceStatusItem>{
 			
 			username.setText(presenceItem.getUsername());
 			status.setText(R.string.online);
-			statusImage.setImageResource(R.drawable.calendar_next_arrow);
+			statusImage.setImageResource(R.drawable.online_point);
 			
 		}
 

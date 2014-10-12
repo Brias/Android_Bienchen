@@ -3,7 +3,7 @@ package de.androidbienchen.chathelper;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,10 +59,10 @@ public class ChatListAdapter extends ArrayAdapter<ChatListItem> {
 		
 		if (chatItem != null) {
 			if (chatItem.getId().equals(id)) {
-				setText(message_Right, username_Right, receivedDate_Right, chatItem, rightLayout, context.getResources().getColor(R.color.start_menu_button_color_light));
+				setText(message_Right, username_Right, receivedDate_Right, chatItem, rightLayout, R.drawable.speech_bubble_right);
 				setTextEmpty(message_Left, username_Left, receivedDate_Left, leftLayout);
 			} else {
-				setText(message_Left, username_Left, receivedDate_Left, chatItem, leftLayout, context.getResources().getColor(R.color.start_menu_button_color_dark));
+				setText(message_Left, username_Left, receivedDate_Left, chatItem, leftLayout, R.drawable.speech_bubble_left);
 				setTextEmpty(message_Right, username_Right, receivedDate_Right, rightLayout);
 			}
 		}
@@ -78,11 +78,11 @@ public class ChatListAdapter extends ArrayAdapter<ChatListItem> {
 	}
 
 	private void setText(TextView message, TextView username, TextView date,
-			ChatListItem chatItem, LinearLayout layout, int color) {
+			ChatListItem chatItem, LinearLayout layout, int background) {
 		message.setText(chatItem.getMessage());
 		date.setText(chatItem.getDate());
 		username.setText(chatItem.getUsername());
 		
-		layout.setBackgroundColor(color);
+		layout.setBackground(context.getResources().getDrawable(background));
 	}
 }

@@ -7,10 +7,10 @@ import java.util.Locale;
 import org.json.JSONObject;
 
 public class ChatListItem {
-	public static final String JSON_USERNAME = "_user";
-	public static final String JSON_DATE = "_date";
-	public static final String JSON_MESSAGE = "_message";
-	public static final String JSON_ID = "_id";
+	public static final String JSON_USERNAME = "user";
+	public static final String JSON_DATE = "date";
+	public static final String JSON_MESSAGE = "message";
+	public static final String JSON_ID = "id";
 	
 	private String message;
 	private String date;

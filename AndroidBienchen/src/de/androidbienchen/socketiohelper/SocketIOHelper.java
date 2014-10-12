@@ -80,7 +80,6 @@ public class SocketIOHelper implements IOCallback {
 		JSONObject obj = status.getPresenceItemAsJSONObject();
 		
 		socket.emit(PRESENCE_EVENT, obj);
-		addStatusToList(obj);
 	}
 	
 	void addMessageToChat(JSONObject obj){
@@ -114,7 +113,7 @@ public class SocketIOHelper implements IOCallback {
 		if(eventName.equals(MESSAGE_EVENT) || eventName.equals(MESSAGE_HISTORY)){
 			addMessageToChat(fetchedData);
 		}
-		else if(eventName.equals(PRESENCE_EVENT)){
+		else if(eventName.equals(PRESENCE_EVENT) || eventName.equals(CURRENT_STATUSES)){
 			addStatusToList(fetchedData);
 			Log.d("CHECKEVENTNAME", "PRESENCE_EVENT");
 		}
@@ -147,7 +146,7 @@ public class SocketIOHelper implements IOCallback {
 				processMessageHistory(eventName, obj[0]);
 				messageHistoryReceived = true;
 			}else
-				if(eventName.equals(MESSAGE_EVENT)){
+				if(eventName.equals(MESSAGE_EVENT) || eventName.equals(PRESENCE_EVENT)){
 				processFetchedData(obj[0], eventName);
 			}
 	}

@@ -23,8 +23,6 @@ public class ReachedReceiver extends BroadcastReceiver{
 	}
 	
 	private void updateUI(boolean entering){
-		if(entering) {
-			presenceActivity.sendStatus(entering);
-		}
+		presenceActivity.sendStatus(entering);
 	}
 }

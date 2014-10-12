@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">AndroidBienchen</string>
+    <string name="app_name">Imkerverein Sinzing</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_scale">ScaleActivity</string>
@@ -51,10 +51,10 @@
         								Der Benutzername dient als Erkennungsmerkmal für alle anderen Appbenutzer.\n
         								Dieses Feld erscheint einmalig und bei jeder Neuinstallation dieser App.\n 
         								Der gewählte Benutzernam ist somit fest und nicht veränderbar.</string>
-    <string name="username_title">Bitten geben Sie ihren gewünschten Benutzernamen ein!</string>
+    <string name="username_title">Bitten geben Sie Ihren gewünschten Benutzernamen ein!</string>
     <string name="updating_data">Updating...</string>
-    <string name="update_succeed">Update Succeed</string>
-    <string name="data_updated">All Data is Updated</string>
+    <string name="update_succeed">Update Erfolgreich!</string>
+    <string name="data_updated">Daten sind auf dem neuesten Stand!</string>
     <string name="btn_ok">OK</string>
     
     <!-- Geofence -->
