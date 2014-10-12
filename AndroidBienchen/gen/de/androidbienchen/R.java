@@ -46,21 +46,22 @@ public final class R {
         public static final int activity_vertical_margin=0x7f070001;
     }
     public static final class drawable {
-        public static final int calendar_next_arrow=0x7f020000;
-        public static final int calendar_prev_arrow=0x7f020001;
-        public static final int cell_bg=0x7f020002;
-        public static final int disable_cell=0x7f020003;
-        public static final int ic_launcher=0x7f020004;
-        public static final int left_arrow=0x7f020005;
-        public static final int listitem_background=0x7f020006;
-        public static final int navdrawer_listselector=0x7f020007;
-        public static final int red_border=0x7f020008;
-        public static final int red_border_gray_bg=0x7f020009;
-        public static final int right_arrow=0x7f02000a;
+        public static final int bee_hell=0x7f020000;
+        public static final int bee_heller=0x7f020001;
+        public static final int calendar_next_arrow=0x7f020002;
+        public static final int calendar_prev_arrow=0x7f020003;
+        public static final int cell_bg=0x7f020004;
+        public static final int disable_cell=0x7f020005;
+        public static final int ic_launcher=0x7f020006;
+        public static final int left_arrow=0x7f020007;
+        public static final int listitem_background=0x7f020008;
+        public static final int navdrawer_listselector=0x7f020009;
+        public static final int red_border=0x7f02000a;
+        public static final int red_border_gray_bg=0x7f02000b;
+        public static final int right_arrow=0x7f02000c;
     }
     public static final class id {
-        public static final int action_refresh=0x7f090020;
-        public static final int action_settings=0x7f090021;
+        public static final int action_settings=0x7f090020;
         public static final int calendar=0x7f090000;
         public static final int calendar_gridview=0x7f09000b;
         public static final int calendar_left_arrow=0x7f090005;
@@ -112,12 +113,11 @@ public final class R {
         public static final int navdrawer_section=0x7f03000e;
     }
     public static final class menu {
-        public static final int calendar=0x7f080000;
-        public static final int cam=0x7f080001;
-        public static final int chat=0x7f080002;
-        public static final int main=0x7f080003;
-        public static final int presence_status=0x7f080004;
-        public static final int scale=0x7f080005;
+        public static final int cam=0x7f080000;
+        public static final int chat=0x7f080001;
+        public static final int main=0x7f080002;
+        public static final int presence_status=0x7f080003;
+        public static final int scale=0x7f080004;
     }
     public static final class string {
         public static final int action_settings=0x7f050002;

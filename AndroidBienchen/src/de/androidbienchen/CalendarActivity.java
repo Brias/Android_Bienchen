@@ -73,20 +73,17 @@ public class CalendarActivity extends Fragment implements SyncListener,
 
 							@Override
 							public void insertComplt(Event event) {
-								// if Internetverbindung vorhanden
-
-								// if (NetworkAvailability
-								// .networkStatus(getActivity())) {
+								
+								if (NetworkAvailability.networkStatus(getActivity())) {
 								addOnline(event);
 								addLocal(event);
 								refreshCalenderView();
-								//
-								// } else {
-								// // if keine Internetverbindung
-								//
-								// addLocal(event);
-								// refreshCalenderView();
-								// }
+								
+								 } else {
+								 
+//								 addLocal(event);
+//								 refreshCalenderView();
+								 }
 							}
 						}, date);
 			}
@@ -122,6 +119,7 @@ public class CalendarActivity extends Fragment implements SyncListener,
 	private void addLocal(Event event) {
 		dbb.addEventLocal(event.Titel, event.Info, event.StartDate,
 				event.EndDate);
+		refreshCalenderView();
 	}
 
 	private void addOnline(Event event) {
