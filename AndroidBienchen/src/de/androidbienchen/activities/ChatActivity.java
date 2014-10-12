@@ -25,69 +25,78 @@ import de.androidbienchen.data.UpdateDialogHelper;
 import de.androidbienchen.listener.MessageReceivedListener;
 import de.androidbienchen.socketiohelper.SocketIOHelper;
 
-public class ChatActivity extends Fragment implements MessageReceivedListener, Runnable{
-	
+public class ChatActivity extends Fragment implements MessageReceivedListener,
+		Runnable {
+
 	private ArrayList<ChatListItem> chatList;
 	private ArrayAdapter<ChatListItem> chatListAdapter;
 	private LocationDatabase db;
 	private SocketIOHelper socketIOhelper;
-	
-	public ChatActivity(SocketIOHelper socketIOhelper){
+	private String id;
+
+	public ChatActivity(SocketIOHelper socketIOhelper) {
 		this.socketIOhelper = socketIOhelper;
 		setListener();
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.chat_input,
-				container, false);
-		
+		View rootView = inflater.inflate(R.layout.chat_input, container, false);
+
 		initDatabase();
+		setAndroidId();
 		initChatList();
 		initUI(rootView);
 		Log.d("ENDOGFVIEW", "TRUE");
 		return rootView;
 	}
-	
+
 	@Override
-	public void onCreate(Bundle savedInstanceState){
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-	
+
 	@Override
-	public void onStart(){
+	public void onStart() {
 		super.onStart();
 	}
-	
-	void requestMessageHistory(){
+
+	void requestMessageHistory() {
 		socketIOhelper.getMessageHistory();
 		Log.d("requestMESSAGEHistory", "TRUE");
 	}
-	
-	void setListener(){
+
+	void setListener() {
 		socketIOhelper.setMessageReceivedListener(this);
 	}
-	
-	void initDatabase(){
+
+	void initDatabase() {
 		db = new LocationDatabase(getActivity());
 	}
 	
-	void initChatList(){
+	void setAndroidId(){
+		db.open();
+		this.id = db.getUserIdentification().getAndroidId();
+		db.close();
+	}
+
+	void initChatList() {
 		chatList = new ArrayList<ChatListItem>();
 	}
-	
-	void initUI(View rootView){
+
+	void initUI(View rootView) {
 		initTaskButton(rootView);
 		initListAdapter(rootView);
 	}
-	
+
 	private void initTaskButton(View rootView) {
 		Button sendButton = (Button) rootView.findViewById(R.id.send_button);
 		sendButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				EditText edit = (EditText) getActivity().findViewById(R.id.chat_input_container);
+				EditText edit = (EditText) getActivity().findViewById(
+						R.id.chat_input_container);
 				String sendingMessage = edit.getText().toString();
 				sendMessage(sendingMessage);
 				edit.setText("");
@@ -97,33 +106,42 @@ public class ChatActivity extends Fragment implements MessageReceivedListener, R
 
 	private void initListAdapter(View rootView) {
 		ListView list = (ListView) rootView.findViewById(R.id.message_list);
-		chatListAdapter = new ChatListAdapter(getActivity(), chatList);
+		chatListAdapter = new ChatListAdapter(getActivity(), chatList, id);
 		list.setAdapter(chatListAdapter);
 	}
-	
-	void sendMessage(String sendMessage){
+
+	void sendMessage(String sendMessage) {
 		if (!sendMessage.equals("") && socketIOhelper.socketConnected()) {
-			socketIOhelper.sendMessage(new ChatListItem(sendMessage, db.getUserIdentification().getUsername()));
-		}else{
-			UpdateDialogHelper.UpdateCanceledDialog(getActivity(), getActivity().getResources().getString(R.string.connection_error_network), "");
+			socketIOhelper.sendMessage(new ChatListItem(sendMessage, db
+					.getUserIdentification().getUsername(), db.getUserIdentification().getAndroidId()));
+		} else {
+			UpdateDialogHelper.UpdateCanceledDialog(
+					getActivity(),
+					getActivity().getResources().getString(
+							R.string.connection_error_network), "");
 		}
 	}
-	
-	void addMessageToList(JSONObject object){
-			try {
-				chatList.add(new ChatListItem(object.getString(ChatListItem.JSON_MESSAGE), object.getString(ChatListItem.JSON_USERNAME), object.getString(ChatListItem.JSON_DATE)));
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			Log.d("AddMessaegToLIst", "TRUE");
+
+	void addMessageToList(JSONObject object) {
+		try {
+			chatList.add(new ChatListItem(object
+					.getString(ChatListItem.JSON_MESSAGE), object
+					.getString(ChatListItem.JSON_USERNAME), object
+					.getString(ChatListItem.JSON_DATE), object
+					.getString(ChatListItem.JSON_ID)));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Log.d("AddMessaegToLIst", "TRUE");
 	}
-	
-	void updateChatView(){
-		
+
+	void updateChatView() {
+
 		chatListAdapter.notifyDataSetChanged();
-		ListView list = (ListView) getActivity().findViewById(R.id.message_list);
-		list.setSelection(chatListAdapter.getCount()-1);
+		ListView list = (ListView) getActivity()
+				.findViewById(R.id.message_list);
+		list.setSelection(chatListAdapter.getCount() - 1);
 	}
 
 	@Override
@@ -137,7 +155,7 @@ public class ChatActivity extends Fragment implements MessageReceivedListener, R
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
@@ -150,10 +168,10 @@ public class ChatActivity extends Fragment implements MessageReceivedListener, R
 	@Override
 	public void onMessageReceived(JSONObject object) {
 		// TODO Auto-generated method stub
-			addMessageToList(object);
-			getActivity().runOnUiThread(this);
+		addMessageToList(object);
+		getActivity().runOnUiThread(this);
 	}
-	
+
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub

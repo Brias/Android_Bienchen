@@ -10,10 +10,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,12 +60,13 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 100; // 10 meters
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
+    private static final long MIN_TIME_BW_UPDATES = 1000* 5 * 1; // 1 minute
 	
 	private ArrayList<PresenceStatusItem> statusList;
 	private PresenceListAdapter statusListAdapter;
 	private LocationDatabase db;
 	private SocketIOHelper socketIOHelper;
+	private LocationManager locationManager;
 	
 	public PresenceStatusActivity(SocketIOHelper socketIOHelper){
 		this.socketIOHelper = socketIOHelper;
@@ -107,14 +110,29 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 		receiver = new ReachedReceiver(this);
 	}
 	
+	@SuppressWarnings("static-access")
 	void initProxmityAlert() {	
 		
-		LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+		locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        
 		getActivity().registerReceiver(receiver, new IntentFilter(ACTION_FILTER));
 		Intent inRadiusIntent = new Intent();
 		inRadiusIntent.setAction(ACTION_FILTER);
 		PendingIntent proximityIntent = PendingIntent.getBroadcast(getActivity(), -1, inRadiusIntent, 0);
 		locationManager.addProximityAlert(LATITUDE, LONGITUDE, PROXIMITY_RADIUS, -1, proximityIntent);
+		
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, proximityIntent);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, proximityIntent);
+		
+		Criteria criteria = new Criteria();
+		criteria.setAccuracy(criteria.ACCURACY_FINE);
+		criteria.setAltitudeRequired(false);
+		criteria.setBearingRequired(false);
+		criteria.setSpeedRequired(false);
+		
+		locationManager.requestLocationUpdates(MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, criteria, proximityIntent);
 	}
 	
 	void initList(){
@@ -148,6 +166,7 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 			  break;
 		  }
 	  }
+	  notifyListChanges();
 	}
 	  
 	void notifyListChanges(){
@@ -199,7 +218,11 @@ public class PresenceStatusActivity extends Fragment implements UserStatusReceiv
 	@Override
 	public void onLocationChanged(Location location) {
 		// TODO Auto-generated method stub
-		
+//		Intent inRadiusIntent = new Intent();
+//		inRadiusIntent.setAction(ACTION_FILTER);
+//		PendingIntent proximityIntent = PendingIntent.getBroadcast(getActivity(), -1, inRadiusIntent, 0);
+//		locationManager.addProximityAlert(LATITUDE, LONGITUDE, PROXIMITY_RADIUS, -1, proximityIntent);
+		Log.d("BLABLABLABLA", ""+location);
 	}
 
 	@Override
