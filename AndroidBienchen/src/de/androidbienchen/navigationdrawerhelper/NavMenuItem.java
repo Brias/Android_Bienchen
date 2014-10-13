@@ -1,5 +1,7 @@
 package de.androidbienchen.navigationdrawerhelper;
 
+//aus online Tutorial
+
 import android.content.Context;
 
 public class NavMenuItem implements NavDrawerItem {
