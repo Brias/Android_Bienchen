@@ -50,16 +50,6 @@ public class ChatActivity extends Fragment implements MessageReceivedListener,
 		return rootView;
 	}
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-	}
-
 	void requestMessageHistory() {
 		socketIOhelper.getMessageHistory();
 	}
@@ -92,13 +82,17 @@ public class ChatActivity extends Fragment implements MessageReceivedListener,
 		sendButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				EditText edit = (EditText) getActivity().findViewById(
-						R.id.chat_input_container);
-				String sendingMessage = edit.getText().toString();
-				sendMessage(sendingMessage);
-				edit.setText("");
+				processUserInput(v);
 			}
 		});
+	}
+	
+	void processUserInput(View v){
+		EditText edit = (EditText) getActivity().findViewById(
+				R.id.chat_input_container);
+		String sendingMessage = edit.getText().toString();
+		sendMessage(sendingMessage);
+		edit.setText("");
 	}
 
 	private void initListAdapter(View rootView) {

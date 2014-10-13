@@ -32,9 +32,4 @@ public class AppConfig {
 		public static final String TABLE_KEY_TEMPERATURE = "_temperatureTable";
 		public static final String TEMPERTURE_KEY = "_temperature";
 	}
-	
-	public class ImageData{
-		public static final String TABLE_KEY_IMAGE = "_imageTable";
-		public static final String IMAGE_KEY = "_image";
-	}
 }

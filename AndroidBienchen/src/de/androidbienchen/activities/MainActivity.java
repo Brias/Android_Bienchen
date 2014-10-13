@@ -85,9 +85,9 @@ public class MainActivity extends AbstractNavDrawerActivity implements
 		getFragmentManager().beginTransaction().hide(chat).commit();
 	}
 
+	// Creates and sets up the Navigation Drawer
 	@Override
 	protected NavDrawerActivityConfiguration getNavDrawerConfiguration() {
-
 		NavDrawerItem[] menu = new NavDrawerItem[] {
 				NavMenuItem.create(1, getResources()
 						.getString(R.string.present), true, this),
@@ -112,8 +112,7 @@ public class MainActivity extends AbstractNavDrawerActivity implements
 		navDrawerActivityConfiguration.setLeftDrawerId(R.id.left_drawer);
 		navDrawerActivityConfiguration.setNavItems(menu);
 		navDrawerActivityConfiguration
-				.setDrawerShadow(R.drawable.red_border_gray_bg); // CHANGE
-																	// PICTURE
+				.setDrawerShadow(R.drawable.red_border_gray_bg);
 		navDrawerActivityConfiguration.setDrawerOpenDesc(R.string.drawer_open);
 		navDrawerActivityConfiguration
 				.setDrawerCloseDesc(R.string.drawer_close);
@@ -124,7 +123,6 @@ public class MainActivity extends AbstractNavDrawerActivity implements
 
 	@Override
 	protected void onNavItemSelected(int id) {
-
 		switch ((int) id) {
 		case 1:
 			changeViewTo(presence);

@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
-import android.util.Log;
 import de.androidbienchen.activities.PresenceStatusActivity;
 
 public class ReachedReceiver extends BroadcastReceiver{
@@ -18,7 +17,6 @@ public class ReachedReceiver extends BroadcastReceiver{
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		boolean entering = intent.getBooleanExtra(LocationManager.KEY_PROXIMITY_ENTERING, false);
-		Log.d("ONRECEIVE", "INRADIUS");
 		updateUI(entering);
 	}
 	

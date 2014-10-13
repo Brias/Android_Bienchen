@@ -1,12 +1,10 @@
 package de.androidbienchen.activities;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -36,10 +34,6 @@ public class CamActivity extends Fragment implements ImageFetcherListener {
 		return rootView;
 	}
 
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,6 +47,7 @@ public class CamActivity extends Fragment implements ImageFetcherListener {
 		firstFetch = true;
 	}
 
+	// Sets up a runnable that is called every 15 minutes
 	void initTimer() {
 		final Handler handler = new Handler();
 		Runnable runnable = new Runnable() {
@@ -79,26 +74,9 @@ public class CamActivity extends Fragment implements ImageFetcherListener {
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-	}
-
-	@Override
 	public void onStop() {
 		super.onStop();
 		imageFetcher.stopFetchingData();
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -120,6 +98,7 @@ public class CamActivity extends Fragment implements ImageFetcherListener {
 		}
 	}
 
+	// Informs the MainActivity of cam update finished
 	void informListener() {
 		if (firstFetch) {
 			firstFetch = false;

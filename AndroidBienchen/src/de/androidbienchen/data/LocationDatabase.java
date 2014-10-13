@@ -8,10 +8,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import de.androidbienchen.statistichelper.Temperature;
 import de.androidbienchen.statistichelper.Weight;
 import de.androidbienchen.usernamehelper.UserIdentification;
@@ -35,35 +32,6 @@ public class LocationDatabase {
 	
 	public void close(){
 		db.close();
-	}
-	
-	public long insertImage(byte[] image) throws SQLiteException{
-	    ContentValues newImageValue = new  ContentValues();
-	    
-	    newImageValue.put(AppConfig.ImageData.IMAGE_KEY, image);
-	    
-	    return db.insert( AppConfig.ImageData.TABLE_KEY_IMAGE, null, newImageValue);
-	}
-	
-	public Bitmap getImage(){
-		Cursor cursor = db.query(AppConfig.ImageData.TABLE_KEY_IMAGE, new String[] {AppConfig.ImageData.IMAGE_KEY}, null, null, null, null, null);
-		byte[] image = null;
-		Bitmap bitmap = null;
-		
-		if(cursor.moveToFirst()){
-			image = cursor.getBlob(0);
-			bitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
-		}
-		
-		return bitmap;
-	}
-	
-	public boolean removeImage(){
-		if(getImage() == null){
-			return true;
-		}else{
-			return db.delete(AppConfig.ImageData.TABLE_KEY_IMAGE, null, null) > 0;
-		}
 	}
 	
 	public long insertScaleValue(Weight weight){
@@ -171,11 +139,6 @@ public class LocationDatabase {
 				+ AppConfig.TemperatureData.TEMPERTURE_KEY + " REAL NOT NULL, "
 				+ AppConfig.Data.DATE_KEY + " TEXT NOT NULL);";
 		
-		private static final String DATABASE_CREATE_IMAGE_TABLE = "create table "
-				+ AppConfig.ImageData.TABLE_KEY_IMAGE + " ("
-				+ AppConfig.Data.ID_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-				+ AppConfig.ImageData.IMAGE_KEY + " BLOB);";
-		
 		private static final String DATABASE_CREATE_USERNAME_TABLE = "create table "
 				+ AppConfig.UsernameData.TABLE_KEY_USERNAME + " ("
 				+ AppConfig.Data.ID_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -190,7 +153,6 @@ public class LocationDatabase {
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(DATABASE_CREATE_SCALE_TABLE);
 			db.execSQL(DATABASE_CREATE_TEMPERATURE_TABLE);
-			db.execSQL(DATABASE_CREATE_IMAGE_TABLE);
 			db.execSQL(DATABASE_CREATE_USERNAME_TABLE);
 		}
 

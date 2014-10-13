@@ -6,7 +6,6 @@ import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -77,11 +76,17 @@ public class StatisticActivity extends Fragment implements DataFetcherListener{
 			setupWeightGraph();
 			
 		}
+		addAttributesToGraph();
 		showGraph();
 	}
 		
-	@SuppressWarnings("deprecation")
 	void showGraph(){
+		LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.statistic_layout);
+		layout.addView(graphView);
+	}
+	
+	@SuppressWarnings("deprecation")
+	void addAttributesToGraph(){
 		graphView.setViewPort(0, 30);
 		graphView.setScrollable(true);
 		graphView.setScalable(true);
@@ -89,17 +94,6 @@ public class StatisticActivity extends Fragment implements DataFetcherListener{
 		graphView.setLegendAlign(LegendAlign.TOP);
 		graphView.setLegendWidth(200);
 		graphView.setBackgroundColor(getResources().getColor(R.color.black));
-		LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.statistic_layout);
-		layout.addView(graphView);
-	}
-	
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
 	}
 
 	@Override

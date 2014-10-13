@@ -61,6 +61,7 @@ public class UsernameActivity extends Activity{
     	return null;
     }
     
+    //If Username already exists it opens the MainActivity immediately
     void checkIfUsernameNecessary(){
     	openDatabase();
     	if(getUsernameOfDatabase() == null){
@@ -104,7 +105,5 @@ public class UsernameActivity extends Activity{
     void initUserIdentification(String username){
     	UserIdentification ui = new UserIdentification(username, androidId);
     	insertUserIdentificationIntoDatabse(ui);
-    }
-    
-    
+    }  
 }

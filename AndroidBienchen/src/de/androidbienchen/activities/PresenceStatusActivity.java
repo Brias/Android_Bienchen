@@ -34,32 +34,29 @@ public class PresenceStatusActivity extends Fragment implements
 	public static final String EXTRA_KEY_IN_RADIUS = "Present";
 	// public static final double LATITUDE = 48.59662; //location data
 	// public static final double LONGITUDE = 12.02154; //of Bienenstand
-	public static final double LATITUDE = 49.03129100;
-	public static final double LONGITUDE = 11.9780100;
-	
+	public static final double LATITUDE = 48.9980729;
+	public static final double LONGITUDE = 12.09311217;
+
 	public static final float PROXIMITY_RADIUS = 200f;
 
-	private static final long TIME_BW_UPDATES = 1000 * 60 * 5;
-	private static final long TIME_BEFORE_FIRST_UPDATE = 1000 * 5;
-	
-	
+	private static final long TIME_BW_UPDATES = 1000 * 20;
+
 	private ReachedReceiver receiver;
-	
+
 	private ArrayList<PresenceStatusItem> statusList;
-	
+
 	private PresenceListAdapter statusListAdapter;
-	
+
 	private LocationDatabase db;
-	
+
 	private SocketIOHelper socketIOHelper;
-	
+
 	private LocationManager locationManager;
-	
+
 	private UserIdentification userIdentification;
-	
+
 	private PendingIntent proximityIntent;
 
-	
 	public PresenceStatusActivity(SocketIOHelper socketIOHelper) {
 		this.socketIOHelper = socketIOHelper;
 		setListener();
@@ -91,8 +88,8 @@ public class PresenceStatusActivity extends Fragment implements
 		registerLocationManager();
 		initProximityIntent();
 		initProxmityAlert();
-		setSingleUpdateRequest();
-		initLocationUpdateTimer();
+		//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIME_BW_UPDATES, 1000, proximityIntent);
+		//initLocationUpdateTimer();
 	}
 
 	void initLocationUpdateTimer() {
@@ -102,6 +99,7 @@ public class PresenceStatusActivity extends Fragment implements
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
+				Log.d("RUN", "TRUE");
 				setSingleUpdateRequest();
 				handler.postDelayed(this, TIME_BW_UPDATES);
 			}
@@ -157,6 +155,7 @@ public class PresenceStatusActivity extends Fragment implements
 	void setSingleUpdateRequest() {
 		locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER,
 				proximityIntent);
+		Log.d("SingleUpdateRequest", "TRUE");
 	}
 
 	void initList() {
@@ -195,14 +194,17 @@ public class PresenceStatusActivity extends Fragment implements
 		statusListAdapter.notifyDataSetChanged();
 	}
 
+	//Checks if id is own id and if the status is true or false and acts on that
 	void updatePresenceStatusView(JSONObject object) {
 		try {
 			if (!object.get(PresenceStatusItem.JSON_ID).equals(
 					userIdentification.getAndroidId())) {
 				if (object.getBoolean(PresenceStatusItem.JSON_STATUS)) {
-					updateUIThere(
-							object.getString(PresenceStatusItem.JSON_USERNAME),
-							object.getString(PresenceStatusItem.JSON_ID));
+					if (!objectAlreadyInList(object)) {
+						updateUIThere(
+								object.getString(PresenceStatusItem.JSON_USERNAME),
+								object.getString(PresenceStatusItem.JSON_ID));
+					}
 				} else {
 					updateUINotThere(object
 							.getString(PresenceStatusItem.JSON_ID));
@@ -214,13 +216,23 @@ public class PresenceStatusActivity extends Fragment implements
 		}
 	}
 
-	void requestCurrentStatuses() {
-		socketIOHelper.getCurrentStatuses();
+	boolean objectAlreadyInList(JSONObject object) {
+		for (int i = 0; i < statusList.size(); i++) {
+			try {
+				if (statusList.get(i).getId()
+						.equals(object.get(PresenceStatusItem.JSON_ID))) {
+					return true;
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
+	void requestCurrentStatuses() {
+		socketIOHelper.getCurrentStatuses();
 	}
 
 	@Override

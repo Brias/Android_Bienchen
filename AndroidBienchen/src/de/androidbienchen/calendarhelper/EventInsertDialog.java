@@ -120,8 +120,7 @@ public class EventInsertDialog {
 	}
 
 	// Enables the user to pick time of the event and creates the new dialog
-
-	public class TimePickerFragment extends DialogFragment implements
+	private class TimePickerFragment extends DialogFragment implements
 			TimePickerDialog.OnTimeSetListener {
 
 		private Date date;
@@ -149,15 +148,6 @@ public class EventInsertDialog {
 			date.setHours(hourOfDay);
 			date.setMinutes(minute);
 			outPutText.setText(formatter.format(date));
-		}
-
-
-		
-		@SuppressWarnings("deprecation")
-		private void copyDate(Date source, Date dest) {
-			dest.setMonth(source.getMonth());
-			dest.setDate(source.getDate());
-			dest.setYear(source.getYear());
 		}
 	}
 }
