@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,9 +36,7 @@ public class PresenceStatusActivity extends Fragment implements
 	public static final double LATITUDE = 48.9980729;
 	public static final double LONGITUDE = 12.09311217;
 
-	public static final float PROXIMITY_RADIUS = 200f;
-
-	private static final long TIME_BW_UPDATES = 1000 * 20;
+	public static final float PROXIMITY_RADIUS = 100f;
 
 	private ReachedReceiver receiver;
 
@@ -88,26 +85,8 @@ public class PresenceStatusActivity extends Fragment implements
 		registerLocationManager();
 		initProximityIntent();
 		initProxmityAlert();
-		//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIME_BW_UPDATES, 1000, proximityIntent);
-		//initLocationUpdateTimer();
 	}
-
-	void initLocationUpdateTimer() {
-		final Handler handler = new Handler();
-		Runnable runnable = new Runnable() {
-
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				Log.d("RUN", "TRUE");
-				setSingleUpdateRequest();
-				handler.postDelayed(this, TIME_BW_UPDATES);
-			}
-		};
-
-		handler.postDelayed(runnable, TIME_BW_UPDATES);
-	}
-
+	
 	void setListener() {
 		socketIOHelper.setUserStatusReceivedListener(this);
 	}

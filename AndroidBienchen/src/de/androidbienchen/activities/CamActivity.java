@@ -55,7 +55,7 @@ public class CamActivity extends Fragment implements ImageFetcherListener {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				imageFetcher.startFetchingData();
+				fetchingData();
 				handler.postDelayed(this, UPDATE_TIMER_TIME);
 			}
 		};

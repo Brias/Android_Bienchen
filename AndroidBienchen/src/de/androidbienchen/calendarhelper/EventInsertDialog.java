@@ -27,11 +27,13 @@ public class EventInsertDialog {
 	private Context cont;
 	private Date clickedDate;
 	private InsertListener ln;
+	private SimpleDateFormat formatter;
 
 	public EventInsertDialog(Context cont, InsertListener ln, Date clickedDate) {
 		this.cont = cont;
 		this.ln = ln;
 		this.clickedDate = clickedDate;
+		initSimpleDateFormat();
 		insertDialog();
 	}
 
@@ -39,10 +41,11 @@ public class EventInsertDialog {
 		public void insertComplt(Event event);
 	}
 
-	private SimpleDateFormat formatter = new SimpleDateFormat(" HH:mm ");
+	private void initSimpleDateFormat() {
+		formatter = new SimpleDateFormat(" HH:mm ");
+	}
 
 	// method to organize the inserted info of the event with a new alert dialog
-
 	public void insertDialog() {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(cont);
@@ -88,7 +91,7 @@ public class EventInsertDialog {
 						fa.getSupportFragmentManager(), "datePicker");
 			}
 		});
-		
+
 		// sets the "Abbrechen" button, which breaks the and closes dialog
 		builder.setView(v);
 		builder.setNegativeButton("Abbrechen", new OnClickListener() {
@@ -98,7 +101,7 @@ public class EventInsertDialog {
 				arg0.dismiss();
 			}
 		});
-		
+
 		// sets the "Hinzufügen" button, organizes the event info
 		builder.setPositiveButton("Hinzufügen", new OnClickListener() {
 
