@@ -117,7 +117,7 @@ public class ChatActivity extends Fragment implements MessageReceivedListener,
 				setCancelledSendMessageDialog();
 			}
 		}else{
-			
+			setEmptyEditTextDialog();
 		}
 	}
 
